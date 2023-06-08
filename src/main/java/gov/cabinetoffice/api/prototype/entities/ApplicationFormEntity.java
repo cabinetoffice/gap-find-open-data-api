@@ -16,7 +16,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.Type;
 
 import java.time.Instant;
@@ -25,7 +24,6 @@ import java.time.Instant;
 @Table(name = "grant_application")
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Builder

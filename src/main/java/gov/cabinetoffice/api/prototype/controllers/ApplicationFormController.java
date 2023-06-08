@@ -15,10 +15,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Application Forms", description = "API for handling organisations.")
+@Tag(name = "Application Forms", description = "API for retrieving applications forms data.")
 @RestController
+@RequestMapping("/application-forms")
 @RequiredArgsConstructor
 public class ApplicationFormController {
 
@@ -30,7 +32,7 @@ public class ApplicationFormController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ApplicationFormEntity.class))),
             @ApiResponse(responseCode = "404", description = "Application not found with given id",
-                    content = @Content(mediaType = "application/json")) })
+                    content = @Content(mediaType = "application/json",schema = @Schema(implementation = GenericErrorDTO.class))) })
     public ResponseEntity getApplicationById(@PathVariable @NotNull Integer applicationId) {
         try {
             ApplicationFormEntity response = this.applicationFormService.getApplicationById(applicationId);
@@ -40,7 +42,6 @@ public class ApplicationFormController {
             GenericErrorDTO genericErrorDTO = new GenericErrorDTO(e.getMessage());
             return new ResponseEntity(genericErrorDTO, HttpStatus.NOT_FOUND);
         }
-
     }
 
 }

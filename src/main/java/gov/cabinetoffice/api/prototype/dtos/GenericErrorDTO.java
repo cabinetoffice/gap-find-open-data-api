@@ -8,7 +8,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class GenericErrorDTO {
 
-    private ErrorMessage error; // TODO replace this map with ErrorMessage class
+    private ErrorMessage error;
 
     public GenericErrorDTO(String errorMessage) {
         this.error = new ErrorMessage(errorMessage);
