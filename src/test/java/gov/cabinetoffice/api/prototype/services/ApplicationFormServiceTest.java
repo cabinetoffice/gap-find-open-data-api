@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringJUnitConfig
@@ -36,6 +37,8 @@ public class ApplicationFormServiceTest {
 
         ApplicationFormEntity response = applicationFormService.getApplicationById(APPLICATION_ID);
 
+        verify(applicationFormRepository).findById(APPLICATION_ID);
+
         assertThat(response).isEqualTo(applicationForm);
         assertThat(response.getGrantApplicationId()).isEqualTo(APPLICATION_ID);
     }
@@ -45,6 +48,8 @@ public class ApplicationFormServiceTest {
         when(applicationFormRepository.findById(APPLICATION_ID)).thenReturn(Optional.empty());
         Throwable exception =  assertThrows(ApplicationFormException.class,
                 () -> applicationFormService.getApplicationById(APPLICATION_ID));
+
+        verify(applicationFormRepository).findById(APPLICATION_ID);
         assertThat(exception.getMessage()).isEqualTo("No application found with id " + APPLICATION_ID);
     }
 }
