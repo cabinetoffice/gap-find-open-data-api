@@ -1,6 +1,6 @@
 package gov.cabinetoffice.api.prototype.entities;
 
-import gov.cabinetoffice.api.prototype.dtos.ApplicationDefinitionDTO;
+import gov.cabinetoffice.api.prototype.dtos.application.ApplicationDefinitionDTO;
 import gov.cabinetoffice.api.prototype.enums.ApplicationStatusEnum;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
@@ -11,7 +11,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Type;
 
 import java.time.Instant;

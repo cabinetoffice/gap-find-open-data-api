@@ -1,4 +1,4 @@
-package gov.cabinetoffice.api.prototype.dtos;
+package gov.cabinetoffice.api.prototype.dtos.application;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import gov.cabinetoffice.api.prototype.enums.ResponseTypeEnum;

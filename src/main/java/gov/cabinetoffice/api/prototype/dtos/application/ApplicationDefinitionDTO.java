@@ -1,4 +1,4 @@
-package gov.cabinetoffice.api.prototype.dtos;
+package gov.cabinetoffice.api.prototype.dtos.application;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import gov.cabinetoffice.api.prototype.exceptions.ApplicationFormNotFoundException;
@@ -25,7 +25,8 @@ public class ApplicationDefinitionDTO {
                 .filter(section -> Objects.equals(section.getSectionId(), sectionId)).toList();
 
         if (applicationFormSectionDTOList.size() > 1) {
-            throw new ApplicationFormNotFoundException("Ambiguous reference - more than one section with id " + sectionId);
+            throw new ApplicationFormNotFoundException(
+                    "Ambiguous reference - more than one section with id " + sectionId);
         }
         else if (applicationFormSectionDTOList.isEmpty()) {
             throw new NotFoundException("Section with id " + sectionId + " does not exist");
