@@ -63,7 +63,7 @@ public class ApplicationFormControllerTest {
         String expectedJson = objectMapper.writeValueAsString(
                 new GenericErrorDTO("No application with id " + APPLICATION_ID + " found"));
 
-        mockMvc.perform(get("/application-forms/1").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/application-forms/" + APPLICATION_ID).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(content().json(expectedJson));
     }
