@@ -32,16 +32,11 @@ public class ApplicationFormController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ApplicationFormEntity.class))),
             @ApiResponse(responseCode = "404", description = "Application not found with given id",
-                    content = @Content(mediaType = "application/json",schema = @Schema(implementation = GenericErrorDTO.class))) })
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = GenericErrorDTO.class))) })
     public ResponseEntity getApplicationById(@PathVariable @NotNull Integer applicationId) {
-        try {
-            ApplicationFormEntity response = this.applicationFormService.getApplicationById(applicationId);
-            return new ResponseEntity(response, HttpStatus.OK);
-        }
-        catch (ApplicationFormException e) {
-            GenericErrorDTO genericErrorDTO = new GenericErrorDTO(e.getMessage());
-            return new ResponseEntity(genericErrorDTO, HttpStatus.NOT_FOUND);
-        }
+        ApplicationFormEntity response = this.applicationFormService.getApplicationById(applicationId);
+        return ResponseEntity.ok().body(response);
     }
 
 }

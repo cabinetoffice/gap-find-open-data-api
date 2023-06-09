@@ -28,10 +28,8 @@ public class ApplicationFormServiceTest {
 
     @Test
     void getApplicationById_found() {
-        ApplicationFormEntity applicationForm = ApplicationFormEntity.builder()
-                .applicationName("test")
-                .grantApplicationId(APPLICATION_ID)
-                .build();
+        ApplicationFormEntity applicationForm = ApplicationFormEntity.builder().applicationName("test")
+                .grantApplicationId(APPLICATION_ID).build();
 
         when(applicationFormRepository.findById(APPLICATION_ID)).thenReturn(java.util.Optional.of(applicationForm));
 
@@ -46,10 +44,11 @@ public class ApplicationFormServiceTest {
     @Test
     void getApplicationById_notFound() {
         when(applicationFormRepository.findById(APPLICATION_ID)).thenReturn(Optional.empty());
-        Throwable exception =  assertThrows(ApplicationFormException.class,
+        Throwable exception = assertThrows(ApplicationFormException.class,
                 () -> applicationFormService.getApplicationById(APPLICATION_ID));
 
         verify(applicationFormRepository).findById(APPLICATION_ID);
         assertThat(exception.getMessage()).isEqualTo("No application found with id " + APPLICATION_ID);
     }
+
 }

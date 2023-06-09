@@ -15,15 +15,13 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 @WebMvcTest(ApplicationFormController.class)
 @AutoConfigureMockMvc(addFilters = false)
-@ContextConfiguration(classes = { ApplicationFormController.class })
+@ContextConfiguration(classes = { ApplicationFormController.class, ControllerExceptionsHandler.class })
 public class ApplicationFormControllerTest {
 
     @Autowired
@@ -39,32 +37,27 @@ public class ApplicationFormControllerTest {
 
     @Test
     void getApplicationById_found() throws Exception {
-        ApplicationFormEntity applicationForm = ApplicationFormEntity.builder()
-                .applicationName("test")
-                .grantApplicationId(APPLICATION_ID)
-                .build();
+        ApplicationFormEntity applicationForm = ApplicationFormEntity.builder().applicationName("test")
+                .grantApplicationId(APPLICATION_ID).build();
 
-        when(applicationFormService.getApplicationById(APPLICATION_ID))
-                .thenReturn(applicationForm);
+        when(applicationFormService.getApplicationById(APPLICATION_ID)).thenReturn(applicationForm);
 
         String expectedJson = objectMapper.writeValueAsString(applicationForm);
 
         mockMvc.perform(get("/application-forms/" + applicationForm.getGrantApplicationId())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
                 .andExpect(content().json(expectedJson));
     }
 
     @Test
     void getApplicationById_notFound() throws Exception {
-        when(applicationFormService.getApplicationById(APPLICATION_ID))
-                .thenThrow(new ApplicationFormException("No application with id " + APPLICATION_ID + " found"));
+        String errorMsg = "No application with id " + APPLICATION_ID + " found";
 
-        String expectedJson = objectMapper.writeValueAsString(
-                new GenericErrorDTO("No application with id " + APPLICATION_ID + " found"));
+        when(applicationFormService.getApplicationById(APPLICATION_ID))
+                .thenThrow(new ApplicationFormException(errorMsg));
 
         mockMvc.perform(get("/application-forms/" + APPLICATION_ID).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andExpect(content().json(expectedJson));
+                .andExpect(status().isNotFound()).andExpect(jsonPath("$.message").value(errorMsg));
     }
+
 }
