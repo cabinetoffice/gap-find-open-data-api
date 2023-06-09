@@ -1,6 +1,7 @@
 package gov.cabinetoffice.api.prototype.controllers;
 
 import gov.cabinetoffice.api.prototype.exceptions.ApplicationFormNotFoundException;
+import gov.cabinetoffice.api.prototype.exceptions.SubmissionNotFoundException;
 import gov.cabinetoffice.api.prototype.models.ErrorMessage;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -10,11 +11,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-@ControllerAdvice(assignableTypes = ApplicationFormController.class)
+@ControllerAdvice(assignableTypes = { ApplicationFormController.class, SubmissionsController.class })
 public class ControllerExceptionsHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = { ApplicationFormNotFoundException.class })
     protected ResponseEntity<Object> handleException(ApplicationFormNotFoundException ex, WebRequest request) {
+        return handleExceptionInternal(ex, ErrorMessage.builder().message(ex.getMessage()).build(), new HttpHeaders(),
+                HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(value = { SubmissionNotFoundException.class })
+    protected ResponseEntity<Object> handleException(SubmissionNotFoundException ex, WebRequest request) {
         return handleExceptionInternal(ex, ErrorMessage.builder().message(ex.getMessage()).build(), new HttpHeaders(),
                 HttpStatus.NOT_FOUND, request);
     }
