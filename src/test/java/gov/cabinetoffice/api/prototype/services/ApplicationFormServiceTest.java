@@ -1,7 +1,7 @@
 package gov.cabinetoffice.api.prototype.services;
 
 import gov.cabinetoffice.api.prototype.entities.ApplicationFormEntity;
-import gov.cabinetoffice.api.prototype.exceptions.ApplicationFormException;
+import gov.cabinetoffice.api.prototype.exceptions.ApplicationFormNotFoundException;
 import gov.cabinetoffice.api.prototype.repositories.ApplicationFormRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -44,7 +44,7 @@ public class ApplicationFormServiceTest {
     @Test
     void getApplicationById_notFound() {
         when(applicationFormRepository.findById(APPLICATION_ID)).thenReturn(Optional.empty());
-        Throwable exception = assertThrows(ApplicationFormException.class,
+        Throwable exception = assertThrows(ApplicationFormNotFoundException.class,
                 () -> applicationFormService.getApplicationById(APPLICATION_ID));
 
         verify(applicationFormRepository).findById(APPLICATION_ID);

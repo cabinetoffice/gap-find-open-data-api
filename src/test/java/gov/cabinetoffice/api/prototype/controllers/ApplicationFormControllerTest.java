@@ -1,8 +1,7 @@
 package gov.cabinetoffice.api.prototype.controllers;
 
-import gov.cabinetoffice.api.prototype.dtos.GenericErrorDTO;
 import gov.cabinetoffice.api.prototype.entities.ApplicationFormEntity;
-import gov.cabinetoffice.api.prototype.exceptions.ApplicationFormException;
+import gov.cabinetoffice.api.prototype.exceptions.ApplicationFormNotFoundException;
 import gov.cabinetoffice.api.prototype.services.ApplicationFormService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +53,7 @@ public class ApplicationFormControllerTest {
         String errorMsg = "No application with id " + APPLICATION_ID + " found";
 
         when(applicationFormService.getApplicationById(APPLICATION_ID))
-                .thenThrow(new ApplicationFormException(errorMsg));
+                .thenThrow(new ApplicationFormNotFoundException(errorMsg));
 
         mockMvc.perform(get("/application-forms/" + APPLICATION_ID).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound()).andExpect(jsonPath("$.message").value(errorMsg));
