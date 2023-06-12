@@ -11,11 +11,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.util.List;
 
+import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -64,6 +67,13 @@ class SubmissionsControllerTest {
 
         mockMvc.perform(get(BASE_PATH + APPLICATION_ID).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound()).andExpect(jsonPath("$.message").value(errorMsg));
+    }
+
+    @Test
+    void getSubmissionByApplicationId_invalidArgument() throws Exception {
+        mockMvc.perform(get(BASE_PATH + "invalidParameterType"))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> result.getResponse().getErrorMessage().contains("Incorrect parameter type passed"));
     }
 
 }
