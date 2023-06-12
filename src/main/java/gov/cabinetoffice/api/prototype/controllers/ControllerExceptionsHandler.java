@@ -7,7 +7,6 @@ import gov.cabinetoffice.api.prototype.models.ErrorMessage;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,7 +33,7 @@ public class ControllerExceptionsHandler extends ResponseEntityExceptionHandler 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public GenericErrorDTO handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex) {
+    public GenericErrorDTO handleMethodArgumentTypeMismatch() {
         return new GenericErrorDTO("Incorrect parameter type passed");
     }
 
