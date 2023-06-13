@@ -14,20 +14,12 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SubmissionSection {
-
-    private String sectionId;
+public class SubmissionSectionDTO {
 
     private String sectionTitle;
 
     private SubmissionSectionStatus sectionStatus;
 
-    private List<SubmissionQuestion> questions;
-
-    public SubmissionQuestion getQuestionById(String questionId) {
-        return this.questions.stream().filter((question) -> Objects.equals(question.getQuestionId(), questionId))
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException("Question with id " + questionId + " does not exist"));
-    }
+    private List<SubmissionQuestionDTO> questions;
 
 }

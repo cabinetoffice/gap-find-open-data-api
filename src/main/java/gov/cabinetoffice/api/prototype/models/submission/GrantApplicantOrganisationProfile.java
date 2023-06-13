@@ -1,4 +1,4 @@
-package gov.cabinetoffice.api.prototype.dtos.submission;
+package gov.cabinetoffice.api.prototype.models.submission;
 
 import gov.cabinetoffice.api.prototype.enums.GrantApplicantOrganisationType;
 import jakarta.persistence.CascadeType;

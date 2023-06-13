@@ -1,8 +1,8 @@
 package gov.cabinetoffice.api.prototype.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import gov.cabinetoffice.api.prototype.dtos.submission.GrantApplicant;
-import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionDefinition;
+import gov.cabinetoffice.api.prototype.models.submission.GrantApplicant;
+import gov.cabinetoffice.api.prototype.models.submission.SubmissionDefinition;
 import gov.cabinetoffice.api.prototype.enums.SubmissionStatus;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.CascadeType;
