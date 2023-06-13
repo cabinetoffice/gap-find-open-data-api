@@ -4,6 +4,10 @@ import gov.cabinetoffice.api.prototype.dtos.GenericErrorDTO;
 import gov.cabinetoffice.api.prototype.exceptions.ApplicationFormNotFoundException;
 import gov.cabinetoffice.api.prototype.exceptions.SubmissionNotFoundException;
 import gov.cabinetoffice.api.prototype.models.ErrorMessage;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +37,10 @@ public class ControllerExceptionsHandler extends ResponseEntityExceptionHandler 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "Invalid parameter type passed",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = GenericErrorDTO.class))) })
     public GenericErrorDTO handleMethodArgumentTypeMismatch() {
         return new GenericErrorDTO("Incorrect parameter type passed");
     }
