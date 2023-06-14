@@ -37,10 +37,9 @@ public class ControllerExceptionsHandler extends ResponseEntityExceptionHandler 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "400", description = "Invalid parameter type passed",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = GenericErrorDTO.class))) })
+    @ApiResponses(value = { @ApiResponse(responseCode = "400", description = "Invalid parameter type passed",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = GenericErrorDTO.class))) })
     public GenericErrorDTO handleMethodArgumentTypeMismatch() {
         return new GenericErrorDTO("Incorrect parameter type passed");
     }
