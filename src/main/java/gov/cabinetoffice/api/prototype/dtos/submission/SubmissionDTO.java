@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -16,7 +17,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SubmissionDTO {
 
-    private String submissionId;
+    private UUID submissionId;
 
     private String applicationFormName;
 

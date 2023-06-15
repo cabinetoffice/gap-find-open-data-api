@@ -1,6 +1,7 @@
 package gov.cabinetoffice.api.prototype.controllers;
 
 import gov.cabinetoffice.api.prototype.dtos.GenericErrorDTO;
+import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionDTO;
 import gov.cabinetoffice.api.prototype.entities.Submission;
 import gov.cabinetoffice.api.prototype.services.SubmissionsService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -35,7 +36,7 @@ public class SubmissionsController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = GenericErrorDTO.class))) })
     public ResponseEntity getSubmissionByApplicationId(@PathVariable @NotNull Integer applicationId) {
-        List<Submission> response = this.submissionsService.getSubmissionByApplicationId(applicationId);
+        List<SubmissionDTO> response = this.submissionsService.getSubmissionByApplicationId(applicationId);
         return ResponseEntity.ok().body(response);
     }
 

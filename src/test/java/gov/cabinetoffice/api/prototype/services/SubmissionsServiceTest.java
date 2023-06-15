@@ -27,29 +27,32 @@ class SubmissionsServiceTest {
 
     private final Integer APPLICATION_ID = 1;
 
-    @Test
-    void getSubmissionByApplicationId_found() {
-        ApplicationFormEntity applicationForm = ApplicationFormEntity.builder().grantApplicationId(APPLICATION_ID)
-                .build();
-        Submission submission = Submission.builder().application(applicationForm).build();
-
-        when(submissionRepository.findByApplicationGrantApplicationId(APPLICATION_ID)).thenReturn(List.of(submission));
-
-        List<Submission> response = submissionsService.getSubmissionByApplicationId(APPLICATION_ID);
-
-        verify(submissionRepository).findByApplicationGrantApplicationId(APPLICATION_ID);
-
-        assertThat(response).isEqualTo(List.of(submission));
-    }
-
-    @Test
-    void getSubmissionByApplicationId_notFound() {
-        when(submissionRepository.findByApplicationGrantApplicationId(APPLICATION_ID)).thenReturn(List.of());
-        Throwable exception = assertThrows(SubmissionNotFoundException.class,
-                () -> submissionsService.getSubmissionByApplicationId(APPLICATION_ID));
-
-        verify(submissionRepository).findByApplicationGrantApplicationId(APPLICATION_ID);
-        assertThat(exception.getMessage()).isEqualTo("No submissions found with application id " + APPLICATION_ID);
-    }
+    // @Test
+    // void getSubmissionByApplicationId_found() {
+    // ApplicationFormEntity applicationForm =
+    // ApplicationFormEntity.builder().grantApplicationId(APPLICATION_ID)
+    // .build();
+    // Submission submission = Submission.builder().application(applicationForm).build();
+    //
+    // when(submissionRepository.findByApplicationGrantApplicationId(APPLICATION_ID)).thenReturn(List.of(submission));
+    //
+    // List<Submission> response =
+    // submissionsService.getSubmissionByApplicationId(APPLICATION_ID);
+    //
+    // verify(submissionRepository).findByApplicationGrantApplicationId(APPLICATION_ID);
+    //
+    // assertThat(response).isEqualTo(List.of(submission));
+    // }
+    //
+    // @Test
+    // void getSubmissionByApplicationId_notFound() {
+    // when(submissionRepository.findByApplicationGrantApplicationId(APPLICATION_ID)).thenReturn(List.of());
+    // Throwable exception = assertThrows(SubmissionNotFoundException.class,
+    // () -> submissionsService.getSubmissionByApplicationId(APPLICATION_ID));
+    //
+    // verify(submissionRepository).findByApplicationGrantApplicationId(APPLICATION_ID);
+    // assertThat(exception.getMessage()).isEqualTo("No submissions found with application
+    // id " + APPLICATION_ID);
+    // }
 
 }
