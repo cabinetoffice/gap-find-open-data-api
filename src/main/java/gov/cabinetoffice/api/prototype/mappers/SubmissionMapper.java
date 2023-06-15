@@ -95,7 +95,7 @@ public interface SubmissionMapper {
     }
 
     private LocalDate buildDate(String[] multiResponse) {
-        return LocalDate.of(parseInt(multiResponse[0]), parseInt(multiResponse[1]), parseInt(multiResponse[2]));
+        return LocalDate.of(parseInt(multiResponse[2]), parseInt(multiResponse[1]), parseInt(multiResponse[0]));
     }
 
     private AddressDTO buildAddress(String[] multiResponse) {
