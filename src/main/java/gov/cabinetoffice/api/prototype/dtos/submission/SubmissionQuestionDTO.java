@@ -15,8 +15,9 @@ public class SubmissionQuestionDTO {
 
     private String questionId;
 
-    private String questionTitle; // fieldTitle in table
+    private String questionTitle;
 
-    private Object questionResponse;
+    @Builder.Default
+    private Object questionResponse = ""; //TODO do we want this to be null or an empty string
 
 }
