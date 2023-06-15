@@ -1,4 +1,4 @@
-package gov.cabinetoffice.api.prototype.dtos;
+package gov.cabinetoffice.api.prototype.dtos.application;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import gov.cabinetoffice.api.prototype.enums.SectionStatusEnum;
@@ -38,7 +38,8 @@ public class ApplicationFormSectionDTO {
                 .filter(question -> Objects.equals(question.getQuestionId(), questionId)).toList();
 
         if (applicationFormQuestionDTOList.size() > 1) {
-            throw new ApplicationFormNotFoundException("Ambiguous reference - more than one question with id " + questionId);
+            throw new ApplicationFormNotFoundException(
+                    "Ambiguous reference - more than one question with id " + questionId);
         }
         else if (applicationFormQuestionDTOList.isEmpty()) {
             throw new NotFoundException("Question with id " + questionId + " does not exist");

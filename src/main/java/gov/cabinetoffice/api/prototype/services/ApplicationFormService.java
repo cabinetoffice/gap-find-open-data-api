@@ -13,8 +13,8 @@ public class ApplicationFormService {
     private final ApplicationFormRepository applicationFormRepository;
 
     public ApplicationFormEntity getApplicationById(Integer applicationId) {
-        return this.applicationFormRepository.findById(applicationId)
-                .orElseThrow(() -> new ApplicationFormNotFoundException("No application found with id " + applicationId));
+        return this.applicationFormRepository.findById(applicationId).orElseThrow(
+                () -> new ApplicationFormNotFoundException("No application found with id " + applicationId));
     }
 
 }

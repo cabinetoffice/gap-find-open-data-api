@@ -1,5 +1,6 @@
 package gov.cabinetoffice.api.prototype.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.cabinetoffice.api.prototype.entities.ApplicationFormEntity;
 import gov.cabinetoffice.api.prototype.exceptions.ApplicationFormNotFoundException;
 import gov.cabinetoffice.api.prototype.services.ApplicationFormService;
@@ -14,9 +15,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ApplicationFormController.class)
 @AutoConfigureMockMvc(addFilters = false)
