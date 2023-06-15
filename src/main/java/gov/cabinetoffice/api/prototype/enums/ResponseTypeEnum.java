@@ -2,11 +2,7 @@ package gov.cabinetoffice.api.prototype.enums;
 
 import java.util.Map;
 
-import static gov.cabinetoffice.api.prototype.constants.ValidationMaps.LONG_ANSWER_VALIDATION;
-import static gov.cabinetoffice.api.prototype.constants.ValidationMaps.NO_VALIDATION;
-import static gov.cabinetoffice.api.prototype.constants.ValidationMaps.NUMERIC_ANSWER_VALIDATION;
-import static gov.cabinetoffice.api.prototype.constants.ValidationMaps.SHORT_ANSWER_VALIDATION;
-import static gov.cabinetoffice.api.prototype.constants.ValidationMaps.SINGLE_FILE_UPLOAD_VALIDATION;
+import static gov.cabinetoffice.api.prototype.constants.ValidationMaps.*;
 
 public enum ResponseTypeEnum {
 

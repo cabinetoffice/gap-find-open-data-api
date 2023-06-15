@@ -1,14 +1,11 @@
 package gov.cabinetoffice.api.prototype.dtos.submission;
 
-import gov.cabinetoffice.api.prototype.enums.SubmissionSectionStatus;
-import gov.cabinetoffice.api.prototype.exceptions.NotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Objects;
 
 @Data
 @NoArgsConstructor
@@ -16,9 +13,9 @@ import java.util.Objects;
 @Builder
 public class SubmissionSectionDTO {
 
-    private String sectionTitle;
+    private String sectionId;
 
-    private SubmissionSectionStatus sectionStatus;
+    private String sectionTitle;
 
     private List<SubmissionQuestionDTO> questions;
 

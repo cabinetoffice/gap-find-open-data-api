@@ -1,14 +1,13 @@
 package gov.cabinetoffice.api.prototype.dtos.submission;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import gov.cabinetoffice.api.prototype.enums.SubmissionStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -17,20 +16,18 @@ import java.time.ZonedDateTime;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SubmissionDTO {
 
-    private ApplicationDTO application;
+    private String submissionId;
 
-    private LocalDateTime created;
+    private String applicationFormName;
 
-    private ZonedDateTime submittedDate;
+    private String grantAdminEmailAddress;
 
-    private SubmissionStatus status;
+    private String grantApplicantEmailAddress;
 
-    private String gapId;
+    private String ggisReferenceNumber;
 
-    private SubmissionDefinitionDTO formQuestionsAndAnswers;
+    private ZonedDateTime submittedTimeStamp;
 
-    private SchemeDTO scheme;
-
-    private GrantApplicantOrganisationProfileDTO createdBy;
+    private List<SubmissionSectionDTO> sections;
 
 }
