@@ -36,7 +36,7 @@ public class SubmissionsController {
             @ApiResponse(responseCode = "404", description = "No submissions found with given application id",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = GenericErrorDTO.class))) })
-    public ResponseEntity getSubmissionByApplicationId(@PathVariable @NotNull Integer applicationId) {
+    public ResponseEntity<SubmissionsDTO> getSubmissionByApplicationId(@PathVariable @NotNull Integer applicationId) {
         SubmissionsDTO response = this.submissionsService.getSubmissionByApplicationId(applicationId);
         return ResponseEntity.ok().body(response);
     }

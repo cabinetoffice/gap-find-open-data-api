@@ -12,6 +12,7 @@ import gov.cabinetoffice.api.prototype.entities.Submission;
 import gov.cabinetoffice.api.prototype.enums.ResponseTypeEnum;
 import gov.cabinetoffice.api.prototype.enums.SubmissionSectionStatus;
 import gov.cabinetoffice.api.prototype.enums.SubmissionStatus;
+import gov.cabinetoffice.api.prototype.exceptions.SubmissionNotFoundException;
 import gov.cabinetoffice.api.prototype.models.submission.GrantApplicant;
 import gov.cabinetoffice.api.prototype.models.submission.GrantApplicantOrganisationProfile;
 import gov.cabinetoffice.api.prototype.models.submission.SubmissionDefinition;
@@ -26,14 +27,19 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static java.lang.String.format;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -175,11 +181,18 @@ public class SubmissionsControllerTest {
     void getSubmissionByApplicationId_returnsExpectedResponse() {
         when(submissionService.getSubmissionByApplicationId(APPLICATION_ID)).thenReturn(submissionsDTO);
 
-        ResponseEntity<SubmissionDTO> response = controllerUnderTest.getSubmissionByApplicationId(APPLICATION_ID);
+        ResponseEntity<SubmissionsDTO> response = controllerUnderTest.getSubmissionByApplicationId(APPLICATION_ID);
 
         verify(submissionService).getSubmissionByApplicationId(APPLICATION_ID);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(response.getBody(), submissionsDTO);
+        assertThat(HttpStatus.OK).isEqualTo( response.getStatusCode());
+        assertThat(response.getBody()).isEqualTo(submissionsDTO);
+
     }
 
+    @Test
+    void getSubmissionByApplicationId_returns404WhenNoSubmissionFound() {
+        when(submissionService.getSubmissionByApplicationId(APPLICATION_ID)).thenThrow(new SubmissionNotFoundException("error"));
+        Exception result = assertThrows(SubmissionNotFoundException.class, () -> controllerUnderTest.getSubmissionByApplicationId(APPLICATION_ID));
+        verify(submissionService).getSubmissionByApplicationId(APPLICATION_ID);
+        assertThat(result.getMessage()).contains("error");}
 }
