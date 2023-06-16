@@ -26,7 +26,7 @@ public class RandomSubmissionGenerator {
     public static SubmissionDefinition.SubmissionDefinitionBuilder randomSubmissionDefinition(
             SubmissionDefinition submissionDefinition) {
 
-        List<SubmissionSection> submissionSectionList = submissionDefinition.getSections().stream()
+        final List<SubmissionSection> submissionSectionList = submissionDefinition.getSections().stream()
                 .map(section -> randomSubmissionSection(section).build()).toList();
 
         return SubmissionDefinition.builder().sections(submissionSectionList);
@@ -42,7 +42,7 @@ public class RandomSubmissionGenerator {
     public static SubmissionSection.SubmissionSectionBuilder randomSubmissionSection(
             SubmissionSection submissionSection) {
 
-        List<SubmissionQuestion> submissionQuestionList = submissionSection.getQuestions().stream()
+        final List<SubmissionQuestion> submissionQuestionList = submissionSection.getQuestions().stream()
                 .map(question -> randomSubmissionQuestion(question).build()).toList();
 
         return SubmissionSection.builder().sectionId(submissionSection.getSectionId())

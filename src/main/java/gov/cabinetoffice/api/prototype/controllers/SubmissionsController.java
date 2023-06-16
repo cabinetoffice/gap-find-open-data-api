@@ -34,7 +34,7 @@ public class SubmissionsController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = GenericErrorDTO.class))) })
     public ResponseEntity<SubmissionsDTO> getSubmissionByApplicationId(@PathVariable @NotNull Integer applicationId) {
-        SubmissionsDTO response = this.submissionsService.getSubmissionByApplicationId(applicationId);
+        final SubmissionsDTO response = this.submissionsService.getSubmissionByApplicationId(applicationId);
         return ResponseEntity.ok().body(response);
     }
 

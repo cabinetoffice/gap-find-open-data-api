@@ -1,6 +1,7 @@
-package gov.cabinetoffice.api.prototype.controllers;
+package gov.cabinetoffice.api.prototype.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gov.cabinetoffice.api.prototype.controllers.SubmissionsController;
 import gov.cabinetoffice.api.prototype.controllers.controllerAdvice.ControllerExceptionsHandler;
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionDTO;
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionsDTO;
@@ -88,7 +89,7 @@ class SubmissionsControllerIntegTest {
 
     @Test
     void getSubmissionByApplicationId_notFound() throws Exception {
-        String errorMsg = "No submissions found with application id " + APPLICATION_ID;
+        final String errorMsg = "No submissions found with application id " + APPLICATION_ID;
 
         when(submissionsService.getSubmissionByApplicationId(APPLICATION_ID))
                 .thenThrow(new SubmissionNotFoundException(errorMsg));
@@ -99,10 +100,10 @@ class SubmissionsControllerIntegTest {
 
     @Test
     void getSubmissionByApplicationId_invalidArgument() throws Exception {
-        ResultActions actions = mockMvc.perform(get(BASE_PATH + "invalidParameterType"));
+        final ResultActions actions = mockMvc.perform(get(BASE_PATH + "invalidParameterType"));
 
-        String errorMessage = actions.andReturn().getResponse().getContentAsString();
-        int errorCode = actions.andReturn().getResponse().getStatus();
+        final String errorMessage = actions.andReturn().getResponse().getContentAsString();
+        final int errorCode = actions.andReturn().getResponse().getStatus();
         assertThat(errorCode).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(errorMessage).contains("Invalid parameter type passed");
 

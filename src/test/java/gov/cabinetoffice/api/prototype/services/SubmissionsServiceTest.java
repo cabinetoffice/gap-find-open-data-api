@@ -46,9 +46,9 @@ class SubmissionsServiceTest {
     void getSubmissionByApplicationId_found() {
         final ZonedDateTime zonedDateTime = ZonedDateTime.now();
 
-        ApplicationFormEntity applicationForm = ApplicationFormEntity.builder().grantApplicationId(APPLICATION_ID)
+        final ApplicationFormEntity applicationForm = ApplicationFormEntity.builder().grantApplicationId(APPLICATION_ID)
                 .build();
-        Submission submission = randomSubmission()
+        final Submission submission = randomSubmission()
                 .definition(randomSubmissionDefinition(randomSubmissionDefinition().build()).build()).gapId("testGapID")
                 .applicant(GrantApplicant.builder()
                         .organisationProfile(
@@ -75,7 +75,7 @@ class SubmissionsServiceTest {
     @Test
     void getSubmissionByApplicationId_notFound() {
         when(submissionRepository.findByApplicationGrantApplicationId(APPLICATION_ID)).thenReturn(List.of());
-        Throwable exception = assertThrows(SubmissionNotFoundException.class,
+        final Throwable exception = assertThrows(SubmissionNotFoundException.class,
                 () -> submissionsService.getSubmissionByApplicationId(APPLICATION_ID));
 
         verify(submissionRepository).findByApplicationGrantApplicationId(APPLICATION_ID);

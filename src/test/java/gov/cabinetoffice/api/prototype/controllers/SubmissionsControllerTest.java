@@ -1,6 +1,6 @@
 package gov.cabinetoffice.api.prototype.controllers;
 
-import gov.cabinetoffice.api.prototype.dtos.application.ApplicationDefinitionDTO;
+import gov.cabinetoffice.api.prototype.models.application.ApplicationDefinition;
 import gov.cabinetoffice.api.prototype.dtos.submission.AddressDTO;
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionDTO;
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionQuestionDTO;
@@ -71,8 +71,7 @@ class SubmissionsControllerTest {
 
     final ApplicationFormEntity application = ApplicationFormEntity.builder().grantApplicationId(APPLICATION_ID)
             .applicationName("Test Application").created(instant).lastUpdated(instant)
-            .definition(new ApplicationDefinitionDTO()).grantSchemeId(scheme.getId()).version(1).lastUpdateBy(1)
-            .build();
+            .definition(new ApplicationDefinition()).grantSchemeId(scheme.getId()).version(1).lastUpdateBy(1).build();
 
     final SubmissionQuestion question1 = SubmissionQuestion.builder().questionId(QUESTION_ID_1).profileField("ORG_NAME")
             .fieldTitle("Enter the name of your organisation")
@@ -177,7 +176,8 @@ class SubmissionsControllerTest {
     void getSubmissionByApplicationId_returnsExpectedResponse() {
         when(submissionService.getSubmissionByApplicationId(APPLICATION_ID)).thenReturn(submissionsDTO);
 
-        ResponseEntity<SubmissionsDTO> response = controllerUnderTest.getSubmissionByApplicationId(APPLICATION_ID);
+        final ResponseEntity<SubmissionsDTO> response = controllerUnderTest
+                .getSubmissionByApplicationId(APPLICATION_ID);
 
         verify(submissionService).getSubmissionByApplicationId(APPLICATION_ID);
         assertThat(HttpStatus.OK).isEqualTo(response.getStatusCode());
@@ -189,7 +189,7 @@ class SubmissionsControllerTest {
     void getSubmissionByApplicationId_returns404WhenNoSubmissionFound() {
         when(submissionService.getSubmissionByApplicationId(APPLICATION_ID))
                 .thenThrow(new SubmissionNotFoundException("error"));
-        Exception result = assertThrows(SubmissionNotFoundException.class,
+        final Exception result = assertThrows(SubmissionNotFoundException.class,
                 () -> controllerUnderTest.getSubmissionByApplicationId(APPLICATION_ID));
         verify(submissionService).getSubmissionByApplicationId(APPLICATION_ID);
         assertThat(result.getMessage()).contains("error");

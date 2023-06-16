@@ -52,9 +52,9 @@ public interface SubmissionMapper {
 
     default SubmissionQuestionDTO submissionQuestionToSubmissionQuestionDto(SubmissionQuestion submissionQuestion) {
         Object questionResponse;
-        String response = submissionQuestion.getResponse();
-        String[] multiResponse = submissionQuestion.getMultiResponse();
-        SubmissionQuestionDTO submissionQuestionDTO = SubmissionQuestionDTO.builder()
+        final String response = submissionQuestion.getResponse();
+        final String[] multiResponse = submissionQuestion.getMultiResponse();
+        final SubmissionQuestionDTO submissionQuestionDTO = SubmissionQuestionDTO.builder()
                 .questionId(submissionQuestion.getQuestionId()).questionTitle(submissionQuestion.getFieldTitle())
                 .build();
         if (response == null && multiResponse == null)

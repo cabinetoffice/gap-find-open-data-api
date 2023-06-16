@@ -33,7 +33,7 @@ public class ApplicationFormController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = GenericErrorDTO.class))) })
     public ResponseEntity getApplicationById(@PathVariable @NotNull Integer applicationId) {
-        ApplicationFormEntity response = this.applicationFormService.getApplicationById(applicationId);
+        final ApplicationFormEntity response = this.applicationFormService.getApplicationById(applicationId);
         return ResponseEntity.ok().body(response);
     }
 

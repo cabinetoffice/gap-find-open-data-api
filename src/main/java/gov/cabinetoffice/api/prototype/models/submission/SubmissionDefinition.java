@@ -23,7 +23,7 @@ public class SubmissionDefinition {
 
     public static SubmissionDefinition transformApplicationDefinitionToSubmissionOne(String applicationDefinitionJson)
             throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
+        final ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(applicationDefinitionJson, SubmissionDefinition.class);
     }
 

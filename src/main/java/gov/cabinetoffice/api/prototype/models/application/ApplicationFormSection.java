@@ -1,4 +1,4 @@
-package gov.cabinetoffice.api.prototype.dtos.application;
+package gov.cabinetoffice.api.prototype.models.application;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import gov.cabinetoffice.api.prototype.enums.SectionStatusEnum;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
-public class ApplicationFormSectionDTO {
+public class ApplicationFormSection {
 
     private String sectionId;
 
@@ -25,16 +25,16 @@ public class ApplicationFormSectionDTO {
 
     private SectionStatusEnum sectionStatus;
 
-    private List<ApplicationFormQuestionDTO> questions;
+    private List<ApplicationFormQuestion> questions;
 
-    public ApplicationFormSectionDTO(String sectionTitle) {
+    public ApplicationFormSection(String sectionTitle) {
         this.sectionTitle = sectionTitle;
         this.sectionId = UUID.randomUUID().toString();
         this.questions = Collections.emptyList();
     }
 
-    public ApplicationFormQuestionDTO getQuestionById(String questionId) {
-        List<ApplicationFormQuestionDTO> applicationFormQuestionDTOList = this.questions.stream()
+    public ApplicationFormQuestion getQuestionById(String questionId) {
+        final List<ApplicationFormQuestion> applicationFormQuestionDTOList = this.questions.stream()
                 .filter(question -> Objects.equals(question.getQuestionId(), questionId)).toList();
 
         if (applicationFormQuestionDTOList.size() > 1) {

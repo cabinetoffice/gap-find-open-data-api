@@ -2,6 +2,8 @@ package gov.cabinetoffice.api.prototype.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
+import java.util.Arrays;
+
 public enum GrantApplicantOrganisationType {
 
     LIMITED_COMPANY("Limited Company"), UNLIMITED_COMPANY("Unlimited Company"),
@@ -19,12 +21,7 @@ public enum GrantApplicantOrganisationType {
     }
 
     public static GrantApplicantOrganisationType valueOfName(String name) {
-        for (GrantApplicantOrganisationType type : values()) {
-            if (type.name.equals(name)) {
-                return type;
-            }
-        }
-        return null;
+        return Arrays.stream(values()).filter(type -> type.name.equals(name)).findFirst().orElse(null);
     }
 
     @JsonCreator

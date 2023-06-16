@@ -32,7 +32,6 @@ public class SchemeEntity {
     @Column(name = "grant_scheme_id")
     private Integer id;
 
-    // This will become a FK to Organisation
     @Column(name = "funder_id", nullable = false)
     private Integer funderId;
 
@@ -50,7 +49,6 @@ public class SchemeEntity {
     @Column(name = "last_updated")
     private Instant lastUpdated;
 
-    // This will become a FK to User
     @Column(name = "last_updated_by")
     private Integer lastUpdatedBy;
 

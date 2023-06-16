@@ -1,6 +1,6 @@
 package gov.cabinetoffice.api.prototype.entities;
 
-import gov.cabinetoffice.api.prototype.dtos.application.ApplicationDefinitionDTO;
+import gov.cabinetoffice.api.prototype.models.application.ApplicationDefinition;
 import gov.cabinetoffice.api.prototype.enums.ApplicationStatusEnum;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
@@ -64,6 +64,6 @@ public class ApplicationFormEntity {
 
     @Column(name = "definition", nullable = false, columnDefinition = "json")
     @Type(JsonType.class)
-    private ApplicationDefinitionDTO definition;
+    private ApplicationDefinition definition;
 
 }

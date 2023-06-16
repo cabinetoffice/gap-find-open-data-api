@@ -1,4 +1,4 @@
-package gov.cabinetoffice.api.prototype.dtos.application;
+package gov.cabinetoffice.api.prototype.models.application;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import gov.cabinetoffice.api.prototype.enums.ResponseTypeEnum;
@@ -15,7 +15,7 @@ import java.util.Map;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
-public class ApplicationFormQuestionDTO {
+public class ApplicationFormQuestion {
 
     private String questionId;
 

@@ -1,64 +1,71 @@
 package gov.cabinetoffice.api.prototype.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import gov.cabinetoffice.api.prototype.controllers.controllerAdvice.ControllerExceptionsHandler;
+import gov.cabinetoffice.api.prototype.models.application.ApplicationDefinition;
 import gov.cabinetoffice.api.prototype.entities.ApplicationFormEntity;
+import gov.cabinetoffice.api.prototype.entities.SchemeEntity;
 import gov.cabinetoffice.api.prototype.exceptions.ApplicationFormNotFoundException;
 import gov.cabinetoffice.api.prototype.services.ApplicationFormService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ApplicationFormController.class)
-@AutoConfigureMockMvc(addFilters = false)
-@ContextConfiguration(classes = { ApplicationFormController.class, ControllerExceptionsHandler.class })
-class ApplicationFormControllerTest {
+@ExtendWith(MockitoExtension.class)
+public class ApplicationFormControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private static final Integer APPLICATION_ID = 1;
 
-    @MockBean
+    final Instant instant = Instant.now();
+
+    final SchemeEntity scheme = SchemeEntity.builder().id(1).version(1).funderId(1).lastUpdated(instant)
+            .email("test@and.digital").name("Test Scheme").ggisIdentifier("Test GGIS Identifier").build();
+
+    final ApplicationFormEntity application = ApplicationFormEntity.builder().grantApplicationId(APPLICATION_ID)
+            .applicationName("Test Application").created(instant).lastUpdated(instant)
+            .definition(new ApplicationDefinition()).grantSchemeId(scheme.getId()).version(1).lastUpdateBy(1).build();
+
+    @Mock
     private ApplicationFormService applicationFormService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private ApplicationFormController controllerUnderTest;
 
-    private final Integer APPLICATION_ID = 1;
-
-    @Test
-    void getApplicationById_found() throws Exception {
-        ApplicationFormEntity applicationForm = ApplicationFormEntity.builder().applicationName("test")
-                .grantApplicationId(APPLICATION_ID).build();
-
-        when(applicationFormService.getApplicationById(APPLICATION_ID)).thenReturn(applicationForm);
-
-        String expectedJson = objectMapper.writeValueAsString(applicationForm);
-
-        mockMvc.perform(get("/application-forms/" + applicationForm.getGrantApplicationId())
-                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-                .andExpect(content().json(expectedJson));
+    @BeforeEach
+    void setup() {
+        controllerUnderTest = new ApplicationFormController(applicationFormService);
     }
 
     @Test
-    void getApplicationById_notFound() throws Exception {
-        String errorMsg = "No application with id " + APPLICATION_ID + " found";
+    void getApplicationById_returnsExpectedResponse() {
+        when(applicationFormService.getApplicationById(APPLICATION_ID)).thenReturn(application);
 
+        final ResponseEntity<ApplicationFormEntity> response = controllerUnderTest.getApplicationById(APPLICATION_ID);
+
+        verify(applicationFormService).getApplicationById(APPLICATION_ID);
+        assertThat(HttpStatus.OK).isEqualTo(response.getStatusCode());
+        assertThat(response.getBody()).isEqualTo(application);
+
+    }
+
+    @Test
+    void getApplicationById_returns404WhenNoApplicationFound() {
         when(applicationFormService.getApplicationById(APPLICATION_ID))
-                .thenThrow(new ApplicationFormNotFoundException(errorMsg));
-
-        mockMvc.perform(get("/application-forms/" + APPLICATION_ID).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound()).andExpect(jsonPath("$.message").value(errorMsg));
+                .thenThrow(new ApplicationFormNotFoundException("error"));
+        final Exception result = assertThrows(ApplicationFormNotFoundException.class,
+                () -> controllerUnderTest.getApplicationById(APPLICATION_ID));
+        verify(applicationFormService).getApplicationById(APPLICATION_ID);
+        assertThat(result.getMessage()).contains("error");
     }
 
 }

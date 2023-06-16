@@ -1,4 +1,4 @@
-package gov.cabinetoffice.api.prototype.dtos.application;
+package gov.cabinetoffice.api.prototype.models.application;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import gov.cabinetoffice.api.prototype.exceptions.ApplicationFormNotFoundException;
@@ -16,12 +16,12 @@ import java.util.Objects;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
-public class ApplicationDefinitionDTO {
+public class ApplicationDefinition {
 
-    private List<ApplicationFormSectionDTO> sections;
+    private List<ApplicationFormSection> sections;
 
-    public ApplicationFormSectionDTO getSectionById(String sectionId) {
-        List<ApplicationFormSectionDTO> applicationFormSectionDTOList = this.sections.stream()
+    public ApplicationFormSection getSectionById(String sectionId) {
+        final List<ApplicationFormSection> applicationFormSectionDTOList = this.sections.stream()
                 .filter(section -> Objects.equals(section.getSectionId(), sectionId)).toList();
 
         if (applicationFormSectionDTOList.size() > 1) {

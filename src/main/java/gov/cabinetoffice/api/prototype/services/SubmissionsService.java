@@ -20,12 +20,12 @@ public class SubmissionsService {
     private final SubmissionMapper submissionMapper;
 
     public SubmissionsDTO getSubmissionByApplicationId(Integer applicationId) {
-        List<Submission> submissions = submissionRepository.findByApplicationGrantApplicationId(applicationId);
+        final List<Submission> submissions = submissionRepository.findByApplicationGrantApplicationId(applicationId);
         if (submissions.isEmpty()) {
             throw new SubmissionNotFoundException("No submissions found with application id " + applicationId);
         }
         else {
-            List<SubmissionDTO> submissionDTOList = submissions.stream()
+            final List<SubmissionDTO> submissionDTOList = submissions.stream()
                     .map(submissionMapper::submissionToSubmissionDto).toList();
             return SubmissionsDTO.builder().submissions(submissionDTOList).build();
         }
