@@ -1,24 +1,21 @@
 package gov.cabinetoffice.api.prototype.dtos.submission;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import gov.cabinetoffice.api.prototype.entities.Submission;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SubmissionQuestionDTO {
+public class SubmissionsDTO {
 
-    private String questionId;
-
-    private String questionTitle;
-
-    @Builder.Default
-    private Object questionResponse = ""; // TODO do we want this to be null or an empty
-                                          // string
+    private List<SubmissionDTO> submissions;
 
 }

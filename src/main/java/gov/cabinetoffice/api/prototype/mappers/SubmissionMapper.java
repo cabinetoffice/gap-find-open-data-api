@@ -5,20 +5,17 @@ import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionDTO;
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionQuestionDTO;
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionSectionDTO;
 import gov.cabinetoffice.api.prototype.entities.Submission;
-import gov.cabinetoffice.api.prototype.enums.ResponseTypeEnum;
 import gov.cabinetoffice.api.prototype.models.submission.SubmissionQuestion;
 import gov.cabinetoffice.api.prototype.models.submission.SubmissionSection;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails;
 
-import javax.print.attribute.DateTimeSyntax;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Integer.*;
+import static java.util.stream.Collectors.*;
 
 @Mapper(componentModel = "spring")
 public interface SubmissionMapper {
@@ -45,21 +42,16 @@ public interface SubmissionMapper {
 
     default List<SubmissionSectionDTO> submissionSectionListToSubmissionSectionDtoList(
             List<SubmissionSection> submissionSections) {
-        List<SubmissionSectionDTO> submissionSectionDTOs = new ArrayList<>();
-        for (SubmissionSection section : submissionSections) {
-            submissionSectionDTOs.add(submissionSectionToSubmissionSectionDto(section));
-        }
+        List<SubmissionSectionDTO> submissionSectionDTOs = submissionSections.stream()
+                .map(this::submissionSectionToSubmissionSectionDto).collect(toList());
         return submissionSectionDTOs;
     }
 
     @Named("mapQuestions")
     default List<SubmissionQuestionDTO> submissionQuestionListToSubmissionQuestionDtoList(
             List<SubmissionQuestion> submissionQuestions) {
-        List<SubmissionQuestionDTO> submissionQuestionDTOList = new ArrayList<>();
-        for (SubmissionQuestion submissionQuestion : submissionQuestions) {
-
-            submissionQuestionDTOList.add(submissionQuestionToSubmissionQuestionDto(submissionQuestion));
-        }
+        List<SubmissionQuestionDTO> submissionQuestionDTOList = submissionQuestions.stream()
+                .map(this::submissionQuestionToSubmissionQuestionDto).collect(toList());
         return submissionQuestionDTOList;
     }
 
@@ -73,6 +65,15 @@ public interface SubmissionMapper {
         if (response == null && multiResponse == null)
             return submissionQuestionDTO;
 
+        questionResponse = getQuestionResponseByResponseType(submissionQuestion, response, multiResponse);
+
+        submissionQuestionDTO.setQuestionResponse(questionResponse);
+        return submissionQuestionDTO;
+    }
+
+    private Object getQuestionResponseByResponseType(SubmissionQuestion submissionQuestion, String response,
+            String[] multiResponse) {
+        Object questionResponse;
         switch (submissionQuestion.getResponseType()) {
             case YesNo, Dropdown, ShortAnswer, LongAnswer, Numeric:
                 questionResponse = response;
@@ -87,11 +88,10 @@ public interface SubmissionMapper {
                 questionResponse = buildDate(multiResponse);
                 break;
             default:
-                throw new IllegalStateException("Unexpected value: " + submissionQuestion.getResponseType());
+                questionResponse = ""; // TODO do we want this to be null or an empty
+                                       // string
         }
-
-        submissionQuestionDTO.setQuestionResponse(questionResponse);
-        return submissionQuestionDTO;
+        return questionResponse;
     }
 
     private LocalDate buildDate(String[] multiResponse) {

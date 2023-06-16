@@ -76,7 +76,7 @@
           "hintText": "Funding organisation might use this to identify your organisation when you apply for a grant. It might also be used to check your organisation is legitimate.",
           "responseType": "ShortAnswer",
           "validation": { "mandatory": true },
-          "response": "Yes"
+          "response": "123456"
         },
         {
           "questionId": "APPLICANT_ORG_CHARITY_NUMBER",
