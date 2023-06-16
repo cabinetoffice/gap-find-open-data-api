@@ -1,5 +1,7 @@
-package gov.cabinetoffice.api.prototype.controllers;
+package gov.cabinetoffice.api.prototype.controllers.controllerAdvice;
 
+import gov.cabinetoffice.api.prototype.controllers.ApplicationFormController;
+import gov.cabinetoffice.api.prototype.controllers.SubmissionsController;
 import gov.cabinetoffice.api.prototype.dtos.GenericErrorDTO;
 import gov.cabinetoffice.api.prototype.exceptions.ApplicationFormNotFoundException;
 import gov.cabinetoffice.api.prototype.exceptions.SubmissionNotFoundException;
@@ -40,8 +42,11 @@ public class ControllerExceptionsHandler extends ResponseEntityExceptionHandler 
     @ApiResponses(value = { @ApiResponse(responseCode = "400", description = "Invalid parameter type passed",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = GenericErrorDTO.class))) })
-    public GenericErrorDTO handleMethodArgumentTypeMismatch() {
-        return new GenericErrorDTO("Incorrect parameter type passed");
+    public ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex,
+            WebRequest request) {
+        return handleExceptionInternal(ex, ErrorMessage.builder().message("Invalid parameter type passed").build(),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+
     }
 
 }

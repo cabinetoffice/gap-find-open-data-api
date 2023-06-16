@@ -1,6 +1,7 @@
 package gov.cabinetoffice.api.prototype.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gov.cabinetoffice.api.prototype.controllers.controllerAdvice.ControllerExceptionsHandler;
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionDTO;
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionsDTO;
 import gov.cabinetoffice.api.prototype.entities.ApplicationFormEntity;
@@ -39,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(SubmissionsController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ContextConfiguration(classes = { SubmissionsController.class, ControllerExceptionsHandler.class })
-class SubmissionsControllerTestInteg {
+class SubmissionsControllerIntegTest {
 
     private static final String BASE_PATH = "/submissions/";
 
@@ -103,7 +104,7 @@ class SubmissionsControllerTestInteg {
         String errorMessage = actions.andReturn().getResponse().getContentAsString();
         int errorCode = actions.andReturn().getResponse().getStatus();
         assertThat(errorCode).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(errorMessage).contains("Incorrect parameter type passed");
+        assertThat(errorMessage).contains("Invalid parameter type passed");
 
     }
 

@@ -14,8 +14,7 @@ import org.mapstruct.Named;
 import java.time.LocalDate;
 import java.util.List;
 
-import static java.lang.Integer.*;
-import static java.util.stream.Collectors.*;
+import static java.lang.Integer.parseInt;
 
 @Mapper(componentModel = "spring")
 public interface SubmissionMapper {
@@ -42,17 +41,13 @@ public interface SubmissionMapper {
 
     default List<SubmissionSectionDTO> submissionSectionListToSubmissionSectionDtoList(
             List<SubmissionSection> submissionSections) {
-        List<SubmissionSectionDTO> submissionSectionDTOs = submissionSections.stream()
-                .map(this::submissionSectionToSubmissionSectionDto).collect(toList());
-        return submissionSectionDTOs;
+        return submissionSections.stream().map(this::submissionSectionToSubmissionSectionDto).toList();
     }
 
     @Named("mapQuestions")
     default List<SubmissionQuestionDTO> submissionQuestionListToSubmissionQuestionDtoList(
             List<SubmissionQuestion> submissionQuestions) {
-        List<SubmissionQuestionDTO> submissionQuestionDTOList = submissionQuestions.stream()
-                .map(this::submissionQuestionToSubmissionQuestionDto).collect(toList());
-        return submissionQuestionDTOList;
+        return submissionQuestions.stream().map(this::submissionQuestionToSubmissionQuestionDto).toList();
     }
 
     default SubmissionQuestionDTO submissionQuestionToSubmissionQuestionDto(SubmissionQuestion submissionQuestion) {

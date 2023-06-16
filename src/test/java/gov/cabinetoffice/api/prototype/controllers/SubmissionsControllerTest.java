@@ -27,24 +27,20 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-import static java.lang.String.format;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class SubmissionsControllerTest {
+class SubmissionsControllerTest {
 
     private static final Integer APPLICATION_ID = 1;
 
@@ -184,15 +180,19 @@ public class SubmissionsControllerTest {
         ResponseEntity<SubmissionsDTO> response = controllerUnderTest.getSubmissionByApplicationId(APPLICATION_ID);
 
         verify(submissionService).getSubmissionByApplicationId(APPLICATION_ID);
-        assertThat(HttpStatus.OK).isEqualTo( response.getStatusCode());
+        assertThat(HttpStatus.OK).isEqualTo(response.getStatusCode());
         assertThat(response.getBody()).isEqualTo(submissionsDTO);
 
     }
 
     @Test
     void getSubmissionByApplicationId_returns404WhenNoSubmissionFound() {
-        when(submissionService.getSubmissionByApplicationId(APPLICATION_ID)).thenThrow(new SubmissionNotFoundException("error"));
-        Exception result = assertThrows(SubmissionNotFoundException.class, () -> controllerUnderTest.getSubmissionByApplicationId(APPLICATION_ID));
+        when(submissionService.getSubmissionByApplicationId(APPLICATION_ID))
+                .thenThrow(new SubmissionNotFoundException("error"));
+        Exception result = assertThrows(SubmissionNotFoundException.class,
+                () -> controllerUnderTest.getSubmissionByApplicationId(APPLICATION_ID));
         verify(submissionService).getSubmissionByApplicationId(APPLICATION_ID);
-        assertThat(result.getMessage()).contains("error");}
+        assertThat(result.getMessage()).contains("error");
+    }
+
 }

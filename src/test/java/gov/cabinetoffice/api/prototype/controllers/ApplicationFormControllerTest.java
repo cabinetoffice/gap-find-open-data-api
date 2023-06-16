@@ -1,6 +1,7 @@
 package gov.cabinetoffice.api.prototype.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gov.cabinetoffice.api.prototype.controllers.controllerAdvice.ControllerExceptionsHandler;
 import gov.cabinetoffice.api.prototype.entities.ApplicationFormEntity;
 import gov.cabinetoffice.api.prototype.exceptions.ApplicationFormNotFoundException;
 import gov.cabinetoffice.api.prototype.services.ApplicationFormService;
@@ -22,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ApplicationFormController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ContextConfiguration(classes = { ApplicationFormController.class, ControllerExceptionsHandler.class })
-public class ApplicationFormControllerTest {
+class ApplicationFormControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
