@@ -47,7 +47,8 @@ class SubmissionsServiceTest {
     void getSubmissionByApplicationId_found() {
         final ZonedDateTime zonedDateTime = ZonedDateTime.now();
 
-        ApplicationFormEntity applicationForm = ApplicationFormEntity.builder().grantApplicationId(APPLICATION_ID).build();
+        ApplicationFormEntity applicationForm = ApplicationFormEntity.builder().grantApplicationId(APPLICATION_ID)
+                .build();
         Submission submission = randomSubmission()
                 .definition(randomSubmissionDefinition(randomSubmissionDefinition().build()).build()).gapId("testGapID")
                 .applicant(GrantApplicant.builder()
@@ -55,8 +56,7 @@ class SubmissionsServiceTest {
                                 GrantApplicantOrganisationProfile.builder().legalName("testLegalName").build())
                         .build())
                 .scheme(SchemeEntity.builder().id(1).name("testSchemeName").build()).submittedDate(zonedDateTime)
-                .application(applicationForm)
-                .build();
+                .application(applicationForm).build();
 
         when(submissionRepository.findByApplicationGrantApplicationId(APPLICATION_ID)).thenReturn(List.of(submission));
         when(submissionMapper.submissionToSubmissionDto(submission)).thenCallRealMethod();
