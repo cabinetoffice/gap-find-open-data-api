@@ -20,8 +20,8 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static gov.cabinetoffice.api.prototype.testDataGenerator.RandomSubmissionGenerator.randomSubmission;
-import static gov.cabinetoffice.api.prototype.testDataGenerator.RandomSubmissionGenerator.randomSubmissionDefinition;
+import static gov.cabinetoffice.api.prototype.test_data_generator.RandomSubmissionGenerator.randomSubmission;
+import static gov.cabinetoffice.api.prototype.test_data_generator.RandomSubmissionGenerator.randomSubmissionDefinition;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -31,55 +31,58 @@ import static org.mockito.Mockito.when;
 @SpringJUnitConfig
 class SubmissionsServiceTest {
 
-    @Mock
-    private SubmissionRepository submissionRepository;
+	@Mock
+	private SubmissionRepository submissionRepository;
 
-    @InjectMocks
-    private SubmissionsService submissionsService;
+	@InjectMocks
+	private SubmissionsService submissionsService;
 
-    @Spy
-    private SubmissionMapper submissionMapper = new SubmissionMapperImpl();
+	@Spy
+	private SubmissionMapper submissionMapper = new SubmissionMapperImpl();
 
-    private final int APPLICATION_ID = 1;
+	private final int APPLICATION_ID = 1;
 
-    @Test
-    void getSubmissionByApplicationId_found() {
-        final ZonedDateTime zonedDateTime = ZonedDateTime.now();
+	@Test
+	void getSubmissionByApplicationId_found() {
+		final ZonedDateTime zonedDateTime = ZonedDateTime.now();
 
-        final ApplicationFormEntity applicationForm = ApplicationFormEntity.builder().grantApplicationId(APPLICATION_ID)
-                .build();
-        final Submission submission = randomSubmission()
-                .definition(randomSubmissionDefinition(randomSubmissionDefinition().build()).build()).gapId("testGapID")
-                .applicant(GrantApplicant.builder()
-                        .organisationProfile(
-                                GrantApplicantOrganisationProfile.builder().legalName("testLegalName").build())
-                        .build())
-                .scheme(SchemeEntity.builder().id(1).name("testSchemeName").build()).submittedDate(zonedDateTime)
-                .application(applicationForm).build();
+		final ApplicationFormEntity applicationForm = ApplicationFormEntity.builder()
+			.grantApplicationId(APPLICATION_ID)
+			.build();
+		final Submission submission = randomSubmission()
+			.definition(randomSubmissionDefinition(randomSubmissionDefinition().build()).build())
+			.gapId("testGapID")
+			.applicant(GrantApplicant.builder()
+				.organisationProfile(GrantApplicantOrganisationProfile.builder().legalName("testLegalName").build())
+				.build())
+			.scheme(SchemeEntity.builder().id(1).name("testSchemeName").build())
+			.submittedDate(zonedDateTime)
+			.application(applicationForm)
+			.build();
 
-        when(submissionRepository.findByApplicationGrantApplicationId(APPLICATION_ID)).thenReturn(List.of(submission));
-        when(submissionMapper.submissionToSubmissionDto(submission)).thenCallRealMethod();
+		when(submissionRepository.findByApplicationGrantApplicationId(APPLICATION_ID)).thenReturn(List.of(submission));
+		when(submissionMapper.submissionToSubmissionDto(submission)).thenCallRealMethod();
 
-        final SubmissionsDTO response = submissionsService.getSubmissionByApplicationId(APPLICATION_ID);
+		final SubmissionsDTO response = submissionsService.getSubmissionByApplicationId(APPLICATION_ID);
 
-        final SubmissionDTO submissionDTO = response.getSubmissions().get(0);
-        final SubmissionsDTO expectedResult = SubmissionsDTO.builder().submissions(List.of(submissionDTO)).build();
+		final SubmissionDTO submissionDTO = response.getSubmissions().get(0);
+		final SubmissionsDTO expectedResult = SubmissionsDTO.builder().submissions(List.of(submissionDTO)).build();
 
-        assertEquals(submissionMapper.submissionToSubmissionDto(submission), submissionDTO);
+		assertEquals(submissionMapper.submissionToSubmissionDto(submission), submissionDTO);
 
-        verify(submissionRepository).findByApplicationGrantApplicationId(APPLICATION_ID);
+		verify(submissionRepository).findByApplicationGrantApplicationId(APPLICATION_ID);
 
-        assertThat(response).isEqualTo(expectedResult);
-    }
+		assertThat(response).isEqualTo(expectedResult);
+	}
 
-    @Test
-    void getSubmissionByApplicationId_notFound() {
-        when(submissionRepository.findByApplicationGrantApplicationId(APPLICATION_ID)).thenReturn(List.of());
-        final Throwable exception = assertThrows(SubmissionNotFoundException.class,
-                () -> submissionsService.getSubmissionByApplicationId(APPLICATION_ID));
+	@Test
+	void getSubmissionByApplicationId_notFound() {
+		when(submissionRepository.findByApplicationGrantApplicationId(APPLICATION_ID)).thenReturn(List.of());
+		final Throwable exception = assertThrows(SubmissionNotFoundException.class,
+				() -> submissionsService.getSubmissionByApplicationId(APPLICATION_ID));
 
-        verify(submissionRepository).findByApplicationGrantApplicationId(APPLICATION_ID);
-        assertThat(exception.getMessage()).isEqualTo("No submissions found with application id " + APPLICATION_ID);
-    }
+		verify(submissionRepository).findByApplicationGrantApplicationId(APPLICATION_ID);
+		assertThat(exception.getMessage()).isEqualTo("No submissions found with application id " + APPLICATION_ID);
+	}
 
 }

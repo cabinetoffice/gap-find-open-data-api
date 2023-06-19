@@ -11,22 +11,22 @@ import lombok.NoArgsConstructor;
 @Builder
 public class SubmissionQuestionValidation {
 
-    private boolean mandatory;
+	private boolean mandatory;
 
-    private Integer minLength;
+	private Integer minLength;
 
-    private Integer maxLength;
+	private Integer maxLength;
 
-    private Integer minWords;
+	private Integer minWords;
 
-    private Integer maxWords;
+	private Integer maxWords;
 
-    private boolean greaterThanZero;
+	private boolean greaterThanZero;
 
-    private String validInput;
+	private String validInput;
 
-    private int maxFileSizeMB;
+	private int maxFileSizeMB;
 
-    private String[] allowedTypes;
+	private String[] allowedTypes;
 
 }

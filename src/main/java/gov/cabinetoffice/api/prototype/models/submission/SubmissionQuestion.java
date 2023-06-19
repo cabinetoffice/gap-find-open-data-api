@@ -14,36 +14,30 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SubmissionQuestion {
 
-    private String questionId;
+	private String questionId;
 
-    private String profileField;
+	private String profileField;
 
-    private String fieldTitle;
+	private String fieldTitle;
 
-    private String displayText;
+	private String displayText;
 
-    private String hintText;
+	private String hintText;
 
-    private String questionSuffix;
+	private String questionSuffix;
 
-    private String fieldPrefix;
+	private String fieldPrefix;
 
-    private String adminSummary;
+	private String adminSummary;
 
-    private ResponseTypeEnum responseType;
+	private ResponseTypeEnum responseType;
 
-    private SubmissionQuestionValidation validation;
+	private SubmissionQuestionValidation validation;
 
-    private String[] options;
+	private String[] options;
 
-    private String response;
+	private String response;
 
-    private String[] multiResponse;
-
-    public SubmissionQuestion(SubmissionQuestion other) {
-        this(other.questionId, other.profileField, other.fieldTitle, other.displayText, other.hintText,
-                other.questionSuffix, other.fieldPrefix, other.adminSummary, other.responseType, other.validation,
-                other.options, other.response, other.multiResponse);
-    }
+	private String[] multiResponse;
 
 }

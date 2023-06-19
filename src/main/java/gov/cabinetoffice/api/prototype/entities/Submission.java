@@ -42,81 +42,81 @@ import java.util.UUID;
 @Table(name = "grant_submission")
 public class Submission {
 
-    @Id
-    @GeneratedValue
-    private UUID id;
+	@Id
+	@GeneratedValue
+	private UUID id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "applicant_id", referencedColumnName = "id")
-    @JsonIgnoreProperties("submissions")
-    @ToString.Exclude
-    private GrantApplicant applicant;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "applicant_id", referencedColumnName = "id")
+	@JsonIgnoreProperties("submissions")
+	@ToString.Exclude
+	private GrantApplicant applicant;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "scheme_id")
-    @ToString.Exclude
-    private SchemeEntity scheme;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "scheme_id")
+	@ToString.Exclude
+	private SchemeEntity scheme;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "application_id")
-    @JsonIgnoreProperties("schemes")
-    @ToString.Exclude
-    private ApplicationFormEntity application;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "application_id")
+	@JsonIgnoreProperties("schemes")
+	@ToString.Exclude
+	private ApplicationFormEntity application;
 
-    @Column
-    private int version;
+	@Column
+	private int version;
 
-    @CreatedDate
-    private LocalDateTime created;
+	@CreatedDate
+	private LocalDateTime created;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "created_by", referencedColumnName = "id")
-    @JsonIgnoreProperties("submissions")
-    @ToString.Exclude
-    private GrantApplicant createdBy;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "created_by", referencedColumnName = "id")
+	@JsonIgnoreProperties("submissions")
+	@ToString.Exclude
+	private GrantApplicant createdBy;
 
-    @LastModifiedDate
-    private LocalDateTime lastUpdated;
+	@LastModifiedDate
+	private LocalDateTime lastUpdated;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "last_updated_by", referencedColumnName = "id")
-    @JsonIgnoreProperties("submissions")
-    @ToString.Exclude
-    private GrantApplicant lastUpdatedBy;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "last_updated_by", referencedColumnName = "id")
+	@JsonIgnoreProperties("submissions")
+	@ToString.Exclude
+	private GrantApplicant lastUpdatedBy;
 
-    @Column
-    private ZonedDateTime submittedDate;
+	@Column
+	private ZonedDateTime submittedDate;
 
-    @Column
-    private String applicationName;
+	@Column
+	private String applicationName;
 
-    @Column
-    @Enumerated(EnumType.STRING)
-    private SubmissionStatus status;
+	@Column
+	@Enumerated(EnumType.STRING)
+	private SubmissionStatus status;
 
-    @Type(JsonType.class)
-    @Column(columnDefinition = "json")
-    private SubmissionDefinition definition;
+	@Type(JsonType.class)
+	@Column(columnDefinition = "json")
+	private SubmissionDefinition definition;
 
-    @Column(name = "gap_id")
-    private String gapId;
+	@Column(name = "gap_id")
+	private String gapId;
 
-    @Column(name = "last_required_checks_export")
-    private Instant lastRequiredChecksExport;
+	@Column(name = "last_required_checks_export")
+	private Instant lastRequiredChecksExport;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
-            return false;
-        Submission that = (Submission) o;
-        return id != null && Objects.equals(id, that.id);
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
+			return false;
+		Submission that = (Submission) o;
+		return id != null && Objects.equals(id, that.id);
+	}
 
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
+	@Override
+	public int hashCode() {
+		return getClass().hashCode();
+	}
 
 }

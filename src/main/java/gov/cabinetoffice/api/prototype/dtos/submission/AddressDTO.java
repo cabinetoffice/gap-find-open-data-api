@@ -13,14 +13,14 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AddressDTO {
 
-    private String addressLine1;
+	private String addressLine1;
 
-    private String addressLine2;
+	private String addressLine2;
 
-    private String town;
+	private String town;
 
-    private String county;
+	private String county;
 
-    private String postcode;
+	private String postcode;
 
 }

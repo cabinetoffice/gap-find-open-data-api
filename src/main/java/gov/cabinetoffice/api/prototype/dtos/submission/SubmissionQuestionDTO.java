@@ -13,12 +13,12 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SubmissionQuestionDTO {
 
-    private String questionId;
+	private String questionId;
 
-    private String questionTitle;
+	private String questionTitle;
 
-    @Builder.Default
-    private Object questionResponse = ""; // TODO do we want this to be null or an empty
-                                          // string
+	@Builder.Default
+	private Object questionResponse = ""; // TODO do we want this to be null or an empty
+											// string
 
 }

@@ -19,34 +19,12 @@ import java.util.UUID;
 @Builder
 public class ApplicationFormSection {
 
-    private String sectionId;
+	private String sectionId;
 
-    private String sectionTitle;
+	private String sectionTitle;
 
-    private SectionStatusEnum sectionStatus;
+	private SectionStatusEnum sectionStatus;
 
-    private List<ApplicationFormQuestion> questions;
-
-    public ApplicationFormSection(String sectionTitle) {
-        this.sectionTitle = sectionTitle;
-        this.sectionId = UUID.randomUUID().toString();
-        this.questions = Collections.emptyList();
-    }
-
-    public ApplicationFormQuestion getQuestionById(String questionId) {
-        final List<ApplicationFormQuestion> applicationFormQuestionDTOList = this.questions.stream()
-                .filter(question -> Objects.equals(question.getQuestionId(), questionId)).toList();
-
-        if (applicationFormQuestionDTOList.size() > 1) {
-            throw new ApplicationFormNotFoundException(
-                    "Ambiguous reference - more than one question with id " + questionId);
-        }
-        else if (applicationFormQuestionDTOList.isEmpty()) {
-            throw new NotFoundException("Question with id " + questionId + " does not exist");
-        }
-        else {
-            return applicationFormQuestionDTOList.get(0);
-        }
-    }
+	private List<ApplicationFormQuestion> questions;
 
 }

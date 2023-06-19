@@ -17,18 +17,18 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SubmissionDTO {
 
-    private UUID submissionId;
+	private UUID submissionId;
 
-    private String applicationFormName;
+	private String applicationFormName;
 
-    private String grantAdminEmailAddress;
+	private String grantAdminEmailAddress;
 
-    private String grantApplicantEmailAddress;
+	private String grantApplicantEmailAddress;
 
-    private String ggisReferenceNumber;
+	private String ggisReferenceNumber;
 
-    private ZonedDateTime submittedTimeStamp;
+	private ZonedDateTime submittedTimeStamp;
 
-    private List<SubmissionSectionDTO> sections;
+	private List<SubmissionSectionDTO> sections;
 
 }

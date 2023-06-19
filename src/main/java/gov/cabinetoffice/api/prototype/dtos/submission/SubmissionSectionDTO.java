@@ -13,10 +13,10 @@ import java.util.List;
 @Builder
 public class SubmissionSectionDTO {
 
-    private String sectionId;
+	private String sectionId;
 
-    private String sectionTitle;
+	private String sectionTitle;
 
-    private List<SubmissionQuestionDTO> questions;
+	private List<SubmissionQuestionDTO> questions;
 
 }

@@ -23,19 +23,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class SubmissionsController {
 
-    private final SubmissionsService submissionsService;
+	private final SubmissionsService submissionsService;
 
-    @GetMapping("/{applicationId}")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Submissions retrieved successfully.",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Submission.class))),
-            @ApiResponse(responseCode = "404", description = "No submissions found with given application id",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = GenericErrorDTO.class))) })
-    public ResponseEntity<SubmissionsDTO> getSubmissionByApplicationId(@PathVariable @NotNull int applicationId) {
-        final SubmissionsDTO response = this.submissionsService.getSubmissionByApplicationId(applicationId);
-        return ResponseEntity.ok().body(response);
-    }
+	@GetMapping("/{applicationId}")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Submissions retrieved successfully.",
+					content = @Content(mediaType = "application/json",
+							schema = @Schema(implementation = Submission.class))),
+			@ApiResponse(responseCode = "404", description = "No submissions found with given application id",
+					content = @Content(mediaType = "application/json",
+							schema = @Schema(implementation = GenericErrorDTO.class))) })
+	public ResponseEntity<SubmissionsDTO> getSubmissionByApplicationId(@PathVariable @NotNull int applicationId) {
+		final SubmissionsDTO response = this.submissionsService.getSubmissionByApplicationId(applicationId);
+		return ResponseEntity.ok().body(response);
+	}
 
 }

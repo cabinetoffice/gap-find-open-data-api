@@ -15,21 +15,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SubmissionsService {
 
-    private final SubmissionRepository submissionRepository;
+	private final SubmissionRepository submissionRepository;
 
-    private final SubmissionMapper submissionMapper;
+	private final SubmissionMapper submissionMapper;
 
-    public SubmissionsDTO getSubmissionByApplicationId(int applicationId) {
-        final List<Submission> submissions = submissionRepository.findByApplicationGrantApplicationId(applicationId);
+	public SubmissionsDTO getSubmissionByApplicationId(int applicationId) {
+		final List<Submission> submissions = submissionRepository.findByApplicationGrantApplicationId(applicationId);
 
-        if (submissions.isEmpty()) {
-            throw new SubmissionNotFoundException("No submissions found with application id " + applicationId);
-        }
-        else {
-            final List<SubmissionDTO> submissionDTOList = submissions.stream()
-                    .map(submissionMapper::submissionToSubmissionDto).toList();
-            return SubmissionsDTO.builder().submissions(submissionDTOList).build();
-        }
-    }
+		if (submissions.isEmpty()) {
+			throw new SubmissionNotFoundException("No submissions found with application id " + applicationId);
+		}
+		else {
+			final List<SubmissionDTO> submissionDTOList = submissions.stream()
+				.map(submissionMapper::submissionToSubmissionDto)
+				.toList();
+			return SubmissionsDTO.builder().submissions(submissionDTOList).build();
+		}
+	}
 
 }

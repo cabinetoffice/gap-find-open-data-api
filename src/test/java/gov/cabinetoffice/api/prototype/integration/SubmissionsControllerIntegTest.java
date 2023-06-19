@@ -2,7 +2,7 @@ package gov.cabinetoffice.api.prototype.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.cabinetoffice.api.prototype.controllers.SubmissionsController;
-import gov.cabinetoffice.api.prototype.controllers.controllerAdvice.ControllerExceptionsHandler;
+import gov.cabinetoffice.api.prototype.controllers.controller_advice.ControllerExceptionsHandler;
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionDTO;
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionsDTO;
 import gov.cabinetoffice.api.prototype.entities.ApplicationFormEntity;
@@ -29,8 +29,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static gov.cabinetoffice.api.prototype.testDataGenerator.RandomSubmissionGenerator.randomSubmission;
-import static gov.cabinetoffice.api.prototype.testDataGenerator.RandomSubmissionGenerator.randomSubmissionDefinition;
+import static gov.cabinetoffice.api.prototype.test_data_generator.RandomSubmissionGenerator.randomSubmission;
+import static gov.cabinetoffice.api.prototype.test_data_generator.RandomSubmissionGenerator.randomSubmissionDefinition;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -43,70 +43,77 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = { SubmissionsController.class, ControllerExceptionsHandler.class })
 class SubmissionsControllerIntegTest {
 
-    private static final String BASE_PATH = "/submissions/";
+	private static final String BASE_PATH = "/submissions/";
 
-    private final Integer APPLICATION_ID = 1;
+	private final Integer APPLICATION_ID = 1;
 
-    @Autowired
-    private MockMvc mockMvc;
+	@Autowired
+	private MockMvc mockMvc;
 
-    @MockBean
-    private SubmissionsService submissionsService;
+	@MockBean
+	private SubmissionsService submissionsService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+	@Autowired
+	private ObjectMapper objectMapper;
 
-    @Spy
-    private SubmissionMapper submissionMapper = new SubmissionMapperImpl();
+	@Spy
+	private SubmissionMapper submissionMapper = new SubmissionMapperImpl();
 
-    @Test
-    void getSubmissionByApplicationId_found() throws Exception {
-        final ZonedDateTime zonedDateTime = ZonedDateTime.now();
-        final ApplicationFormEntity applicationForm = ApplicationFormEntity.builder().grantApplicationId(APPLICATION_ID)
-                .applicationName("test").grantApplicationId(APPLICATION_ID).build();
+	@Test
+	void getSubmissionByApplicationId_found() throws Exception {
+		final ZonedDateTime zonedDateTime = ZonedDateTime.now();
+		final ApplicationFormEntity applicationForm = ApplicationFormEntity.builder()
+			.grantApplicationId(APPLICATION_ID)
+			.applicationName("test")
+			.grantApplicationId(APPLICATION_ID)
+			.build();
 
-        final Submission submission = randomSubmission()
-                .definition(randomSubmissionDefinition(randomSubmissionDefinition().build()).build()).gapId("testGapID")
-                .applicant(GrantApplicant.builder()
-                        .organisationProfile(
-                                GrantApplicantOrganisationProfile.builder().legalName("testLegalName").build())
-                        .build())
-                .scheme(SchemeEntity.builder().id(1).name("testSchemeName").build()).submittedDate(zonedDateTime)
-                .application(applicationForm).build();
+		final Submission submission = randomSubmission()
+			.definition(randomSubmissionDefinition(randomSubmissionDefinition().build()).build())
+			.gapId("testGapID")
+			.applicant(GrantApplicant.builder()
+				.organisationProfile(GrantApplicantOrganisationProfile.builder().legalName("testLegalName").build())
+				.build())
+			.scheme(SchemeEntity.builder().id(1).name("testSchemeName").build())
+			.submittedDate(zonedDateTime)
+			.application(applicationForm)
+			.build();
 
-        when(submissionMapper.submissionToSubmissionDto(submission)).thenCallRealMethod();
+		when(submissionMapper.submissionToSubmissionDto(submission)).thenCallRealMethod();
 
-        final SubmissionDTO submissionDTO = submissionMapper.submissionToSubmissionDto(submission);
-        final SubmissionsDTO response = SubmissionsDTO.builder().submissions(List.of(submissionDTO)).build();
+		final SubmissionDTO submissionDTO = submissionMapper.submissionToSubmissionDto(submission);
+		final SubmissionsDTO response = SubmissionsDTO.builder().submissions(List.of(submissionDTO)).build();
 
-        when(submissionsService.getSubmissionByApplicationId(APPLICATION_ID)).thenReturn(response);
+		when(submissionsService.getSubmissionByApplicationId(APPLICATION_ID)).thenReturn(response);
 
-        final String expectedJson = objectMapper.writeValueAsString(response);
+		final String expectedJson = objectMapper.writeValueAsString(response);
 
-        mockMvc.perform(get(BASE_PATH + APPLICATION_ID).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()).andExpect(content().json(expectedJson));
-    }
+		mockMvc.perform(get(BASE_PATH + APPLICATION_ID).contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(content().json(expectedJson));
+	}
 
-    @Test
-    void getSubmissionByApplicationId_notFound() throws Exception {
-        final String errorMsg = "No submissions found with application id " + APPLICATION_ID;
+	@Test
+	void getSubmissionByApplicationId_notFound() throws Exception {
+		final String errorMsg = "No submissions found with application id " + APPLICATION_ID;
 
-        when(submissionsService.getSubmissionByApplicationId(APPLICATION_ID))
-                .thenThrow(new SubmissionNotFoundException(errorMsg));
+		when(submissionsService.getSubmissionByApplicationId(APPLICATION_ID))
+			.thenThrow(new SubmissionNotFoundException(errorMsg));
 
-        mockMvc.perform(get(BASE_PATH + APPLICATION_ID).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound()).andExpect(jsonPath("$.message").value(errorMsg));
-    }
+		mockMvc.perform(get(BASE_PATH + APPLICATION_ID).contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.message").value(errorMsg));
+	}
 
-    @Test
-    void getSubmissionByApplicationId_invalidArgument() throws Exception {
-        final ResultActions actions = mockMvc.perform(get(BASE_PATH + "invalidParameterType"));
+	@Test
+	void getSubmissionByApplicationId_invalidArgument() throws Exception {
+		final ResultActions actions = mockMvc.perform(get(BASE_PATH + "invalidParameterType"));
 
-        final String errorMessage = actions.andReturn().getResponse().getContentAsString();
-        final int errorCode = actions.andReturn().getResponse().getStatus();
-        assertThat(errorCode).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(errorMessage).contains("Invalid parameter type passed");
+		final String errorMessage = actions.andReturn().getResponse().getContentAsString();
+		final int errorCode = actions.andReturn().getResponse().getStatus();
+		assertThat(errorCode).isEqualTo(HttpStatus.BAD_REQUEST.value());
+		assertThat(errorMessage).contains("Invalid parameter type passed");
 
-    }
+	}
 
 }

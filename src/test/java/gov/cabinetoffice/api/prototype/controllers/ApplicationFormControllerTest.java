@@ -1,9 +1,9 @@
 package gov.cabinetoffice.api.prototype.controllers;
 
-import gov.cabinetoffice.api.prototype.models.application.ApplicationDefinition;
 import gov.cabinetoffice.api.prototype.entities.ApplicationFormEntity;
 import gov.cabinetoffice.api.prototype.entities.SchemeEntity;
 import gov.cabinetoffice.api.prototype.exceptions.ApplicationFormNotFoundException;
+import gov.cabinetoffice.api.prototype.models.application.ApplicationDefinition;
 import gov.cabinetoffice.api.prototype.services.ApplicationFormService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -23,49 +21,63 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ApplicationFormControllerTest {
+class ApplicationFormControllerTest {
 
-    private static final int APPLICATION_ID = 1;
+	private static final int APPLICATION_ID = 1;
 
-    final Instant instant = Instant.now();
+	final Instant instant = Instant.now();
 
-    final SchemeEntity scheme = SchemeEntity.builder().id(1).version(1).funderId(1).lastUpdated(instant)
-            .email("test@and.digital").name("Test Scheme").ggisIdentifier("Test GGIS Identifier").build();
+	final SchemeEntity scheme = SchemeEntity.builder()
+		.id(1)
+		.version(1)
+		.funderId(1)
+		.lastUpdated(instant)
+		.email("test@and.digital")
+		.name("Test Scheme")
+		.ggisIdentifier("Test GGIS Identifier")
+		.build();
 
-    final ApplicationFormEntity application = ApplicationFormEntity.builder().grantApplicationId(APPLICATION_ID)
-            .applicationName("Test Application").created(instant).lastUpdated(instant)
-            .definition(new ApplicationDefinition()).grantSchemeId(scheme.getId()).version(1).lastUpdateBy(1).build();
+	final ApplicationFormEntity application = ApplicationFormEntity.builder()
+		.grantApplicationId(APPLICATION_ID)
+		.applicationName("Test Application")
+		.created(instant)
+		.lastUpdated(instant)
+		.definition(new ApplicationDefinition())
+		.grantSchemeId(scheme.getId())
+		.version(1)
+		.lastUpdateBy(1)
+		.build();
 
-    @Mock
-    private ApplicationFormService applicationFormService;
+	@Mock
+	private ApplicationFormService applicationFormService;
 
-    private ApplicationFormController controllerUnderTest;
+	private ApplicationFormController controllerUnderTest;
 
-    @BeforeEach
-    void setup() {
-        controllerUnderTest = new ApplicationFormController(applicationFormService);
-    }
+	@BeforeEach
+	void setup() {
+		controllerUnderTest = new ApplicationFormController(applicationFormService);
+	}
 
-    @Test
-    void getApplicationById_returnsExpectedResponse() {
-        when(applicationFormService.getApplicationById(APPLICATION_ID)).thenReturn(application);
+	@Test
+	void getApplicationById_returnsExpectedResponse() {
+		when(applicationFormService.getApplicationById(APPLICATION_ID)).thenReturn(application);
 
-        final ResponseEntity<ApplicationFormEntity> response = controllerUnderTest.getApplicationById(APPLICATION_ID);
+		final ResponseEntity<ApplicationFormEntity> response = controllerUnderTest.getApplicationById(APPLICATION_ID);
 
-        verify(applicationFormService).getApplicationById(APPLICATION_ID);
-        assertThat(HttpStatus.OK).isEqualTo(response.getStatusCode());
-        assertThat(response.getBody()).isEqualTo(application);
+		verify(applicationFormService).getApplicationById(APPLICATION_ID);
+		assertThat(HttpStatus.OK).isEqualTo(response.getStatusCode());
+		assertThat(response.getBody()).isEqualTo(application);
 
-    }
+	}
 
-    @Test
-    void getApplicationById_returns404WhenNoApplicationFound() {
-        when(applicationFormService.getApplicationById(APPLICATION_ID))
-                .thenThrow(new ApplicationFormNotFoundException("error"));
-        final Exception result = assertThrows(ApplicationFormNotFoundException.class,
-                () -> controllerUnderTest.getApplicationById(APPLICATION_ID));
-        verify(applicationFormService).getApplicationById(APPLICATION_ID);
-        assertThat(result.getMessage()).contains("error");
-    }
+	@Test
+	void getApplicationById_returns404WhenNoApplicationFound() {
+		when(applicationFormService.getApplicationById(APPLICATION_ID))
+				.thenThrow(new ApplicationFormNotFoundException("error"));
+		final Exception result = assertThrows(ApplicationFormNotFoundException.class,
+				() -> controllerUnderTest.getApplicationById(APPLICATION_ID));
+		verify(applicationFormService).getApplicationById(APPLICATION_ID);
+		assertThat(result.getMessage()).contains("error");
+	}
 
 }

@@ -15,6 +15,6 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SubmissionsDTO {
 
-    private List<SubmissionDTO> submissions;
+	private List<SubmissionDTO> submissions;
 
 }

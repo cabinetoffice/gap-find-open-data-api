@@ -29,19 +29,19 @@ import java.util.UUID;
 @Getter
 public class GrantApplicant {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
 
-    @Column
-    private UUID userId;
+	@Column
+	private UUID userId;
 
-    @OneToOne(mappedBy = "applicant")
-    @JsonIgnoreProperties("applicant")
-    private GrantApplicantOrganisationProfile organisationProfile;
+	@OneToOne(mappedBy = "applicant")
+	@JsonIgnoreProperties("applicant")
+	private GrantApplicantOrganisationProfile organisationProfile;
 
-    @OneToMany(mappedBy = "applicant")
-    @Builder.Default
-    private List<Submission> submissions = new ArrayList<>();
+	@OneToMany(mappedBy = "applicant")
+	@Builder.Default
+	private List<Submission> submissions = new ArrayList<>();
 
 }

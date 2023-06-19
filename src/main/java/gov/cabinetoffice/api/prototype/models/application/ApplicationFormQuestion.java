@@ -17,26 +17,26 @@ import java.util.Map;
 @Builder
 public class ApplicationFormQuestion {
 
-    private String questionId;
+	private String questionId;
 
-    private String profileField;
+	private String profileField;
 
-    private String fieldPrefix;
+	private String fieldPrefix;
 
-    private String fieldTitle;
+	private String fieldTitle;
 
-    private String hintText;
+	private String hintText;
 
-    private String adminSummary;
+	private String adminSummary;
 
-    private String displayText;
+	private String displayText;
 
-    private String questionSuffix;
+	private String questionSuffix;
 
-    private ResponseTypeEnum responseType;
+	private ResponseTypeEnum responseType;
 
-    private Map<String, Object> validation;
+	private Map<String, Object> validation;
 
-    private List<String> options;
+	private List<String> options;
 
 }

@@ -2,7 +2,7 @@ package gov.cabinetoffice.api.prototype.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.cabinetoffice.api.prototype.controllers.ApplicationFormController;
-import gov.cabinetoffice.api.prototype.controllers.controllerAdvice.ControllerExceptionsHandler;
+import gov.cabinetoffice.api.prototype.controllers.controller_advice.ControllerExceptionsHandler;
 import gov.cabinetoffice.api.prototype.entities.ApplicationFormEntity;
 import gov.cabinetoffice.api.prototype.exceptions.ApplicationFormNotFoundException;
 import gov.cabinetoffice.api.prototype.services.ApplicationFormService;
@@ -26,40 +26,45 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = { ApplicationFormController.class, ControllerExceptionsHandler.class })
 class ApplicationFormControllerIntegTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+	@Autowired
+	private MockMvc mockMvc;
 
-    @MockBean
-    private ApplicationFormService applicationFormService;
+	@MockBean
+	private ApplicationFormService applicationFormService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+	@Autowired
+	private ObjectMapper objectMapper;
 
-    private final Integer APPLICATION_ID = 1;
+	private final Integer APPLICATION_ID = 1;
 
-    @Test
-    void getApplicationById_found() throws Exception {
-        final ApplicationFormEntity applicationForm = ApplicationFormEntity.builder().applicationName("test")
-                .grantApplicationId(APPLICATION_ID).build();
+	@Test
+	void getApplicationById_found() throws Exception {
+		final ApplicationFormEntity applicationForm = ApplicationFormEntity.builder()
+			.applicationName("test")
+			.grantApplicationId(APPLICATION_ID)
+			.build();
 
-        when(applicationFormService.getApplicationById(APPLICATION_ID)).thenReturn(applicationForm);
+		when(applicationFormService.getApplicationById(APPLICATION_ID)).thenReturn(applicationForm);
 
-        final String expectedJson = objectMapper.writeValueAsString(applicationForm);
+		final String expectedJson = objectMapper.writeValueAsString(applicationForm);
 
-        mockMvc.perform(get("/application-forms/" + applicationForm.getGrantApplicationId())
-                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-                .andExpect(content().json(expectedJson));
-    }
+		mockMvc
+			.perform(get("/application-forms/" + applicationForm.getGrantApplicationId())
+				.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(content().json(expectedJson));
+	}
 
-    @Test
-    void getApplicationById_notFound() throws Exception {
-        final String errorMsg = "No application with id " + APPLICATION_ID + " found";
+	@Test
+	void getApplicationById_notFound() throws Exception {
+		final String errorMsg = "No application with id " + APPLICATION_ID + " found";
 
-        when(applicationFormService.getApplicationById(APPLICATION_ID))
-                .thenThrow(new ApplicationFormNotFoundException(errorMsg));
+		when(applicationFormService.getApplicationById(APPLICATION_ID))
+			.thenThrow(new ApplicationFormNotFoundException(errorMsg));
 
-        mockMvc.perform(get("/application-forms/" + APPLICATION_ID).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound()).andExpect(jsonPath("$.message").value(errorMsg));
-    }
+		mockMvc.perform(get("/application-forms/" + APPLICATION_ID).contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.message").value(errorMsg));
+	}
 
 }

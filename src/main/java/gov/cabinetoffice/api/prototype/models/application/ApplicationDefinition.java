@@ -18,22 +18,6 @@ import java.util.Objects;
 @Builder
 public class ApplicationDefinition {
 
-    private List<ApplicationFormSection> sections;
-
-    public ApplicationFormSection getSectionById(String sectionId) {
-        final List<ApplicationFormSection> applicationFormSectionDTOList = this.sections.stream()
-                .filter(section -> Objects.equals(section.getSectionId(), sectionId)).toList();
-
-        if (applicationFormSectionDTOList.size() > 1) {
-            throw new ApplicationFormNotFoundException(
-                    "Ambiguous reference - more than one section with id " + sectionId);
-        }
-        else if (applicationFormSectionDTOList.isEmpty()) {
-            throw new NotFoundException("Section with id " + sectionId + " does not exist");
-        }
-        else {
-            return applicationFormSectionDTOList.get(0);
-        }
-    }
+	private List<ApplicationFormSection> sections;
 
 }

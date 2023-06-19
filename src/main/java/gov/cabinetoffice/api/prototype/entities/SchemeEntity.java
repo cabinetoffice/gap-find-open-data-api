@@ -27,55 +27,55 @@ import java.util.Objects;
 @Builder
 public class SchemeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "grant_scheme_id")
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "grant_scheme_id")
+	private Integer id;
 
-    @Column(name = "funder_id", nullable = false)
-    private Integer funderId;
+	@Column(name = "funder_id", nullable = false)
+	private Integer funderId;
 
-    @Column(name = "version", nullable = false)
-    @Builder.Default
-    private Integer version = 1;
+	@Column(name = "version", nullable = false)
+	@Builder.Default
+	private Integer version = 1;
 
-    @Column(name = "created_date", nullable = false)
-    @Builder.Default
-    private Instant createdDate = Instant.now();
+	@Column(name = "created_date", nullable = false)
+	@Builder.Default
+	private Instant createdDate = Instant.now();
 
-    @Column(name = "created_by", nullable = false)
-    private Integer createdBy;
+	@Column(name = "created_by", nullable = false)
+	private Integer createdBy;
 
-    @Column(name = "last_updated")
-    private Instant lastUpdated;
+	@Column(name = "last_updated")
+	private Instant lastUpdated;
 
-    @Column(name = "last_updated_by")
-    private Integer lastUpdatedBy;
+	@Column(name = "last_updated_by")
+	private Integer lastUpdatedBy;
 
-    @Column(name = "ggis_identifier", nullable = false)
-    private String ggisIdentifier;
+	@Column(name = "ggis_identifier", nullable = false)
+	private String ggisIdentifier;
 
-    @Column(name = "scheme_name", nullable = false)
-    private String name;
+	@Column(name = "scheme_name", nullable = false)
+	private String name;
 
-    @Column(name = "scheme_contact")
-    private String email;
+	@Column(name = "scheme_contact")
+	private String email;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
-            return false;
-        }
-        SchemeEntity that = (SchemeEntity) o;
-        return this.id != null && Objects.equals(this.id, that.id);
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+			return false;
+		}
+		SchemeEntity that = (SchemeEntity) o;
+		return this.id != null && Objects.equals(this.id, that.id);
+	}
 
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
+	@Override
+	public int hashCode() {
+		return getClass().hashCode();
+	}
 
 }
