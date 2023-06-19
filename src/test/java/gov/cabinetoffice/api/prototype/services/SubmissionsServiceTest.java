@@ -40,7 +40,7 @@ class SubmissionsServiceTest {
     @Spy
     private SubmissionMapper submissionMapper = new SubmissionMapperImpl();
 
-    private final Integer APPLICATION_ID = 1;
+    private final int APPLICATION_ID = 1;
 
     @Test
     void getSubmissionByApplicationId_found() {

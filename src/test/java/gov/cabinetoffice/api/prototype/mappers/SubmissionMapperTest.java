@@ -1,32 +1,17 @@
-package gov.cabinetoffice.api.prototype.controllers;
+package gov.cabinetoffice.api.prototype.mappers;
 
-import gov.cabinetoffice.api.prototype.models.application.ApplicationDefinition;
-import gov.cabinetoffice.api.prototype.dtos.submission.AddressDTO;
-import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionDTO;
-import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionQuestionDTO;
-import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionSectionDTO;
-import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionsDTO;
+import gov.cabinetoffice.api.prototype.dtos.submission.*;
 import gov.cabinetoffice.api.prototype.entities.ApplicationFormEntity;
 import gov.cabinetoffice.api.prototype.entities.SchemeEntity;
 import gov.cabinetoffice.api.prototype.entities.Submission;
 import gov.cabinetoffice.api.prototype.enums.ResponseTypeEnum;
 import gov.cabinetoffice.api.prototype.enums.SubmissionSectionStatus;
 import gov.cabinetoffice.api.prototype.enums.SubmissionStatus;
-import gov.cabinetoffice.api.prototype.exceptions.SubmissionNotFoundException;
-import gov.cabinetoffice.api.prototype.models.submission.GrantApplicant;
-import gov.cabinetoffice.api.prototype.models.submission.GrantApplicantOrganisationProfile;
-import gov.cabinetoffice.api.prototype.models.submission.SubmissionDefinition;
-import gov.cabinetoffice.api.prototype.models.submission.SubmissionQuestion;
-import gov.cabinetoffice.api.prototype.models.submission.SubmissionQuestionValidation;
-import gov.cabinetoffice.api.prototype.models.submission.SubmissionSection;
-import gov.cabinetoffice.api.prototype.services.SubmissionsService;
+import gov.cabinetoffice.api.prototype.models.application.ApplicationDefinition;
+import gov.cabinetoffice.api.prototype.models.submission.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.mapstruct.factory.Mappers;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -35,12 +20,9 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
-class SubmissionsControllerTest {
+class SubmissionMapperTest {
 
     private static final int APPLICATION_ID = 1;
 
@@ -100,7 +82,7 @@ class SubmissionsControllerTest {
             .build();
 
     final SubmissionQuestion question4 = SubmissionQuestion.builder().questionId(QUESTION_ID_4).fieldTitle(
-            "Description of the project, please include information regarding public accessibility (see GOV.UK guidance for a definition of public access) to the newly planted trees")
+                    "Description of the project, please include information regarding public accessibility (see GOV.UK guidance for a definition of public access) to the newly planted trees")
             .hintText("Optional additional helptext").responseType(ResponseTypeEnum.LongAnswer)
             .validation(SubmissionQuestionValidation.builder().mandatory(true).minLength(100).maxLength(2000)
                     .minWords(50).maxWords(400).build())
@@ -162,37 +144,17 @@ class SubmissionsControllerTest {
 
     final SubmissionsDTO submissionsDTO = SubmissionsDTO.builder().submissions(List.of(submissionDTO)).build();
 
-    @Mock
-    private SubmissionsService submissionService;
-
-    private SubmissionsController controllerUnderTest;
+    private final SubmissionMapper submissionMapper = Mappers.getMapper(SubmissionMapper.class);
 
     @BeforeEach
-    void setup() {
-        controllerUnderTest = new SubmissionsController(submissionService);
+    void setUp() {
     }
 
     @Test
-    void getSubmissionByApplicationId_returnsExpectedResponse() {
-        when(submissionService.getSubmissionByApplicationId(APPLICATION_ID)).thenReturn(submissionsDTO);
+    void submissionToSubmissionDto() {
+        SubmissionDTO result = submissionMapper.submissionToSubmissionDto(submission);
 
-        final ResponseEntity<SubmissionsDTO> response = controllerUnderTest
-                .getSubmissionByApplicationId(APPLICATION_ID);
-
-        verify(submissionService).getSubmissionByApplicationId(APPLICATION_ID);
-        assertThat(HttpStatus.OK).isEqualTo(response.getStatusCode());
-        assertThat(response.getBody()).isEqualTo(submissionsDTO);
+        assertThat(result).isEqualTo(submissionDTO);
 
     }
-
-    @Test
-    void getSubmissionByApplicationId_returns404WhenNoSubmissionFound() {
-        when(submissionService.getSubmissionByApplicationId(APPLICATION_ID))
-                .thenThrow(new SubmissionNotFoundException("error"));
-        final Exception result = assertThrows(SubmissionNotFoundException.class,
-                () -> controllerUnderTest.getSubmissionByApplicationId(APPLICATION_ID));
-        verify(submissionService).getSubmissionByApplicationId(APPLICATION_ID);
-        assertThat(result.getMessage()).contains("error");
-    }
-
 }

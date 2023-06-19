@@ -24,7 +24,7 @@ public class ApplicationFormServiceTest {
     @InjectMocks
     private ApplicationFormService applicationFormService;
 
-    private final Integer APPLICATION_ID = 1;
+    private final int APPLICATION_ID = 1;
 
     @Test
     void getApplicationById_found() {

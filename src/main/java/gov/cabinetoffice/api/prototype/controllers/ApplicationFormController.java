@@ -32,7 +32,7 @@ public class ApplicationFormController {
             @ApiResponse(responseCode = "404", description = "Application not found with given id",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = GenericErrorDTO.class))) })
-    public ResponseEntity getApplicationById(@PathVariable @NotNull Integer applicationId) {
+    public ResponseEntity getApplicationById(@PathVariable @NotNull int applicationId) {
         final ApplicationFormEntity response = this.applicationFormService.getApplicationById(applicationId);
         return ResponseEntity.ok().body(response);
     }

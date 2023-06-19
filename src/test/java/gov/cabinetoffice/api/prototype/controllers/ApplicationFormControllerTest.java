@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class ApplicationFormControllerTest {
 
-    private static final Integer APPLICATION_ID = 1;
+    private static final int APPLICATION_ID = 1;
 
     final Instant instant = Instant.now();
 

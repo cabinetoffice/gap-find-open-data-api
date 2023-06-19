@@ -19,8 +19,9 @@ public class SubmissionsService {
 
     private final SubmissionMapper submissionMapper;
 
-    public SubmissionsDTO getSubmissionByApplicationId(Integer applicationId) {
+    public SubmissionsDTO getSubmissionByApplicationId(int applicationId) {
         final List<Submission> submissions = submissionRepository.findByApplicationGrantApplicationId(applicationId);
+
         if (submissions.isEmpty()) {
             throw new SubmissionNotFoundException("No submissions found with application id " + applicationId);
         }
