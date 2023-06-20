@@ -13,6 +13,7 @@ import org.mapstruct.Named;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import static java.lang.Integer.parseInt;
 
@@ -75,9 +76,15 @@ public interface SubmissionMapper {
 			case MultipleSelection -> multiResponse;
 			case AddressInput -> buildAddress(multiResponse);
 			case Date -> buildDate(multiResponse);
+			case SingleFileUpload -> buildUploadResponse(submissionQuestion);
 			default -> ""; // TODO do we want this to be null or an empty string?
 		};
 	}
+
+	default String buildUploadResponse(SubmissionQuestion submissionQuestion) {
+		final UUID attachmentId = submissionQuestion.getAttachmentId();
+		return "";
+	};
 
 	default LocalDate buildDate(String[] multiResponse) {
 		return LocalDate.of(parseInt(multiResponse[2]), parseInt(multiResponse[1]), parseInt(multiResponse[0]));
