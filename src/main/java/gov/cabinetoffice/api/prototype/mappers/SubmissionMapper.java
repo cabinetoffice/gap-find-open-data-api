@@ -13,11 +13,10 @@ import org.mapstruct.Named;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 import static java.lang.Integer.parseInt;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { CustomSubmissionMapperImpl.class })
 public interface SubmissionMapper {
 
 	@Mapping(source = "id", target = "submissionId")
@@ -82,7 +81,6 @@ public interface SubmissionMapper {
 	}
 
 	default String buildUploadResponse(SubmissionQuestion submissionQuestion) {
-		final UUID attachmentId = submissionQuestion.getAttachmentId();
 		return "";
 	};
 
