@@ -2,14 +2,10 @@ package gov.cabinetoffice.api.prototype.services;
 
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionDTO;
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionsDTO;
-import gov.cabinetoffice.api.prototype.entities.ApplicationFormEntity;
-import gov.cabinetoffice.api.prototype.entities.SchemeEntity;
-import gov.cabinetoffice.api.prototype.entities.Submission;
+import gov.cabinetoffice.api.prototype.entities.*;
 import gov.cabinetoffice.api.prototype.exceptions.SubmissionNotFoundException;
 import gov.cabinetoffice.api.prototype.mappers.SubmissionMapper;
 import gov.cabinetoffice.api.prototype.mappers.SubmissionMapperImpl;
-import gov.cabinetoffice.api.prototype.entities.GrantApplicant;
-import gov.cabinetoffice.api.prototype.entities.GrantApplicantOrganisationProfile;
 import gov.cabinetoffice.api.prototype.repositories.SubmissionRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
