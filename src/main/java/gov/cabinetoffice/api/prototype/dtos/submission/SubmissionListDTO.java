@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SubmissionsDTO {
+public class SubmissionListDTO {
 
 	private List<SubmissionDTO> submissions;
 

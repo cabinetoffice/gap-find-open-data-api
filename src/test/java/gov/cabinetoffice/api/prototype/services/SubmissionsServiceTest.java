@@ -1,7 +1,7 @@
 package gov.cabinetoffice.api.prototype.services;
 
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionDTO;
-import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionsDTO;
+import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionListDTO;
 import gov.cabinetoffice.api.prototype.entities.ApplicationFormEntity;
 import gov.cabinetoffice.api.prototype.entities.GrantApplicant;
 import gov.cabinetoffice.api.prototype.entities.GrantApplicantOrganisationProfile;
@@ -63,10 +63,12 @@ class SubmissionsServiceTest {
 		when(submissionRepository.findByApplicationGrantApplicationId(APPLICATION_ID)).thenReturn(List.of(submission));
 		when(submissionMapper.submissionToSubmissionDto(submission)).thenCallRealMethod();
 
-		final SubmissionsDTO response = submissionsService.getSubmissionByApplicationId(APPLICATION_ID);
+		final SubmissionListDTO response = submissionsService.getSubmissionByApplicationId(APPLICATION_ID);
 
 		final SubmissionDTO submissionDTO = response.getSubmissions().get(0);
-		final SubmissionsDTO expectedResult = SubmissionsDTO.builder().submissions(List.of(submissionDTO)).build();
+		final SubmissionListDTO expectedResult = SubmissionListDTO.builder()
+			.submissions(List.of(submissionDTO))
+			.build();
 
 		assertEquals(submissionMapper.submissionToSubmissionDto(submission), submissionDTO);
 
