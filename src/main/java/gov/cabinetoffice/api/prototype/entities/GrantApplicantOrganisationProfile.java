@@ -1,5 +1,6 @@
-package gov.cabinetoffice.api.prototype.models.submission;
+package gov.cabinetoffice.api.prototype.entities;
 
+import gov.cabinetoffice.api.prototype.entities.GrantApplicant;
 import gov.cabinetoffice.api.prototype.enums.GrantApplicantOrganisationType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -22,7 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table
+@Table(name = "grant_applicant_organisation_profile")
 public class GrantApplicantOrganisationProfile {
 
 	@Id
@@ -33,17 +34,17 @@ public class GrantApplicantOrganisationProfile {
 	@JoinColumn(name = "applicant_id", referencedColumnName = "id")
 	private GrantApplicant applicant;
 
-	@Column
+	@Column(name = "legal_name")
 	private String legalName;
 
 	@Column
 	@Enumerated(EnumType.STRING)
 	private GrantApplicantOrganisationType type;
 
-	@Column
+	@Column(name = "address_line1")
 	private String addressLine1;
 
-	@Column
+	@Column(name = "address_line2")
 	private String addressLine2;
 
 	@Column
@@ -55,10 +56,10 @@ public class GrantApplicantOrganisationProfile {
 	@Column
 	private String postcode;
 
-	@Column
+	@Column(name = "charity_commission_number")
 	private String charityCommissionNumber;
 
-	@Column
+	@Column(name = "companies_house_number")
 	private String companiesHouseNumber;
 
 }

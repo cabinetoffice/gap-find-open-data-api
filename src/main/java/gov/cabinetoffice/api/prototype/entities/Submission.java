@@ -2,7 +2,6 @@ package gov.cabinetoffice.api.prototype.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import gov.cabinetoffice.api.prototype.enums.SubmissionStatus;
-import gov.cabinetoffice.api.prototype.models.submission.GrantApplicant;
 import gov.cabinetoffice.api.prototype.models.submission.SubmissionDefinition;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.CascadeType;
@@ -76,6 +75,7 @@ public class Submission {
 	private GrantApplicant createdBy;
 
 	@LastModifiedDate
+	@Column(name = "last_updated")
 	private LocalDateTime lastUpdated;
 
 	@ManyToOne(cascade = CascadeType.ALL)
@@ -84,10 +84,10 @@ public class Submission {
 	@ToString.Exclude
 	private GrantApplicant lastUpdatedBy;
 
-	@Column
+	@Column(name = "submitted_date")
 	private ZonedDateTime submittedDate;
 
-	@Column
+	@Column(name = "application_name")
 	private String applicationName;
 
 	@Column
