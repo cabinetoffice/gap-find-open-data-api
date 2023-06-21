@@ -64,6 +64,8 @@ jobs:
         run: |
           mvn spring-boot:build-image
           echo ''
+          echo ${{ job.container.network }}
+          echo ''
           docker run demo:0.0.1-SNAPSHOT -p 8080:8080 --name application --network ${{ job.container.network }}
           echo '' 
           docker stop application
