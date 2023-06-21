@@ -27,6 +27,9 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
 	@Autowired
 	GrantAttachmentService grantAttachmentService;
 
+	@Autowired
+	SubmissionMapperImpl submissionMapperImpl;
+
 	@Override
 	public List<SubmissionSectionDTO> mapSections(List<SubmissionSection> sections) {
 		return SubmissionMapper.super.mapSections(sections);
@@ -73,98 +76,12 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
 
 	@Override
 	public SubmissionDTO submissionToSubmissionDto(Submission submission) {
-		if (submission == null) {
-			return null;
-		}
-
-		SubmissionDTO.SubmissionDTOBuilder submissionDTO = SubmissionDTO.builder();
-
-		submissionDTO.submissionId(submission.getId());
-		submissionDTO.applicationFormName(submissionApplicationApplicationName(submission));
-		submissionDTO.grantAdminEmailAddress(submissionSchemeEmail(submission));
-		submissionDTO.grantApplicantEmailAddress(submissionSchemeEmail(submission));
-		submissionDTO.ggisReferenceNumber(submissionSchemeGgisIdentifier(submission));
-		submissionDTO.submittedTimeStamp(submission.getSubmittedDate());
-		List<SubmissionSection> sections = submissionDefinitionSections(submission);
-		submissionDTO.sections(mapSections(sections));
-
-		return submissionDTO.build();
+		return submissionMapperImpl.submissionToSubmissionDto(submission);
 	}
 
 	@Override
 	public SubmissionSectionDTO submissionSectionToSubmissionSectionDto(SubmissionSection submissionSection) {
-		if (submissionSection == null) {
-			return null;
-		}
-
-		SubmissionSectionDTO.SubmissionSectionDTOBuilder submissionSectionDTO = SubmissionSectionDTO.builder();
-
-		submissionSectionDTO.sectionId(submissionSection.getSectionId());
-		submissionSectionDTO.sectionTitle(submissionSection.getSectionTitle());
-		submissionSectionDTO
-			.questions(submissionQuestionListToSubmissionQuestionDtoList(submissionSection.getQuestions()));
-
-		return submissionSectionDTO.build();
-	}
-
-	private String submissionApplicationApplicationName(Submission submission) {
-		if (submission == null) {
-			return null;
-		}
-		ApplicationFormEntity application = submission.getApplication();
-		if (application == null) {
-			return null;
-		}
-		String applicationName = application.getApplicationName();
-		if (applicationName == null) {
-			return null;
-		}
-		return applicationName;
-	}
-
-	private String submissionSchemeEmail(Submission submission) {
-		if (submission == null) {
-			return null;
-		}
-		SchemeEntity scheme = submission.getScheme();
-		if (scheme == null) {
-			return null;
-		}
-		String email = scheme.getEmail();
-		if (email == null) {
-			return null;
-		}
-		return email;
-	}
-
-	private String submissionSchemeGgisIdentifier(Submission submission) {
-		if (submission == null) {
-			return null;
-		}
-		SchemeEntity scheme = submission.getScheme();
-		if (scheme == null) {
-			return null;
-		}
-		String ggisIdentifier = scheme.getGgisIdentifier();
-		if (ggisIdentifier == null) {
-			return null;
-		}
-		return ggisIdentifier;
-	}
-
-	private List<SubmissionSection> submissionDefinitionSections(Submission submission) {
-		if (submission == null) {
-			return List.of();
-		}
-		SubmissionDefinition definition = submission.getDefinition();
-		if (definition == null) {
-			return List.of();
-		}
-		List<SubmissionSection> sections = definition.getSections();
-		if (sections == null) {
-			return List.of();
-		}
-		return sections;
+		return submissionMapperImpl.submissionSectionToSubmissionSectionDto(submissionSection);
 	}
 
 }

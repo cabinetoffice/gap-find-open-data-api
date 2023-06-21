@@ -80,9 +80,7 @@ public interface SubmissionMapper {
 		};
 	}
 
-	default String buildUploadResponse(SubmissionQuestion submissionQuestion) {
-		return "";
-	};
+	String buildUploadResponse(SubmissionQuestion submissionQuestion);
 
 	default LocalDate buildDate(String[] multiResponse) {
 		return LocalDate.of(parseInt(multiResponse[2]), parseInt(multiResponse[1]), parseInt(multiResponse[0]));
