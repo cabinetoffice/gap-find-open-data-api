@@ -25,7 +25,6 @@ public class SubmissionsController {
 
 	private final SubmissionsService submissionsService;
 
-	//TODO remove meeee
 	@GetMapping("/{applicationId}")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Submissions retrieved successfully.",
