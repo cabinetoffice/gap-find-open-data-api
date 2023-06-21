@@ -60,5 +60,8 @@ jobs:
 #          name: DependencyCheck report
 #          path: ${{github.workspace}}/reports
 
-      - name: start application
+      - name: Start application
         run: mvn spring-boot:run
+
+      - name: Stop application
+        run: mvn spring-boot:stop
