@@ -1,29 +1,17 @@
 package gov.cabinetoffice.api.prototype.services;
 
-import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionDTO;
-import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionListDTO;
-import gov.cabinetoffice.api.prototype.entities.*;
+import gov.cabinetoffice.api.prototype.entities.GrantAttachment;
 import gov.cabinetoffice.api.prototype.exceptions.GrantAttachmentNotFoundException;
-import gov.cabinetoffice.api.prototype.exceptions.SubmissionNotFoundException;
-import gov.cabinetoffice.api.prototype.mappers.SubmissionMapper;
-import gov.cabinetoffice.api.prototype.mappers.SubmissionMapperImpl;
 import gov.cabinetoffice.api.prototype.repositories.GrantAttachmentRepository;
-import gov.cabinetoffice.api.prototype.repositories.SubmissionRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.UUID;
 
-import static gov.cabinetoffice.api.prototype.test_data_generator.RandomSubmissionGenerator.randomSubmission;
-import static gov.cabinetoffice.api.prototype.test_data_generator.RandomSubmissionGenerator.randomSubmissionDefinition;
-import static java.util.Optional.*;
+import static java.util.Optional.ofNullable;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

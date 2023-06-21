@@ -80,7 +80,11 @@ public interface SubmissionMapper {
 		};
 	}
 
-	String buildUploadResponse(SubmissionQuestion submissionQuestion);
+	// returns empty string, so it won't be overridden by auto generated
+	// SubmissionMapperImpl
+	default String buildUploadResponse(SubmissionQuestion submissionQuestion) {
+		return "";
+	}
 
 	default LocalDate buildDate(String[] multiResponse) {
 		return LocalDate.of(parseInt(multiResponse[2]), parseInt(multiResponse[1]), parseInt(multiResponse[0]));

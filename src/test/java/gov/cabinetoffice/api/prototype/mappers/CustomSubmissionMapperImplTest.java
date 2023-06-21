@@ -13,21 +13,27 @@ import gov.cabinetoffice.api.prototype.models.submission.SubmissionDefinition;
 import gov.cabinetoffice.api.prototype.models.submission.SubmissionQuestion;
 import gov.cabinetoffice.api.prototype.models.submission.SubmissionQuestionValidation;
 import gov.cabinetoffice.api.prototype.models.submission.SubmissionSection;
+import gov.cabinetoffice.api.prototype.services.GrantAttachmentService;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.when;
 
-class SubmissionMapperTest {
+@SpringJUnitConfig
+class CustomSubmissionMapperImplTest {
 
 	private static final int APPLICATION_ID = 1;
+
+	private final UUID GRANT_ATTACHMENT_ID = UUID.randomUUID();
 
 	final LocalDateTime timestamp = LocalDateTime.now();
 
@@ -42,6 +48,8 @@ class SubmissionMapperTest {
 	final String QUESTION_ID_3 = "APPLICANT_ORG_COMPANIES_HOUSE";
 
 	final String QUESTION_ID_4 = "CUSTOM_INPUT_1";
+
+	final String QUESTION_ID_5 = "FILE_UPLOAD_1";
 
 	final String SECTION_ID_1 = "ELIGIBILITY";
 
@@ -238,150 +246,44 @@ class SubmissionMapperTest {
 		.sections(List.of(submissionSectionDTO1, submissionSectionDTO2))
 		.build();
 
-	private final SubmissionMapper submissionMapper = Mappers.getMapper(SubmissionMapper.class);
+	@InjectMocks
+	private CustomSubmissionMapperImpl customSubmissionMapperImpl;
+
+	@Mock
+	GrantAttachmentService grantAttachmentService;
+
+	// didn't test the other methods because they are tested in SubmissionMapperTest
 
 	@Test
 	void submissionToSubmissionDto() {
-		SubmissionDTO result = submissionMapper.submissionToSubmissionDto(submission);
+		SubmissionDTO result = customSubmissionMapperImpl.submissionToSubmissionDto(submission);
 		assertThat(result).isEqualTo(submissionDTO);
 	}
 
 	@Test
-	void mapSections() {
-		List<SubmissionSectionDTO> result = submissionMapper.mapSections(submission.getDefinition().getSections());
-		assertThat(result).isEqualTo(List.of(submissionSectionDTO1, submissionSectionDTO2));
-	}
-
-	@Test
 	void submissionSectionToSubmissionSectionDto() {
-		SubmissionSectionDTO result = submissionMapper.submissionSectionToSubmissionSectionDto(section1);
+		SubmissionSectionDTO result = customSubmissionMapperImpl.submissionSectionToSubmissionSectionDto(section1);
 		assertThat(result).isEqualTo(submissionSectionDTO1);
 	}
 
 	@Test
-	void submissionSectionListToSubmissionSectionDtoList() {
-		List<SubmissionSectionDTO> result = submissionMapper
-			.submissionSectionListToSubmissionSectionDtoList(submission.getDefinition().getSections());
-		assertThat(result).isEqualTo(List.of(submissionSectionDTO1, submissionSectionDTO2));
-	}
-
-	@Test
-	void submissionQuestionListToSubmissionQuestionDtoList() {
-		List<SubmissionQuestionDTO> result = submissionMapper
-			.submissionQuestionListToSubmissionQuestionDtoList(section1.getQuestions());
-		assertThat(result).isEqualTo(List.of(questionDTO1, questionDTO2, questionDTO3));
-	}
-
-	@Test
-	void submissionQuestionToSubmissionQuestionDto() {
-		SubmissionQuestionDTO result = submissionMapper.submissionQuestionToSubmissionQuestionDto(question1);
-		assertThat(result).isEqualTo(questionDTO1);
-	}
-
-	@Test
-	void buildDate() {
-		LocalDate result = submissionMapper.buildDate(date);
-		assertThat(result).isEqualTo(LocalDate.of(1987, 12, 1));
-	}
-
-	@Test
-	void buildAddress() {
-		AddressDTO result = submissionMapper.buildAddress(address);
-		assertThat(result).isEqualTo(addressDTO);
-	}
-
-	@Test
-	void getQuestionResponseByResponseType__shortAnswerType() {
-		Object result = submissionMapper.getQuestionResponseByResponseType(question1);
-		assertThat(result).isEqualTo(question1.getResponse());
-	}
-
-	@Test
-	void getQuestionResponseByResponseType__YesNoType() {
-		Object result = submissionMapper.getQuestionResponseByResponseType(question3);
-		assertThat(result).isEqualTo(question3.getResponse());
-	}
-
-	@Test
-	void getQuestionResponseByResponseType__LongAnswerType() {
-		Object result = submissionMapper.getQuestionResponseByResponseType(question4);
-		assertThat(result).isEqualTo(question4.getResponse());
-	}
-
-	@Test
-	void getQuestionResponseByResponseType__DropdownType() {
+	void buildUploadResponse() {
 		SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
 			.questionId("testId")
-			.responseType(ResponseTypeEnum.Dropdown)
-			.fieldTitle("Test Dropdown")
-			.response("Test Dropdown Response")
-			.build();
-		Object result = submissionMapper.getQuestionResponseByResponseType(submissionQuestion);
-		assertThat(result).isEqualTo(submissionQuestion.getResponse());
-	}
-
-	@Test
-	void getQuestionResponseByResponseType__NumericType() {
-		SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
-			.questionId("testId")
-			.responseType(ResponseTypeEnum.Numeric)
-			.fieldTitle("Test Numeric")
-			.response("1")
-			.build();
-		Object result = submissionMapper.getQuestionResponseByResponseType(submissionQuestion);
-		assertThat(result).isEqualTo(submissionQuestion.getResponse());
-	}
-
-	@Test
-	void getQuestionResponseByResponseType__MultipleSelectionType() {
-		String[] multiResponse = { "a", "b", "c" };
-		SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
-			.questionId("testId")
-			.responseType(ResponseTypeEnum.MultipleSelection)
-			.fieldTitle("Test Multiple selection")
-			.multiResponse(multiResponse)
-			.build();
-		Object result = submissionMapper.getQuestionResponseByResponseType(submissionQuestion);
-		assertThat(result).isEqualTo(submissionQuestion.getMultiResponse());
-	}
-
-	@Test
-	void getQuestionResponseByResponseType__AddressType() {
-		AddressDTO addressDTO = AddressDTO.builder()
-			.addressLine1(address[0])
-			.addressLine2(address[1])
-			.town(address[2])
-			.county(address[3])
-			.postcode(address[4])
-			.build();
-		Object result = submissionMapper.getQuestionResponseByResponseType(question2);
-		assertThat(result).isEqualTo(addressDTO);
-	}
-
-	@Test
-	void getQuestionResponseByResponseType__DateType() {
-		String[] date = { "01", "12", "1987" };
-		SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
-			.questionId("testId")
-			.responseType(ResponseTypeEnum.Date)
-			.fieldTitle("Test Date")
+			.responseType(ResponseTypeEnum.SingleFileUpload)
+			.fieldTitle("Test Upload")
 			.multiResponse(date)
+			.attachmentId(GRANT_ATTACHMENT_ID)
 			.build();
-		LocalDate expectedResult = LocalDate.of(1987, 12, 1);
-		Object result = submissionMapper.getQuestionResponseByResponseType(submissionQuestion);
-		assertThat(result).isEqualTo(expectedResult);
-	}
 
-	@Test
-	void getQuestionResponseByResponseType__Default() {
-		SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
-			.questionId("testId")
-			.responseType(ResponseTypeEnum.SingleSelection)
-			.fieldTitle("Test singleSelection")
-			.multiResponse(date)
+		GrantAttachment grantAttachment = GrantAttachment.builder()
+			.id(GRANT_ATTACHMENT_ID)
+			.location("location")
 			.build();
-		Object result = submissionMapper.getQuestionResponseByResponseType(submissionQuestion);
-		assertThat(result).isEqualTo("");
+
+		when(grantAttachmentService.getGrantAttachmentById(GRANT_ATTACHMENT_ID)).thenReturn(grantAttachment);
+		String result = customSubmissionMapperImpl.buildUploadResponse(submissionQuestion);
+		assertThat(result).isEqualTo(grantAttachment.getLocation());
 	}
 
 }

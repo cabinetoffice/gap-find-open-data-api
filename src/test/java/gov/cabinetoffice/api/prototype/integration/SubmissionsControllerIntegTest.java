@@ -5,11 +5,7 @@ import gov.cabinetoffice.api.prototype.controllers.SubmissionsController;
 import gov.cabinetoffice.api.prototype.controllers.controller_advice.ControllerExceptionsHandler;
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionDTO;
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionListDTO;
-import gov.cabinetoffice.api.prototype.entities.ApplicationFormEntity;
-import gov.cabinetoffice.api.prototype.entities.GrantApplicant;
-import gov.cabinetoffice.api.prototype.entities.GrantApplicantOrganisationProfile;
-import gov.cabinetoffice.api.prototype.entities.SchemeEntity;
-import gov.cabinetoffice.api.prototype.entities.Submission;
+import gov.cabinetoffice.api.prototype.entities.*;
 import gov.cabinetoffice.api.prototype.exceptions.SubmissionNotFoundException;
 import gov.cabinetoffice.api.prototype.mappers.SubmissionMapper;
 import gov.cabinetoffice.api.prototype.mappers.SubmissionMapperImpl;
@@ -34,9 +30,7 @@ import static gov.cabinetoffice.api.prototype.test_data_generator.RandomSubmissi
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(SubmissionsController.class)
 @AutoConfigureMockMvc(addFilters = false)
