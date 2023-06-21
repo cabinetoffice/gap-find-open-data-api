@@ -61,6 +61,5 @@ jobs:
 #          path: ${{github.workspace}}/reports
 
       - name: Integration tests
-        run: | 
-          mvn spring-boot:run
-          mvn spring-boot:stop
+        run: |
+          mvn spring-boot:build-image
