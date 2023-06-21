@@ -20,7 +20,6 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_DATABASE: gap-prototype
           POSTGRES_USERNAME: postgres
           POSTGRES_PASSWORD: mysecretpassword
         options: >-
