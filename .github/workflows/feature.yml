@@ -63,3 +63,4 @@ jobs:
       - name: Integration tests
         run: |
           mvn spring-boot:build-image
+          docker images
