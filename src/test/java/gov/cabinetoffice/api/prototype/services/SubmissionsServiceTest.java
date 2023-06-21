@@ -1,17 +1,25 @@
 package gov.cabinetoffice.api.prototype.services;
 
-import gov.cabinetoffice.api.prototype.entities.ApplicationFormEntity;
-import gov.cabinetoffice.api.prototype.entities.Submission;
+import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionDTO;
+import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionsDTO;
+import gov.cabinetoffice.api.prototype.entities.*;
 import gov.cabinetoffice.api.prototype.exceptions.SubmissionNotFoundException;
+import gov.cabinetoffice.api.prototype.mappers.SubmissionMapper;
+import gov.cabinetoffice.api.prototype.mappers.SubmissionMapperImpl;
 import gov.cabinetoffice.api.prototype.repositories.SubmissionRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
+import static gov.cabinetoffice.api.prototype.test_data_generator.RandomSubmissionGenerator.randomSubmission;
+import static gov.cabinetoffice.api.prototype.test_data_generator.RandomSubmissionGenerator.randomSubmissionDefinition;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -19,37 +27,58 @@ import static org.mockito.Mockito.when;
 @SpringJUnitConfig
 class SubmissionsServiceTest {
 
-    @Mock
-    private SubmissionRepository submissionRepository;
+	@Mock
+	private SubmissionRepository submissionRepository;
 
-    @InjectMocks
-    private SubmissionsService submissionsService;
+	@InjectMocks
+	private SubmissionsService submissionsService;
 
-    private final Integer APPLICATION_ID = 1;
+	@Spy
+	private SubmissionMapper submissionMapper = new SubmissionMapperImpl();
 
-    @Test
-    void getSubmissionByApplicationId_found() {
-        ApplicationFormEntity applicationForm = ApplicationFormEntity.builder().grantApplicationId(APPLICATION_ID)
-                .build();
-        Submission submission = Submission.builder().application(applicationForm).build();
+	private final int APPLICATION_ID = 1;
 
-        when(submissionRepository.findByApplicationGrantApplicationId(APPLICATION_ID)).thenReturn(List.of(submission));
+	@Test
+	void getSubmissionByApplicationId_found() {
+		final ZonedDateTime zonedDateTime = ZonedDateTime.now();
 
-        List<Submission> response = submissionsService.getSubmissionByApplicationId(APPLICATION_ID);
+		final ApplicationFormEntity applicationForm = ApplicationFormEntity.builder()
+			.grantApplicationId(APPLICATION_ID)
+			.build();
+		final Submission submission = randomSubmission()
+			.definition(randomSubmissionDefinition(randomSubmissionDefinition().build()).build())
+			.gapId("testGapID")
+			.applicant(GrantApplicant.builder()
+				.organisationProfile(GrantApplicantOrganisationProfile.builder().legalName("testLegalName").build())
+				.build())
+			.scheme(SchemeEntity.builder().id(1).name("testSchemeName").build())
+			.submittedDate(zonedDateTime)
+			.application(applicationForm)
+			.build();
 
-        verify(submissionRepository).findByApplicationGrantApplicationId(APPLICATION_ID);
+		when(submissionRepository.findByApplicationGrantApplicationId(APPLICATION_ID)).thenReturn(List.of(submission));
+		when(submissionMapper.submissionToSubmissionDto(submission)).thenCallRealMethod();
 
-        assertThat(response).isEqualTo(List.of(submission));
-    }
+		final SubmissionsDTO response = submissionsService.getSubmissionByApplicationId(APPLICATION_ID);
 
-    @Test
-    void getSubmissionByApplicationId_notFound() {
-        when(submissionRepository.findByApplicationGrantApplicationId(APPLICATION_ID)).thenReturn(List.of());
-        Throwable exception = assertThrows(SubmissionNotFoundException.class,
-                () -> submissionsService.getSubmissionByApplicationId(APPLICATION_ID));
+		final SubmissionDTO submissionDTO = response.getSubmissions().get(0);
+		final SubmissionsDTO expectedResult = SubmissionsDTO.builder().submissions(List.of(submissionDTO)).build();
 
-        verify(submissionRepository).findByApplicationGrantApplicationId(APPLICATION_ID);
-        assertThat(exception.getMessage()).isEqualTo("No submissions found with application id " + APPLICATION_ID);
-    }
+		assertEquals(submissionMapper.submissionToSubmissionDto(submission), submissionDTO);
+
+		verify(submissionRepository).findByApplicationGrantApplicationId(APPLICATION_ID);
+
+		assertThat(response).isEqualTo(expectedResult);
+	}
+
+	@Test
+	void getSubmissionByApplicationId_notFound() {
+		when(submissionRepository.findByApplicationGrantApplicationId(APPLICATION_ID)).thenReturn(List.of());
+		final Throwable exception = assertThrows(SubmissionNotFoundException.class,
+				() -> submissionsService.getSubmissionByApplicationId(APPLICATION_ID));
+
+		verify(submissionRepository).findByApplicationGrantApplicationId(APPLICATION_ID);
+		assertThat(exception.getMessage()).isEqualTo("No submissions found with application id " + APPLICATION_ID);
+	}
 
 }

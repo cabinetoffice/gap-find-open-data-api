@@ -16,39 +16,41 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringJUnitConfig
-public class ApplicationFormServiceTest {
+class ApplicationFormServiceTest {
 
-    @Mock
-    private ApplicationFormRepository applicationFormRepository;
+	@Mock
+	private ApplicationFormRepository applicationFormRepository;
 
-    @InjectMocks
-    private ApplicationFormService applicationFormService;
+	@InjectMocks
+	private ApplicationFormService applicationFormService;
 
-    private final Integer APPLICATION_ID = 1;
+	private final int APPLICATION_ID = 1;
 
-    @Test
-    void getApplicationById_found() {
-        ApplicationFormEntity applicationForm = ApplicationFormEntity.builder().applicationName("test")
-                .grantApplicationId(APPLICATION_ID).build();
+	@Test
+	void getApplicationById_found() {
+		final ApplicationFormEntity applicationForm = ApplicationFormEntity.builder()
+			.applicationName("test")
+			.grantApplicationId(APPLICATION_ID)
+			.build();
 
-        when(applicationFormRepository.findById(APPLICATION_ID)).thenReturn(java.util.Optional.of(applicationForm));
+		when(applicationFormRepository.findById(APPLICATION_ID)).thenReturn(java.util.Optional.of(applicationForm));
 
-        ApplicationFormEntity response = applicationFormService.getApplicationById(APPLICATION_ID);
+		final ApplicationFormEntity response = applicationFormService.getApplicationById(APPLICATION_ID);
 
-        verify(applicationFormRepository).findById(APPLICATION_ID);
+		verify(applicationFormRepository).findById(APPLICATION_ID);
 
-        assertThat(response).isEqualTo(applicationForm);
-        assertThat(response.getGrantApplicationId()).isEqualTo(APPLICATION_ID);
-    }
+		assertThat(response).isEqualTo(applicationForm);
+		assertThat(response.getGrantApplicationId()).isEqualTo(APPLICATION_ID);
+	}
 
-    @Test
-    void getApplicationById_notFound() {
-        when(applicationFormRepository.findById(APPLICATION_ID)).thenReturn(Optional.empty());
-        Throwable exception = assertThrows(ApplicationFormNotFoundException.class,
-                () -> applicationFormService.getApplicationById(APPLICATION_ID));
+	@Test
+	void getApplicationById_notFound() {
+		when(applicationFormRepository.findById(APPLICATION_ID)).thenReturn(Optional.empty());
+		final Throwable exception = assertThrows(ApplicationFormNotFoundException.class,
+				() -> applicationFormService.getApplicationById(APPLICATION_ID));
 
-        verify(applicationFormRepository).findById(APPLICATION_ID);
-        assertThat(exception.getMessage()).isEqualTo("No application found with id " + APPLICATION_ID);
-    }
+		verify(applicationFormRepository).findById(APPLICATION_ID);
+		assertThat(exception.getMessage()).isEqualTo("No application found with id " + APPLICATION_ID);
+	}
 
 }

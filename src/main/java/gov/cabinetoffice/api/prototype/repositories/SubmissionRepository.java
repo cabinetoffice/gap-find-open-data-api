@@ -10,6 +10,6 @@ import java.util.UUID;
 @Repository
 public interface SubmissionRepository extends JpaRepository<Submission, UUID> {
 
-    List<Submission> findByApplicationGrantApplicationId(Integer applicationId);
+	List<Submission> findByApplicationGrantApplicationId(Integer applicationId);
 
 }

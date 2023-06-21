@@ -1,83 +1,216 @@
 package gov.cabinetoffice.api.prototype.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import gov.cabinetoffice.api.prototype.dtos.submission.*;
 import gov.cabinetoffice.api.prototype.entities.ApplicationFormEntity;
-import gov.cabinetoffice.api.prototype.entities.Submission;
+import gov.cabinetoffice.api.prototype.entities.SchemeEntity;
+import gov.cabinetoffice.api.prototype.enums.ResponseTypeEnum;
 import gov.cabinetoffice.api.prototype.exceptions.SubmissionNotFoundException;
+import gov.cabinetoffice.api.prototype.models.application.ApplicationDefinition;
+import gov.cabinetoffice.api.prototype.models.submission.SubmissionQuestion;
+import gov.cabinetoffice.api.prototype.models.submission.SubmissionQuestionValidation;
 import gov.cabinetoffice.api.prototype.services.SubmissionsService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.http.ResponseEntity;
 
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(SubmissionsController.class)
-@AutoConfigureMockMvc(addFilters = false)
-@ContextConfiguration(classes = { SubmissionsController.class, ControllerExceptionsHandler.class })
+@ExtendWith(MockitoExtension.class)
 class SubmissionsControllerTest {
 
-    private static final String BASE_PATH = "/submissions/";
+	private static final int APPLICATION_ID = 1;
 
-    private final Integer APPLICATION_ID = 1;
+	final ZonedDateTime zonedDateTime = ZonedDateTime.now();
 
-    @Autowired
-    private MockMvc mockMvc;
+	final Instant instant = Instant.now();
 
-    @MockBean
-    private SubmissionsService submissionsService;
+	final String QUESTION_ID_1 = "APPLICANT_ORG_NAME";
 
-    @Autowired
-    private ObjectMapper objectMapper;
+	final String QUESTION_ID_2 = "APPLICANT_ORG_ADDRESS";
 
-    @Test
-    void getSubmissionByApplicationId_found() throws Exception {
-        ApplicationFormEntity applicationForm = ApplicationFormEntity.builder().grantApplicationId(APPLICATION_ID)
-                .applicationName("test").grantApplicationId(APPLICATION_ID).build();
+	final String QUESTION_ID_3 = "APPLICANT_ORG_COMPANIES_HOUSE";
 
-        Submission submission = Submission.builder().application(applicationForm).build();
-        List<Submission> submissions = List.of(submission);
-        when(submissionsService.getSubmissionByApplicationId(APPLICATION_ID)).thenReturn(submissions);
+	final String QUESTION_ID_4 = "CUSTOM_INPUT_1";
 
-        String expectedJson = objectMapper.writeValueAsString(submissions);
+	final String SECTION_ID_1 = "ELIGIBILITY";
 
-        mockMvc.perform(get(BASE_PATH + APPLICATION_ID).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()).andExpect(content().json(expectedJson));
-    }
+	final String SECTION_ID_2 = "CUSTOM_SECTION_1";
 
-    @Test
-    void getSubmissionByApplicationId_notFound() throws Exception {
-        String errorMsg = "No submissions found with application id " + APPLICATION_ID;
+	final String SECTION_TITLE_1 = "Eligibility";
 
-        when(submissionsService.getSubmissionByApplicationId(APPLICATION_ID))
-                .thenThrow(new SubmissionNotFoundException(errorMsg));
+	final String SECTION_TITLE_2 = "Project Status";
 
-        mockMvc.perform(get(BASE_PATH + APPLICATION_ID).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound()).andExpect(jsonPath("$.message").value(errorMsg));
-    }
+	final SchemeEntity scheme = SchemeEntity.builder()
+		.id(1)
+		.version(1)
+		.funderId(1)
+		.lastUpdated(instant)
+		.email("test@and.digital")
+		.name("Test Scheme")
+		.ggisIdentifier("Test GGIS Identifier")
+		.build();
 
-    @Test
-    void getSubmissionByApplicationId_invalidArgument() throws Exception {
-        ResultActions actions = mockMvc.perform(get(BASE_PATH + "invalidParameterType"));
+	final ApplicationFormEntity application = ApplicationFormEntity.builder()
+		.grantApplicationId(APPLICATION_ID)
+		.applicationName("Test Application")
+		.created(instant)
+		.lastUpdated(instant)
+		.definition(new ApplicationDefinition())
+		.grantSchemeId(scheme.getId())
+		.version(1)
+		.lastUpdateBy(1)
+		.build();
 
-        String errorMessage = actions.andReturn().getResponse().getContentAsString();
-        int errorCode = actions.andReturn().getResponse().getStatus();
-        assertThat(errorCode).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(errorMessage).contains("Incorrect parameter type passed");
+	final SubmissionQuestion question1 = SubmissionQuestion.builder()
+		.questionId(QUESTION_ID_1)
+		.profileField("ORG_NAME")
+		.fieldTitle("Enter the name of your organisation")
+		.hintText(
+				"This is the official name of your organisation. It could be the name that is registered with Companies House or the Charities Commission")
+		.responseType(ResponseTypeEnum.ShortAnswer)
+		.response("organisationName")
+		.validation(SubmissionQuestionValidation.builder().mandatory(true).minLength(2).maxLength(250).build())
+		.build();
 
-    }
+	final SubmissionQuestionDTO questionDTO1 = SubmissionQuestionDTO.builder()
+		.questionId(question1.getQuestionId())
+		.questionTitle(question1.getFieldTitle())
+		.questionResponse(question1.getResponse())
+		.build();
+
+	final String[] address = { "addressLine1", "addressLine2", "town", "county", "postcode" };
+
+	final SubmissionQuestion question2 = SubmissionQuestion.builder()
+		.questionId(QUESTION_ID_2)
+		.profileField("ORG_ADDRESS")
+		.fieldTitle("Enter your organisation's address")
+		.responseType(ResponseTypeEnum.AddressInput)
+		.multiResponse(address)
+		.validation(SubmissionQuestionValidation.builder().mandatory(true).build())
+		.build();
+
+	final SubmissionQuestion question3 = SubmissionQuestion.builder()
+		.questionId(QUESTION_ID_3)
+		.profileField("ORG_COMPANIES_HOUSE")
+		.fieldTitle("Does your organisation have a Companies House number?")
+		.hintText(
+				"Funding organisation might use this to identify your organisation when you apply for a grant. It might also be used to check your organisation is legitimate.")
+		.responseType(ResponseTypeEnum.YesNo)
+		.response("yes")
+		.validation(SubmissionQuestionValidation.builder().minLength(5).maxLength(100).build())
+		.build();
+
+	final SubmissionQuestionDTO questionDTO3 = SubmissionQuestionDTO.builder()
+		.questionId(question3.getQuestionId())
+		.questionTitle(question3.getFieldTitle())
+		.questionResponse(question3.getResponse())
+		.build();
+
+	final SubmissionQuestion question4 = SubmissionQuestion.builder()
+		.questionId(QUESTION_ID_4)
+		.fieldTitle(
+				"Description of the project, please include information regarding public accessibility (see GOV.UK guidance for a definition of public access) to the newly planted trees")
+		.hintText("Optional additional helptext")
+		.responseType(ResponseTypeEnum.LongAnswer)
+		.validation(SubmissionQuestionValidation.builder()
+			.mandatory(true)
+			.minLength(100)
+			.maxLength(2000)
+			.minWords(50)
+			.maxWords(400)
+			.build())
+		.response("description of the project")
+		.build();
+
+	final SubmissionQuestionDTO questionDTO4 = SubmissionQuestionDTO.builder()
+		.questionId(question4.getQuestionId())
+		.questionTitle(question4.getFieldTitle())
+		.questionResponse(question4.getResponse())
+		.build();
+
+	final SubmissionSectionDTO submissionSectionDTO2 = SubmissionSectionDTO.builder()
+		.sectionId(SECTION_ID_2)
+		.sectionTitle(SECTION_TITLE_2)
+		.questions(List.of(questionDTO4))
+		.build();
+
+	final AddressDTO addressDTO = AddressDTO.builder()
+		.addressLine1(address[0])
+		.addressLine2(address[1])
+		.town(address[2])
+		.county(address[3])
+		.postcode(address[4])
+		.build();
+
+	final SubmissionQuestionDTO questionDTO2 = SubmissionQuestionDTO.builder()
+		.questionId(question2.getQuestionId())
+		.questionTitle(question2.getFieldTitle())
+		.questionResponse(addressDTO)
+		.build();
+
+	final SubmissionSectionDTO submissionSectionDTO1 = SubmissionSectionDTO.builder()
+		.sectionId(SECTION_ID_1)
+		.sectionTitle(SECTION_TITLE_1)
+		.questions(List.of(questionDTO1, questionDTO2, questionDTO3))
+		.build();
+
+	private final UUID SUBMISSION_ID = UUID.fromString("1c2eabf0-b33c-433a-b00f-e73d8efca929");
+
+	final SubmissionDTO submissionDTO = SubmissionDTO.builder()
+		.submissionId(SUBMISSION_ID)
+		.applicationFormName(application.getApplicationName())
+		.ggisReferenceNumber(scheme.getGgisIdentifier())
+		.grantAdminEmailAddress(scheme.getEmail())
+		.submittedTimeStamp(zonedDateTime)
+		.grantApplicantEmailAddress(scheme.getEmail())
+		.sections(List.of(submissionSectionDTO1, submissionSectionDTO2))
+		.build();
+
+	final SubmissionsDTO submissionsDTO = SubmissionsDTO.builder().submissions(List.of(submissionDTO)).build();
+
+	@Mock
+	private SubmissionsService submissionService;
+
+	private SubmissionsController controllerUnderTest;
+
+	@BeforeEach
+	void setup() {
+		controllerUnderTest = new SubmissionsController(submissionService);
+	}
+
+	@Test
+	void getSubmissionByApplicationId_returnsExpectedResponse() {
+		when(submissionService.getSubmissionByApplicationId(APPLICATION_ID)).thenReturn(submissionsDTO);
+
+		final ResponseEntity<SubmissionsDTO> response = controllerUnderTest
+				.getSubmissionByApplicationId(APPLICATION_ID);
+
+		verify(submissionService).getSubmissionByApplicationId(APPLICATION_ID);
+		assertThat(HttpStatus.OK).isEqualTo(response.getStatusCode());
+		assertThat(response.getBody()).isEqualTo(submissionsDTO);
+
+	}
+
+	@Test
+	void getSubmissionByApplicationId_returns404WhenNoSubmissionFound() {
+		when(submissionService.getSubmissionByApplicationId(APPLICATION_ID))
+				.thenThrow(new SubmissionNotFoundException("error"));
+		final Exception result = assertThrows(SubmissionNotFoundException.class,
+				() -> controllerUnderTest.getSubmissionByApplicationId(APPLICATION_ID));
+		verify(submissionService).getSubmissionByApplicationId(APPLICATION_ID);
+		assertThat(result.getMessage()).contains("error");
+	}
 
 }

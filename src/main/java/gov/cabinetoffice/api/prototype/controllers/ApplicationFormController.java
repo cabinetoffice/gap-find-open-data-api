@@ -22,19 +22,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ApplicationFormController {
 
-    private final ApplicationFormService applicationFormService;
+	private final ApplicationFormService applicationFormService;
 
-    @GetMapping("/{applicationId}")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Application summary retrieved successfully.",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ApplicationFormEntity.class))),
-            @ApiResponse(responseCode = "404", description = "Application not found with given id",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = GenericErrorDTO.class))) })
-    public ResponseEntity getApplicationById(@PathVariable @NotNull Integer applicationId) {
-        ApplicationFormEntity response = this.applicationFormService.getApplicationById(applicationId);
-        return ResponseEntity.ok().body(response);
-    }
+	@GetMapping("/{applicationId}")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Application summary retrieved successfully.",
+					content = @Content(mediaType = "application/json",
+							schema = @Schema(implementation = ApplicationFormEntity.class))),
+			@ApiResponse(responseCode = "404", description = "Application not found with given id",
+					content = @Content(mediaType = "application/json",
+							schema = @Schema(implementation = GenericErrorDTO.class))) })
+	public ResponseEntity<ApplicationFormEntity> getApplicationById(@PathVariable @NotNull int applicationId) {
+		final ApplicationFormEntity response = this.applicationFormService.getApplicationById(applicationId);
+		return ResponseEntity.ok().body(response);
+	}
 
 }
