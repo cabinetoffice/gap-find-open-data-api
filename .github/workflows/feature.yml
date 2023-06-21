@@ -15,7 +15,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: openjdk:17-alpine
 
     services:
       postgres:
@@ -66,6 +65,8 @@ jobs:
           mvn spring-boot:build-image
           echo ''
           echo ${{ job.container.network }}
+          echo ''
+          echo ${{ job.services.postgres.network }}
           echo ''
           docker run demo:0.0.1-SNAPSHOT -p 8080:8080 --name application --network ${{ job.container.network }}
           echo '' 
