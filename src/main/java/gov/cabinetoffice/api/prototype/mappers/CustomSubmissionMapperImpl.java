@@ -117,7 +117,7 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
 
 		if (application == null)
 			return null;
-		
+
 		return application.getApplicationName();
 	}
 
