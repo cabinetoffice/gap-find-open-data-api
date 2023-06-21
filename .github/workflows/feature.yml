@@ -64,6 +64,6 @@ jobs:
           echo ''
           docker images
           echo ''
-          docker run demo:0.0.1-SNAPSHOT -p 8080:8080 -n application
+          docker run demo:0.0.1-SNAPSHOT -p 8080:8080 --name application
           echo '' 
           docker stop application
