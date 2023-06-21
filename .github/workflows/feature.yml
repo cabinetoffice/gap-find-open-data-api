@@ -61,6 +61,3 @@ jobs:
         with:
           name: DependencyCheck report
           path: ${{github.workspace}}/reports
-
-      - name: start service
-        run: mvn spring-boot:run
