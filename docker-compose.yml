@@ -27,3 +27,6 @@ services:
 
 networks:
   testing-network:
+
+volumes:
+  db-data:
