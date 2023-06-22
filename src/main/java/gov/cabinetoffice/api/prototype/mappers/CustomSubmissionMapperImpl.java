@@ -30,9 +30,6 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
 	GrantAttachmentService grantAttachmentService;
 
 	@Autowired
-	SubmissionMapperImpl submissionMapperImpl;
-
-	@Autowired
 	S3Service s3Service;
 
 	@Autowired
