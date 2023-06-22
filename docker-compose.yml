@@ -16,7 +16,6 @@ services:
   #GAP Open API prototype
   prototype:
     image: gap-prototype:latest
-    restart: always
     depends_on:
       - database
     ports:
