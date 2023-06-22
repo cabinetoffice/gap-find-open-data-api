@@ -3,8 +3,7 @@ version: '3'
 services:
 
   #Postgres Database
-  database:
-    container_name: postgres-gap-prototype
+  postgres-database:
     image: postgres
     environment:
       POSTGRES_USER: postgres
@@ -12,12 +11,14 @@ services:
       POSTGRES_DB: gap-prototype
     ports:
       - "5432:5432"
+    networks:
+      - testing-network
 
   #GAP Open API prototype
   prototype:
     image: gap-prototype:latest
     depends_on:
-      - database
+      - postgres-database
     ports:
       - "8080:8080"
     networks:
