@@ -71,4 +71,4 @@ jobs:
           mvn spring-boot:build-image -DskipTests
           echo ''
           echo ''
-          docker run gap-prototype:latest -p 8080:8080 --network "host"
+          docker run gap-prototype:latest -p 8080:8080 --network "host" -e spring_datasource_username="postgres" spring_datasource_password="mysecretpassword" spring_datasource_url="jdbc:postgresql://localhost:5432/postgres"
