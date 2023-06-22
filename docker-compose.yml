@@ -29,7 +29,6 @@ services:
       - "8080:8080"
     networks:
       - testing-network
-    environment:
 
 networks:
   testing-network:
