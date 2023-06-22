@@ -68,5 +68,9 @@ jobs:
       - name: Integration tests
         run: |
           docker build --tag prototype-application .
+          echo ''
+          echo ''
           docker container ps -a
+          echo ''
+          echo ''
           docker run prototype-application -p 8080:8080 --network ${{ job.container.network }}
