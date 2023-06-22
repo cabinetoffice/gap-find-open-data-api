@@ -1,0 +1,35 @@
+# docker-compose.yml
+version: '3'
+services:
+
+  #Postgres Database
+  database:
+    container_name: postgres-gap-prototype
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: gap-prototype
+    ports:
+      - "5432:5432"
+    options: >-
+      --health-cmd pg_isready
+      --health-interval 10s
+      --health-timeout 5s
+      --health-retries 5
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  prototype:
+    image:
+    restart: always
+    depends_on:
+      - database
+    ports:
+      - "8080:8080"
+    networks:
+      - testing-network
+    environment:
+
+networks:
+  testing-network:

@@ -70,5 +70,8 @@ jobs:
         run: |
           mvn spring-boot:build-image -DskipTests
           echo ''
+          echo '' 
+          ls -l 
           echo ''
-          docker run gap-prototype:latest -p 8080:8080 --network "host"
+          echo ''
+          docker compose -f docker-compose.yml up
