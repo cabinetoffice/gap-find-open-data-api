@@ -56,7 +56,8 @@ jobs:
           mvn spring-boot:build-image -DskipTests
           echo ''
           echo '' 
-          docker compose -f docker-compose.yml up --exit-code-from prototype
+          docker compose -f docker-compose.yml up -d --exit-code-from prototype
           echo '' 
           echo '' 
-          docker compose logs -f -t
+          docker stop postgres-database
+          docker stop prototype
