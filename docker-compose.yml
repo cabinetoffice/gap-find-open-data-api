@@ -15,6 +15,7 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
 
+  #GAP Open API prototype
   prototype:
     image: gap-prototype:latest
     restart: always
@@ -24,6 +25,9 @@ services:
       - "8080:8080"
     networks:
       - testing-network
+
+
+  #Serenity Integration Tests
 
 networks:
   testing-network:
