@@ -60,8 +60,11 @@ jobs:
 #          name: DependencyCheck report
 #          path: ${{github.workspace}}/reports
 
+      - name: Unit tests
+        run: mvn test
+
       - name: Integration tests
         run: |
-          mvn spring-boot:build-image
+          mvn spring-boot:build-image -DskipTests
           echo ''
           docker run gap-prototype:latest -p 8080:8080 --network ${{ job.container.network }}
