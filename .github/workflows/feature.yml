@@ -60,14 +60,12 @@ jobs:
 #          name: DependencyCheck report
 #          path: ${{github.workspace}}/reports
 
+#          docker run demo:0.0.1-SNAPSHOT -p 8080:8080 --name application --network ${{ job.container.network }}
+#          echo ''
+#          docker stop application
       - name: Integration tests
         run: |
-          mvn spring-boot:build-image
+          ./mvnw package
+          docker build .
+          docker images
           echo ''
-          echo ${{ job.container.network }}
-          echo ''
-          echo ${{ job.services.postgres.network }}
-          echo ''
-          docker run demo:0.0.1-SNAPSHOT -p 8080:8080 --name application --network ${{ job.container.network }}
-          echo '' 
-          docker stop application
