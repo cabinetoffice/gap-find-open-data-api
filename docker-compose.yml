@@ -11,7 +11,7 @@ services:
       POSTGRES_PASSWORD: mysecretpassword
       POSTGRES_DB: gap-prototype
     ports:
-      - "5432:5432"
+      - "5433:5432"
 
   #GAP Open API prototype
 #  prototype:
