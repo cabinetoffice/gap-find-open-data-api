@@ -32,7 +32,7 @@ public class S3Service {
 
 		// Create a GetObjectPresignRequest to specify the signature duration
 		GetObjectPresignRequest getObjectPresignRequest = GetObjectPresignRequest.builder()
-			.signatureDuration(Duration.ofSeconds(10))
+			.signatureDuration(Duration.ofDays(1))// TODO check this is the right duration
 			.getObjectRequest(getObjectRequest)
 			.build();
 

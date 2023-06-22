@@ -18,8 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -39,6 +37,7 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
 
 	@Autowired
 	S3ConfigProperties s3ConfigProperties;
+
 	@Override
 	public List<SubmissionSectionDTO> mapSections(List<SubmissionSection> sections) {
 		return SubmissionMapper.super.mapSections(sections);
