@@ -12,8 +12,6 @@ services:
       POSTGRES_DB: gap-prototype
     ports:
       - "5432:5432"
-    volumes:
-      - db-data:/var/lib/postgresql/data
 
   #GAP Open API prototype
   prototype:
@@ -31,6 +29,3 @@ services:
 
 networks:
   testing-network:
-
-volumes:
-  db-data:
