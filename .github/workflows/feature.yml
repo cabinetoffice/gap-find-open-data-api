@@ -67,9 +67,6 @@ jobs:
 #          docker stop application
       - name: Integration tests
         run: |
-          ls -l
-          echo ''
           docker build --tag prototype-application .
-          docker images
-          echo ''
+          docker container ps -a
           docker run prototype-application -p 8080:8080 --network ${{ job.container.network }}
