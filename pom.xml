@@ -9,8 +9,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>gov.cabinetoffice.api.prototype</groupId>
-	<artifactId>demo</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>gap-prototype</artifactId>
+	<version>latest</version>
 	<name>ApplicationRunner</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>

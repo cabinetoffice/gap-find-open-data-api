@@ -32,14 +32,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: "17"
           distribution: "temurin"
           cache: maven
-
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
@@ -62,15 +60,8 @@ jobs:
 #          name: DependencyCheck report
 #          path: ${{github.workspace}}/reports
 
-#          docker run demo:0.0.1-SNAPSHOT -p 8080:8080 --name application --network ${{ job.container.network }}
-#          echo ''
-#          docker stop application
       - name: Integration tests
         run: |
-          docker build --tag prototype-application .
+          mvn spring-boot:build-image
           echo ''
-          echo ''
-          docker container ps -a
-          echo ''
-          echo ''
-          docker run prototype-application -p 8080:8080 --network ${{ job.container.network }}
+          docker run gap-prototype:latest -p 8080:8080 --network ${{ job.container.network }}
