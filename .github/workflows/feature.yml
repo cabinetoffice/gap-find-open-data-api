@@ -54,10 +54,6 @@ jobs:
       - name: Integration tests
         run: |
           mvn spring-boot:build-image -DskipTests
-          echo ''
-          echo '' 
           docker compose -f docker-compose.yml up -d
-          echo '' 
-          echo '' 
           docker stop postgres-db
           docker stop gap-prototype
