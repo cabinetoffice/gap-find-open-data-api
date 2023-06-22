@@ -68,9 +68,12 @@ jobs:
 
   run-application:
     needs: build
+
+
     runs-on: ubuntu-latest
     container: maven:latest
-      ports: 8080
+      ports:
+        - 8080
 
     steps:
       - run: mvn spring-boot:start
