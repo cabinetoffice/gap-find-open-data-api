@@ -12,11 +12,6 @@ services:
       POSTGRES_DB: gap-prototype
     ports:
       - "5432:5432"
-    options: >-
-      --health-cmd pg_isready
-      --health-interval 10s
-      --health-timeout 5s
-      --health-retries 5
     volumes:
       - db-data:/var/lib/postgresql/data
 
