@@ -71,7 +71,7 @@ jobs:
           mvn spring-boot:build-image -DskipTests
           echo ''
           echo '' 
-          docker compose -f docker-compose.yml up -d 
+          docker compose -f docker-compose.yml up
           echo '' 
           echo '' 
           docker compose logs -f -t
