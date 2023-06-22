@@ -68,4 +68,4 @@ jobs:
         run: |
           mvn spring-boot:build-image -DskipTests
           echo ''
-          docker run gap-prototype:latest -p 8080:8080 --network ${{ job.container.network }}
+          docker run gap-prototype:latest -p 8080:8080 --network="host"
