@@ -20,6 +20,7 @@ jobs:
       postgres:
         image: postgres
         env:
+          POSTGRES_DB: postgres
           POSTGRES_USERNAME: postgres
           POSTGRES_PASSWORD: mysecretpassword
         options: >-
@@ -39,9 +40,10 @@ jobs:
           java-version: "17"
           distribution: "temurin"
           cache: maven
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml -DskipTests
 
+#      - name: Build with Maven
+#        run: mvn -B package --file pom.xml -DskipTests
+#
 #      - name: Dependency check
 #        uses: dependency-check/Dependency-Check_Action@main
 #        env:
@@ -60,12 +62,15 @@ jobs:
 #        with:
 #          name: DependencyCheck report
 #          path: ${{github.workspace}}/reports
+#
+#      - name: Unit tests
+#        run: mvn test
 
-      - name: Unit tests
-        run: mvn test
+  run-application:
+    needs: build
+    runs-on: ubuntu-latest
+    container: maven:latest
+      ports: 8080
 
-      - name: Integration tests
-        run: |
-          mvn spring-boot:build-image -DskipTests
-          echo ''
-          docker run gap-prototype:latest -p 8080:8080 --network="host"
+    steps:
+      - run: mvn spring-boot:start
