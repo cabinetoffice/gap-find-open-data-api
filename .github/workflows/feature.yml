@@ -26,30 +26,30 @@ jobs:
           distribution: "temurin"
           cache: maven
 
-#      - name: Build with Maven
-#        run: mvn -B package --file pom.xml -DskipTests
-#
-#      - name: Dependency check
-#        uses: dependency-check/Dependency-Check_Action@main
-#        env:
-#          JAVA_HOME: /opt/jdk
-#        id: DependencyCheck
-#        with:
-#          project: "gap-find-api-prototype"
-#          path: "."
-#          format: "HTML"
-#          args: >
-#            --enableRetired
-#            --disableOssIndex true
-#
-#      - name: Upload dependency check report
-#        uses: actions/upload-artifact@master
-#        with:
-#          name: DependencyCheck report
-#          path: ${{github.workspace}}/reports
-#
-#      - name: Unit tests
-#        run: mvn test
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml -DskipTests
+
+      - name: Dependency check
+        uses: dependency-check/Dependency-Check_Action@main
+        env:
+          JAVA_HOME: /opt/jdk
+        id: DependencyCheck
+        with:
+          project: "gap-find-api-prototype"
+          path: "."
+          format: "HTML"
+          args: >
+            --enableRetired
+            --disableOssIndex true
+
+      - name: Upload dependency check report
+        uses: actions/upload-artifact@master
+        with:
+          name: DependencyCheck report
+          path: ${{github.workspace}}/reports
+
+      - name: Unit tests
+        run: mvn test
 
       - name: Integration tests
         run: |
