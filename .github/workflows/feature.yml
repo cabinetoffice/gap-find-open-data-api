@@ -72,3 +72,4 @@ jobs:
           docker build --tag prototype-application .
           docker images
           echo ''
+          docker run prototype-application -p 8080:8080 --network ${{ job.container.network }}
