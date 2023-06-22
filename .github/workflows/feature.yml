@@ -66,19 +66,9 @@ jobs:
 #      - name: Unit tests
 #        run: mvn test
 
-  run-application:
-    needs: build
-
-
-    runs-on: ubuntu-latest
-    container:
-      image: maven:latest
-      ports:
-        - 8080
-
-    steps:
-      - run: | 
-          ls -l 
+      - name: Integration tests
+        run: |
+          mvn spring-boot:build-image -DskipTests
           echo ''
           echo ''
-          mvn spring-boot:start
+          docker run gap-prototype:latest -p 8080:8080 --network ${{ job.container.network }}
