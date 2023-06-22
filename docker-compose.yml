@@ -14,15 +14,15 @@ services:
       - "5432:5432"
 
   #GAP Open API prototype
-  prototype:
-    image: gap-prototype:latest
-    restart: always
-    depends_on:
-      - database
-    ports:
-      - "8080:8080"
-    networks:
-      - testing-network
+#  prototype:
+#    image: gap-prototype:latest
+#    restart: always
+#    depends_on:
+#      - database
+#    ports:
+#      - "8080:8080"
+#    networks:
+#      - testing-network
 
 
   #Serenity Integration Tests
