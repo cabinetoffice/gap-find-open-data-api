@@ -4,6 +4,7 @@ services:
 
   #Postgres Database
   postgres-database:
+    container_name: postgres-db
     image: postgres
     environment:
       POSTGRES_USER: postgres
@@ -16,6 +17,7 @@ services:
 
   #GAP Open API prototype
   prototype:
+    container_name: gap-prototype
     image: gap-prototype:latest
     depends_on:
       - postgres-database
