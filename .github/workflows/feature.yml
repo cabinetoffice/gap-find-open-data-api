@@ -77,4 +77,8 @@ jobs:
         - 8080
 
     steps:
-      - run: mvn spring-boot:start
+      - run: | 
+          ls -l 
+          echo ''
+          echo ''
+          mvn spring-boot:start
