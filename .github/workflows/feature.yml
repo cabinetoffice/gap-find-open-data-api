@@ -69,6 +69,6 @@ jobs:
         run: |
           ls -l
           echo ''
-          docker build --tag prototype-application.
+          docker build --tag prototype-application .
           docker images
           echo ''
