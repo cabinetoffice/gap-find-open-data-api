@@ -71,7 +71,8 @@ jobs:
 
 
     runs-on: ubuntu-latest
-    container: maven:latest
+    container:
+      image: maven:latest
       ports:
         - 8080
 
