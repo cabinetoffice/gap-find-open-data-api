@@ -55,15 +55,9 @@ class ApplicationFormControllerTest {
 
 	private ApplicationFormController controllerUnderTest;
 
-	@Mock
-	private S3Service s3Service;
-
-	@Mock
-	private S3ConfigProperties s3ConfigProperties;
-
 	@BeforeEach
 	void setup() {
-		controllerUnderTest = new ApplicationFormController(applicationFormService, s3Service, s3ConfigProperties);
+		controllerUnderTest = new ApplicationFormController(applicationFormService);
 	}
 
 	@Test

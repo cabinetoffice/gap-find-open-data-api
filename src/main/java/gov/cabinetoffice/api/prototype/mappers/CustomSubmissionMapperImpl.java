@@ -1,5 +1,6 @@
 package gov.cabinetoffice.api.prototype.mappers;
 
+import gov.cabinetoffice.api.prototype.config.S3ConfigProperties;
 import gov.cabinetoffice.api.prototype.dtos.submission.AddressDTO;
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionDTO;
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionQuestionDTO;
@@ -12,10 +13,13 @@ import gov.cabinetoffice.api.prototype.models.submission.SubmissionDefinition;
 import gov.cabinetoffice.api.prototype.models.submission.SubmissionQuestion;
 import gov.cabinetoffice.api.prototype.models.submission.SubmissionSection;
 import gov.cabinetoffice.api.prototype.services.GrantAttachmentService;
+import gov.cabinetoffice.api.prototype.services.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -30,6 +34,11 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
 	@Autowired
 	SubmissionMapperImpl submissionMapperImpl;
 
+	@Autowired
+	S3Service s3Service;
+
+	@Autowired
+	S3ConfigProperties s3ConfigProperties;
 	@Override
 	public List<SubmissionSectionDTO> mapSections(List<SubmissionSection> sections) {
 		return SubmissionMapper.super.mapSections(sections);
@@ -61,7 +70,10 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
 	public String buildUploadResponse(SubmissionQuestion submissionQuestion) {
 		UUID grantAttachmentId = submissionQuestion.getAttachmentId();
 		GrantAttachment grantAttachment = grantAttachmentService.getGrantAttachmentById(grantAttachmentId);
-		return grantAttachment.getLocation();
+		String bucketName = s3ConfigProperties.getSourceBucket();
+		String objectKey = grantAttachment.getLocation().split(".amazonaws.com/")[1];
+		return s3Service.createPresignedURL(bucketName, objectKey);
+
 	}
 
 	@Override
