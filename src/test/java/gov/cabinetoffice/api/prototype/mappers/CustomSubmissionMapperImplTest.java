@@ -5,12 +5,7 @@ import gov.cabinetoffice.api.prototype.dtos.submission.AddressDTO;
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionDTO;
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionQuestionDTO;
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionSectionDTO;
-import gov.cabinetoffice.api.prototype.entities.ApplicationFormEntity;
-import gov.cabinetoffice.api.prototype.entities.GrantApplicant;
-import gov.cabinetoffice.api.prototype.entities.GrantApplicantOrganisationProfile;
-import gov.cabinetoffice.api.prototype.entities.GrantAttachment;
-import gov.cabinetoffice.api.prototype.entities.SchemeEntity;
-import gov.cabinetoffice.api.prototype.entities.Submission;
+import gov.cabinetoffice.api.prototype.entities.*;
 import gov.cabinetoffice.api.prototype.enums.ResponseTypeEnum;
 import gov.cabinetoffice.api.prototype.enums.SubmissionSectionStatus;
 import gov.cabinetoffice.api.prototype.enums.SubmissionStatus;
@@ -33,6 +28,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringJUnitConfig
@@ -282,24 +278,24 @@ class CustomSubmissionMapperImplTest {
 		assertThat(result).isEqualTo(submissionSectionDTO1);
 	}
 
-	// @Test
-	// void buildUploadResponse() {
-	// SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
-	// .questionId("testId")
-	// .responseType(ResponseTypeEnum.SingleFileUpload)
-	// .fieldTitle("Test Upload")
-	// .multiResponse(date)
-	// .attachmentId(GRANT_ATTACHMENT_ID)
-	// .build();
-	//
-	// GrantAttachment grantAttachment = GrantAttachment.builder()
-	// .id(GRANT_ATTACHMENT_ID)
-	// .location("location")
-	// .build();
-	//
-	// when(grantAttachmentService.getGrantAttachmentById(GRANT_ATTACHMENT_ID)).thenReturn(grantAttachment);
-	// String result = customSubmissionMapperImpl.buildUploadResponse(submissionQuestion);
-	// assertThat(result).isEqualTo(grantAttachment.getLocation());
-	// }
+	@Test
+	void buildUploadResponse() {
+		final String expectedResult = "presignedUrl";
+
+		final SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
+			.attachmentId(GRANT_ATTACHMENT_ID)
+			.build();
+
+		final GrantAttachment grantAttachment = GrantAttachment.builder()
+			.id(GRANT_ATTACHMENT_ID)
+			.location("www.amazonaws.com/location")
+			.build();
+
+		when(grantAttachmentService.getGrantAttachmentById(GRANT_ATTACHMENT_ID)).thenReturn(grantAttachment);
+		when(s3Service.createPresignedURL(any(), any())).thenReturn(expectedResult);
+
+		final String result = customSubmissionMapperImpl.buildUploadResponse(submissionQuestion);
+		assertThat(result).isEqualTo(expectedResult);
+	}
 
 }

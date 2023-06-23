@@ -1,10 +1,6 @@
 package gov.cabinetoffice.api.prototype.controllers;
 
-import gov.cabinetoffice.api.prototype.dtos.submission.AddressDTO;
-import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionDTO;
-import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionListDTO;
-import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionQuestionDTO;
-import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionSectionDTO;
+import gov.cabinetoffice.api.prototype.dtos.submission.*;
 import gov.cabinetoffice.api.prototype.entities.ApplicationFormEntity;
 import gov.cabinetoffice.api.prototype.entities.SchemeEntity;
 import gov.cabinetoffice.api.prototype.enums.ResponseTypeEnum;
