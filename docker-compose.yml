@@ -28,11 +28,11 @@ services:
 
 
   #Serenity Integration Tests
-  serenity:
-    container_name: serenity-prototype
-    image: maven:3.9.2-amazoncorretto-17
-    networks:
-      - testing-network
+#  serenity:
+#    container_name: serenity-prototype
+#    image: maven:3.9.2-amazoncorretto-17
+#    networks:
+#      - testing-network
 
 networks:
   testing-network:
