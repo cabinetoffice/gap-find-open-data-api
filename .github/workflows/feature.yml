@@ -80,4 +80,5 @@ jobs:
           docker compose -f docker-compose.yml up -d
           docker cp ../serenity serenity-prototype:application
           docker exec -w /application serenity-prototype mvn clean verify
+          docker logs serenity-prototype
           docker compose down
