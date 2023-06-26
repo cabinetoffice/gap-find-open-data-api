@@ -66,6 +66,12 @@ jobs:
 
       - name: Integration tests
         run: |
-          ls -l /home/runner
+          ls -l /home/runner/runners
+          echo ''
+          echo ''
+          ls -l /home/runner/work
+          echo ''
+          echo ''
+          echo $GITHUB_WORKSPACE
           echo ''
           echo ''
