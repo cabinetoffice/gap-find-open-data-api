@@ -69,3 +69,6 @@ jobs:
           ls -l $GITHUB_WORKSPACE
           echo ''
           echo ''
+          pwd
+          echo ''
+          echo ''
