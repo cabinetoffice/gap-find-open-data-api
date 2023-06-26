@@ -74,7 +74,7 @@ jobs:
 
       - name: Run Integration Tests
         working-directory: ./prototype
-        run: docker exec -w /application serenity-prototype sh echo ls -l
+        run: docker exec -w /application serenity-prototype ./echo ls -l
 
       - name: Log Integration Test Results
         if: always()
