@@ -64,25 +64,19 @@ jobs:
 #      docker compose -f docker-compose.yml up -d
 #      docker compose down
 
-      - name: setup integration test environment
+      - name: Build Integration Environment
         working-directory: ./prototype
         run: |
-          ls -l $GITHUB_WORKSPACE
-          echo ''
-          echo ''
-          pwd
-          echo ''
-          echo ''
-          ls -l ../serenity/
-          echo ''
-          echo ''
           mvn spring-boot:build-image -DskipTests
           docker compose -f docker-compose.yml up -d
           docker cp ../serenity serenity-prototype:application
           docker exec -w /application serenity-prototype mvn clean verify
-          docker compose down
 
-      - name: Log test results
+      - name: Run Integration Tests
+        working-directory: ./prototype
+        run: docker exec -w /application serenity-prototype mvn clean verify
+
+      - name: Log Integration Test Results
         if: always()
         working-directory: ./prototype
-        run: docker logs -t serenity-prototype | tail -n 100
+        run: docker logs -t serenity-prototype
