@@ -64,7 +64,7 @@ jobs:
 #      docker compose -f docker-compose.yml up -d
 #      docker compose down
 
-      - name: Integration tests
+      - name: setup integration test environment
         working-directory: ./prototype
         run: |
           ls -l $GITHUB_WORKSPACE
@@ -78,6 +78,6 @@ jobs:
           echo ''
           mvn spring-boot:build-image -DskipTests
           docker compose -f docker-compose.yml up -d
-          docker cp ../serenity serenity:serenity-prototype
-          docker exec -it -w /serenity-prototype serenity mvn clean verify
+          docker cp ../serenity serenity-prototype:application
+          docker exec -it -w /application serenity mvn clean verify
           docker compose down
