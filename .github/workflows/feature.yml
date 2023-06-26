@@ -54,7 +54,6 @@ jobs:
             --disableOssIndex true
 
       - name: Upload dependency check report
-        working-directory: ./prototype
         uses: actions/upload-artifact@master
         with:
           name: DependencyCheck report
