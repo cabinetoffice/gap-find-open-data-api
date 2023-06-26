@@ -73,6 +73,9 @@ jobs:
           pwd
           echo ''
           echo ''
+          ls -l ../serenity/
+          echo ''
+          echo ''
           mvn spring-boot:build-image -DskipTests
           docker compose -f docker-compose.yml up -d
           docker compose down
