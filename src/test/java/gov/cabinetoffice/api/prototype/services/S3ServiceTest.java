@@ -23,19 +23,16 @@ import static org.mockito.Mockito.*;
 class S3ServiceTest {
 
 	@Mock
-	private S3Client s3Client;
-
-	@Mock
 	private S3Presigner s3Presigner;
 
 	@InjectMocks
-	private S3Service s3Service = new S3Service(s3Client);
+	private S3Service s3Service;
 
 	private final String BUCKET_NAME = "testBucketName";
 
 	private final String OBJECT_KEY = "testObjectKey";
 
-	private final Instant DURATION = Instant.now();
+	private final Instant NOW = Instant.now();
 
 	@Test
 	public void testCreatePresignedURL() throws MalformedURLException {
@@ -47,7 +44,7 @@ class S3ServiceTest {
 			PresignedGetObjectRequest presignedRequest = mock(PresignedGetObjectRequest.class);
 
 			when(presignedRequest.url()).thenReturn(new URL(expectedUrl));
-			when(presignedRequest.expiration()).thenReturn(DURATION.plus(Duration.ofDays(S3Service.URL_DURATION)));
+			when(presignedRequest.expiration()).thenReturn(NOW.plus(Duration.ofDays(S3Service.URL_DURATION)));
 			when(presignedRequest.isBrowserExecutable()).thenReturn(true);
 			when(s3Presigner.presignGetObject(any(GetObjectPresignRequest.class))).thenReturn(presignedRequest);
 

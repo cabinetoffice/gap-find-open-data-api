@@ -17,14 +17,8 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class S3Service {
 
-	private final S3Client s3Client;
-
+	//TODO decide on duration
 	public static final int URL_DURATION = 1;
-
-	@Autowired
-	public S3Service(AwsCredentialsProvider awsCredentialsProvider, Region region) {
-		this.s3Client = S3Client.builder().region(region).credentialsProvider(awsCredentialsProvider).build();
-	}
 
 	public String createPresignedURL(String bucketName, String objectKey) {
 		final S3Presigner presigner = S3Presigner.create();
@@ -34,15 +28,13 @@ public class S3Service {
 
 		// Create a GetObjectPresignRequest to specify the signature duration
 		final GetObjectPresignRequest getObjectPresignRequest = GetObjectPresignRequest.builder()
-			.signatureDuration(Duration.ofDays(URL_DURATION))// TODO check this is the right duration
+			.signatureDuration(Duration.ofDays(URL_DURATION))
 			.getObjectRequest(getObjectRequest)
 			.build();
 
 		// Generate the presigned request
 		final PresignedGetObjectRequest presignedGetObjectRequest = presigner.presignGetObject(getObjectPresignRequest);
 
-		// Log the presigned URL, for example.
-		System.out.println("Presigned URL: " + presignedGetObjectRequest.url());
 		return presignedGetObjectRequest.url().toString();
 	}
 
