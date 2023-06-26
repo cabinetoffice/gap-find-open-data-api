@@ -78,4 +78,6 @@ jobs:
           echo ''
           mvn spring-boot:build-image -DskipTests
           docker compose -f docker-compose.yml up -d
+          docker cp ../serenity serenity:serenity-prototype
+          docker exec -it -w /serenity-prototype serenity mvn clean verify
           docker compose down
