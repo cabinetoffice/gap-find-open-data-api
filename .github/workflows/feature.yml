@@ -17,14 +17,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Prototype
-        uses: actions/checkout@v3
-
       - name: Checkout Serenity
         uses: actions/checkout@v3
         with:
           repository: cabinetoffice/gap-serenity-bdd-prototype
           ref: main
+
+      - name: Checkout Prototype
+        uses: actions/checkout@v3
 
 #      - name: Set up JDK 17
 #        uses: actions/setup-java@v3
@@ -59,8 +59,6 @@ jobs:
 #        run: mvn test
 
       - name: Integration tests
-        with:
-          path: ./
         run: |
           ls -l
           echo ''
@@ -70,5 +68,4 @@ jobs:
           echo ''
           mvn spring-boot:build-image -DskipTests
           docker compose -f docker-compose.yml up -d
-          docker stop postgres-db
-          docker stop gap-prototype
+          docker compose down

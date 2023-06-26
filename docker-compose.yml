@@ -28,6 +28,11 @@ services:
 
 
   #Serenity Integration Tests
+  serenity:
+    image: maven:3.9.2-amazoncorretto-17
+    command: ls -l ../
+    networks:
+      - testing-network
 
 networks:
   testing-network:
