@@ -70,7 +70,6 @@ jobs:
           mvn spring-boot:build-image -DskipTests
           docker compose -f docker-compose.yml up -d
           docker cp ../serenity serenity-prototype:application
-          docker exec -w /application serenity-prototype mvn clean verify
 
       - name: Run Integration Tests
         working-directory: ./prototype
