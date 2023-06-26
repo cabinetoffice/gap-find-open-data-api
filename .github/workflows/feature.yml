@@ -83,5 +83,6 @@ jobs:
           docker compose down
 
         - name: Log test results
+          if: always()
           working-directory: ./prototype
           run: docker logs -t serenity-prototype | tail -n 100
