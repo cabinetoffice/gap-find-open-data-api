@@ -62,6 +62,7 @@ jobs:
         run: |
           ls -l
           ls -l ../
+          ls -l /home/runner/work/
           echo ''
           echo ''
           pwd 
