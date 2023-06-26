@@ -73,7 +73,7 @@ jobs:
 
       - name: Run Integration Tests
         working-directory: ./prototype
-        run: docker exec -w /application serenity-prototype mvn clean verify
+        run: docker exec -w /application serenity-prototype "mvn clean verify"
 
       - name: Log Integration Test Results
         if: always()
