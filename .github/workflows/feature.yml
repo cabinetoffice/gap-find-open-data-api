@@ -60,12 +60,12 @@ jobs:
 #
 #      - name: Unit tests
 #        run: mvn test
+#      mvn spring-boot:build-image -DskipTests
+#      docker compose -f docker-compose.yml up -d
+#      docker compose down
 
       - name: Integration tests
         run: |
-          ls -l /home/runner/work/gap-find-api-prototype
+          ls -l /home/runner
           echo ''
           echo ''
-          mvn spring-boot:build-image -DskipTests
-          docker compose -f docker-compose.yml up -d
-          docker compose down
