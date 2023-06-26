@@ -65,6 +65,7 @@ jobs:
 #      docker compose down
 
       - name: Integration tests
+        working-directory: ./prototype
         run: |
           ls -l $GITHUB_WORKSPACE
           echo ''
