@@ -63,10 +63,7 @@ jobs:
 
       - name: Integration tests
         run: |
-          ls -l /home/runner/work/
-          echo ''
-          echo ''
-          pwd 
+          ls -l /home/runner/work/gap-find-api-prototype
           echo ''
           echo ''
           mvn spring-boot:build-image -DskipTests
