@@ -64,7 +64,7 @@ jobs:
 #      docker compose -f docker-compose.yml up -d
 #      docker compose down
 
-      # TODO look into moving these steps into Dockerfile
+      # TODO look into moving these docker steps into docker-compose.yml
       - name: Build Integration Environment
         working-directory: ./prototype
         run: |
@@ -74,7 +74,7 @@ jobs:
 
       - name: Run Integration Tests
         working-directory: ./prototype
-        run: docker exec -w /application serenity-prototype mvn clean
+        run: curl http://localhost:8080/submissions/1
 
       - name: Log Integration Test Results
         if: always()
