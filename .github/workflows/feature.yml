@@ -80,8 +80,7 @@ jobs:
         run: docker logs -t serenity-prototype
 
       - name: Upload Serenity Report
-        working-directory: ./prototype
         uses: actions/upload-artifact@master
         with:
           name: Serenity report
-          path: ${{github.workspace}}/usr/src/serenity/target/site/
+          path: ${{github.workspace}}/serenity/usr/src/serenity/target/site/
