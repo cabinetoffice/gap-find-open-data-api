@@ -80,7 +80,7 @@ jobs:
         run: docker logs -t serenity-prototype
 
       - name: Log report location
-        working0-directory: ./serenity
+        working-directory: ./serenity
         run: | 
           echo 'Current location'
           pwd 
