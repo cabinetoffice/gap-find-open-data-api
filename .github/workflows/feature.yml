@@ -79,6 +79,17 @@ jobs:
         working-directory: ./prototype
         run: docker logs -t serenity-prototype
 
+      - name: Log report location
+        working0-directory: ./serenity
+        run: | 
+          echo 'Current location'
+          pwd 
+          echo ''
+          ls -l
+          echo ''
+          echo 'Github workspoace'
+          echo ${{github.workspace}}
+
       - name: Upload Serenity Report
         uses: actions/upload-artifact@master
         with:
