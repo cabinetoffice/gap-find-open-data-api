@@ -82,5 +82,5 @@ jobs:
       - name: Upload Serenity Report
         uses: actions/upload-artifact@master
         with:
-          name: DependencyCheck report
+          name: Serenity report
           path: ${{github.workspace}}/reports
