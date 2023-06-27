@@ -80,6 +80,7 @@ jobs:
         run: docker logs -t serenity-prototype
 
       - name: Upload Serenity Report
+        working-directory: ./prototype
         uses: actions/upload-artifact@master
         with:
           name: Serenity report
