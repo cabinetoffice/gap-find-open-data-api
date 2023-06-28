@@ -24,7 +24,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      spring_datasource_url: jdbc:postgresql://postgres-database:5432/gap-prototype
+      spring_datasource_url: jdbc:postgresql://postgres-database:5432/gap-prototypes
       spring_datasource_username: postgres
       spring_datasource_password: mysecretpassword
     networks:
