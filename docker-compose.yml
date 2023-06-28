@@ -23,16 +23,12 @@ services:
       - postgres-database
     ports:
       - "8080:8080"
+    environment:
+      spring_datasource_url: jdbc:postgresql://postgres-database:5432/gap-prototype
+      spring_datasource_username: postgres
+      spring_datasource_password: mysecretpassword
     networks:
       - testing-network
-
-
-  #Serenity Integration Tests
-#  serenity:
-#    container_name: serenity-prototype
-#    image: maven:3.9.2-amazoncorretto-17
-#    networks:
-#      - testing-network
 
 networks:
   testing-network:
