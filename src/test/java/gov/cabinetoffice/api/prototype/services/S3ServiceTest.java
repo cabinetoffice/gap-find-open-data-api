@@ -1,26 +1,25 @@
 package gov.cabinetoffice.api.prototype.services;
 
+import gov.cabinetoffice.api.prototype.config.AwsClientConfig;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.Duration;
-import java.time.Instant;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @SpringJUnitConfig
 class S3ServiceTest {
+
+	@Mock
+	AwsClientConfig awsClientConfig;
 
 	@Mock
 	private S3Presigner s3Presigner;
@@ -28,36 +27,30 @@ class S3ServiceTest {
 	@InjectMocks
 	private S3Service s3Service;
 
-	private final String BUCKET_NAME = "testBucketName";
+	private final String BUCKET_NAME = "test-bucket-name";
 
-	private final String OBJECT_KEY = "testObjectKey";
+	final String REGION = "eu-west-2";
 
-	private final Instant NOW = Instant.now();
+	private final String OBJECT_KEY = "test-object-key";
 
 	@Test
-	public void testCreatePresignedURL() throws MalformedURLException {
-		String expectedUrl = "https://example.com/presigned-url";
+	public void testCreatePresignedURL() {
+		final String EXPECTED_URL_START = "https://" + BUCKET_NAME + ".s3." + REGION + ".amazonaws.com/" + OBJECT_KEY
+				+ "?";
 
-		try (MockedStatic<S3Presigner> mockedPresigner = mockStatic(S3Presigner.class)) {
-			mockedPresigner.when(S3Presigner::create).thenReturn(s3Presigner);
+		final PresignedGetObjectRequest presigned = s3Presigner.presignGetObject(
+				getObjectPresignerRequest -> getObjectPresignerRequest.signatureDuration(Duration.ofMinutes(15))
+					.getObjectRequest(getObjectRequest -> getObjectRequest.bucket(BUCKET_NAME).key(OBJECT_KEY)));
 
-			PresignedGetObjectRequest presignedRequest = mock(PresignedGetObjectRequest.class);
+		when(awsClientConfig.getAccessKeyId()).thenReturn("accessKeyId");
+		when(awsClientConfig.getSecretKey()).thenReturn("secretKey");
+		when(awsClientConfig.getRegion()).thenReturn(REGION);
 
-			when(presignedRequest.url()).thenReturn(new URL(expectedUrl));
-			when(presignedRequest.expiration()).thenReturn(NOW.plus(Duration.ofDays(S3Service.URL_DURATION)));
-			when(presignedRequest.isBrowserExecutable()).thenReturn(true);
-			when(s3Presigner.presignGetObject(any(GetObjectPresignRequest.class))).thenReturn(presignedRequest);
+		when(s3Presigner.presignGetObject(any(GetObjectPresignRequest.class))).thenReturn(presigned);
 
-			String resultUrl = s3Service.createPresignedURL(BUCKET_NAME, OBJECT_KEY);
+		final String resultUrl = s3Service.createPresignedURL(BUCKET_NAME, OBJECT_KEY);
 
-			verify(s3Presigner)
-				.presignGetObject(argThat((GetObjectPresignRequest request) -> request.signatureDuration()
-					.equals(Duration.ofDays(S3Service.URL_DURATION))
-						&& request.getObjectRequest().bucket().equals(BUCKET_NAME)
-						&& request.getObjectRequest().key().equals(OBJECT_KEY)));
-
-			assertEquals(expectedUrl, resultUrl);
-		}
+		assertThat(resultUrl).startsWith(EXPECTED_URL_START);
 	}
 
 }

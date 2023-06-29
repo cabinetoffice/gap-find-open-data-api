@@ -19,7 +19,4 @@ public class S3ConfigProperties {
 	@NotNull
 	private String sourceBucket;
 
-	@NotNull
-	private String destinationBucket;
-
 }

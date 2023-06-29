@@ -67,7 +67,6 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
 		UUID grantAttachmentId = submissionQuestion.getAttachmentId();
 		GrantAttachment grantAttachment = grantAttachmentService.getGrantAttachmentById(grantAttachmentId);
 		String bucketName = s3ConfigProperties.getSourceBucket();
-		// TODO should we check the size of the array first?
 		String objectKey = grantAttachment.getLocation().split(".amazonaws.com/")[1];
 		return s3Service.createPresignedURL(bucketName, objectKey);
 
