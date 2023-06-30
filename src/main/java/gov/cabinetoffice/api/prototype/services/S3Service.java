@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
@@ -31,18 +30,15 @@ public class S3Service {
 					() -> AwsBasicCredentials.create(awsClientConfig.getAccessKeyId(), awsClientConfig.getSecretKey()))
 			.build();
 
-		// Create a GetObjectRequest to be pre-signed
-		final GetObjectRequest getObjectRequest = GetObjectRequest.builder().bucket(bucketName).key(objectKey).build();
-
 		// Create a GetObjectPresignRequest to specify the signature duration
 		final GetObjectPresignRequest getObjectPresignRequest = GetObjectPresignRequest.builder()
 			.signatureDuration(Duration.ofSeconds(URL_DURATION))
-			.getObjectRequest(getObjectRequest)
+			.getObjectRequest(getObjectRequest -> getObjectRequest.bucket(bucketName).key(objectKey))
 			.build();
 
 		// Generate the presigned request
 		final PresignedGetObjectRequest presignedGetObjectRequest = presigner.presignGetObject(getObjectPresignRequest);
-
+		presigner.close();
 		return presignedGetObjectRequest.url().toString();
 	}
 

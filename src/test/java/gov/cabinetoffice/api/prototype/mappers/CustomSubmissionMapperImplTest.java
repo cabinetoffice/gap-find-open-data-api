@@ -272,18 +272,6 @@ class CustomSubmissionMapperImplTest {
 	// didn't test the other methods because they are tested in SubmissionMapperTest
 
 	@Test
-	void submissionToSubmissionDto() {
-		SubmissionDTO result = customSubmissionMapperImpl.submissionToSubmissionDto(submission);
-		assertThat(result).isEqualTo(submissionDTO);
-	}
-
-	@Test
-	void submissionSectionToSubmissionSectionDto() {
-		SubmissionSectionDTO result = customSubmissionMapperImpl.submissionSectionToSubmissionSectionDto(section1);
-		assertThat(result).isEqualTo(submissionSectionDTO1);
-	}
-
-	@Test
 	void buildUploadResponse() {
 		final String expectedResult = "presignedUrl";
 
@@ -301,6 +289,107 @@ class CustomSubmissionMapperImplTest {
 
 		final String result = customSubmissionMapperImpl.buildUploadResponse(submissionQuestion);
 		assertThat(result).isEqualTo(expectedResult);
+	}
+
+	@Test
+	void submissionToSubmissionDto() {
+		final SubmissionDTO result = customSubmissionMapperImpl.submissionToSubmissionDto(submission);
+		assertThat(result).isEqualTo(submissionDTO);
+	}
+
+	@Test
+	void submissionToSubmissionDto_returnNullIfSubmissionIsNull() {
+		final SubmissionDTO result = customSubmissionMapperImpl.submissionToSubmissionDto(null);
+		assertThat(result).isNull();
+	}
+
+	@Test
+	void submissionSectionToSubmissionSectionDto() {
+		final SubmissionSectionDTO result = customSubmissionMapperImpl
+			.submissionSectionToSubmissionSectionDto(section1);
+		assertThat(result).isEqualTo(submissionSectionDTO1);
+	}
+
+	@Test
+	void submissionSectionToSubmissionSectionDto_returnNullIfSubmissionIsNull() {
+		final SubmissionSectionDTO result = customSubmissionMapperImpl.submissionSectionToSubmissionSectionDto(null);
+		assertThat(result).isNull();
+	}
+
+	@Test
+	void submissionApplicationApplicationName() {
+		final String result = customSubmissionMapperImpl.submissionApplicationApplicationName(submission);
+		assertThat(result).isEqualTo(submission.getApplication().getApplicationName());
+	}
+
+	@Test
+	void submissionApplicationApplicationName_returnNullIfSubmissionIsNull() {
+		final String result = customSubmissionMapperImpl.submissionApplicationApplicationName(null);
+		assertThat(result).isNull();
+	}
+
+	@Test
+	void submissionApplicationApplicationName_returnNullIfSubmissionApplicationIsNull() {
+		final Submission submission = Submission.builder().application(null).build();
+		final String result = customSubmissionMapperImpl.submissionApplicationApplicationName(submission);
+		assertThat(result).isNull();
+	}
+
+	@Test
+	void submissionSchemeEmail() {
+		final String result = customSubmissionMapperImpl.submissionSchemeEmail(submission);
+		assertThat(result).isEqualTo(submission.getScheme().getEmail());
+	}
+
+	@Test
+	void submissionSchemeEmail_returnNullIfSubmissionIsNull() {
+		final String result = customSubmissionMapperImpl.submissionSchemeEmail(null);
+		assertThat(result).isNull();
+	}
+
+	@Test
+	void submissionSchemeEmail_returnNullIfSubmissionSchemeIsNull() {
+		final Submission submission = Submission.builder().scheme(null).build();
+		final String result = customSubmissionMapperImpl.submissionSchemeEmail(submission);
+		assertThat(result).isNull();
+	}
+
+	@Test
+	void submissionSchemeGgisIdentifier() {
+		final String result = customSubmissionMapperImpl.submissionSchemeGgisIdentifier(submission);
+		assertThat(result).isEqualTo(submission.getScheme().getGgisIdentifier());
+	}
+
+	@Test
+	void submissionSchemeGgisIdentifier_returnNullIfSubmissionIsNull() {
+		final String result = customSubmissionMapperImpl.submissionSchemeGgisIdentifier(null);
+		assertThat(result).isNull();
+	}
+
+	@Test
+	void submissionSchemeGgisIdentifier_returnNullIfSubmissionSchemeIsNull() {
+		final Submission submission = Submission.builder().scheme(null).build();
+		final String result = customSubmissionMapperImpl.submissionSchemeGgisIdentifier(submission);
+		assertThat(result).isNull();
+	}
+
+	@Test
+	void submissionDefinitionSections() {
+		final List<SubmissionSection> result = customSubmissionMapperImpl.submissionDefinitionSections(submission);
+		assertThat(result).isEqualTo(submission.getDefinition().getSections());
+	}
+
+	@Test
+	void submissionDefinitionSections_returnNullIfSubmissionIsNull() {
+		final List<SubmissionSection> result = customSubmissionMapperImpl.submissionDefinitionSections(null);
+		assertThat(result).isNull();
+	}
+
+	@Test
+	void submissionDefinitionSections_returnNullIfSubmissionDefintionIsNull() {
+		final Submission submission = Submission.builder().definition(null).build();
+		final List<SubmissionSection> result = customSubmissionMapperImpl.submissionDefinitionSections(submission);
+		assertThat(result).isNull();
 	}
 
 }

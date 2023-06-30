@@ -34,7 +34,7 @@ class S3ServiceTest {
 	private final String OBJECT_KEY = "test-object-key";
 
 	@Test
-	public void testCreatePresignedURL() {
+	void testCreatePresignedURL() {
 		final String EXPECTED_URL_START = "https://" + BUCKET_NAME + ".s3." + REGION + ".amazonaws.com/" + OBJECT_KEY
 				+ "?";
 
