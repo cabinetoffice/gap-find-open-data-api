@@ -4,8 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.cabinetoffice.api.prototype.controllers.SubmissionsController;
 import gov.cabinetoffice.api.prototype.controllers.controller_advice.ControllerExceptionsHandler;
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionDTO;
-import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionsDTO;
-import gov.cabinetoffice.api.prototype.entities.*;
+import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionListDTO;
+import gov.cabinetoffice.api.prototype.entities.ApplicationFormEntity;
+import gov.cabinetoffice.api.prototype.entities.GrantApplicant;
+import gov.cabinetoffice.api.prototype.entities.GrantApplicantOrganisationProfile;
+import gov.cabinetoffice.api.prototype.entities.SchemeEntity;
+import gov.cabinetoffice.api.prototype.entities.Submission;
 import gov.cabinetoffice.api.prototype.exceptions.SubmissionNotFoundException;
 import gov.cabinetoffice.api.prototype.mappers.SubmissionMapper;
 import gov.cabinetoffice.api.prototype.mappers.SubmissionMapperImpl;
@@ -30,7 +34,9 @@ import static gov.cabinetoffice.api.prototype.test_data_generator.RandomSubmissi
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(SubmissionsController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -76,7 +82,7 @@ class SubmissionsControllerIntegTest {
 		when(submissionMapper.submissionToSubmissionDto(submission)).thenCallRealMethod();
 
 		final SubmissionDTO submissionDTO = submissionMapper.submissionToSubmissionDto(submission);
-		final SubmissionsDTO response = SubmissionsDTO.builder().submissions(List.of(submissionDTO)).build();
+		final SubmissionListDTO response = SubmissionListDTO.builder().submissions(List.of(submissionDTO)).build();
 
 		when(submissionsService.getSubmissionByApplicationId(APPLICATION_ID)).thenReturn(response);
 

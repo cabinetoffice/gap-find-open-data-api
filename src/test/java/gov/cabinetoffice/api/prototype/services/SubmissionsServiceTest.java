@@ -1,17 +1,22 @@
 package gov.cabinetoffice.api.prototype.services;
 
 import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionDTO;
-import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionsDTO;
-import gov.cabinetoffice.api.prototype.entities.*;
+import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionListDTO;
+import gov.cabinetoffice.api.prototype.entities.ApplicationFormEntity;
+import gov.cabinetoffice.api.prototype.entities.GrantApplicant;
+import gov.cabinetoffice.api.prototype.entities.GrantApplicantOrganisationProfile;
+import gov.cabinetoffice.api.prototype.entities.SchemeEntity;
+import gov.cabinetoffice.api.prototype.entities.Submission;
 import gov.cabinetoffice.api.prototype.exceptions.SubmissionNotFoundException;
 import gov.cabinetoffice.api.prototype.mappers.SubmissionMapper;
 import gov.cabinetoffice.api.prototype.mappers.SubmissionMapperImpl;
 import gov.cabinetoffice.api.prototype.repositories.SubmissionRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -24,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringJUnitConfig
+@ExtendWith(MockitoExtension.class)
 class SubmissionsServiceTest {
 
 	@Mock
@@ -59,10 +64,12 @@ class SubmissionsServiceTest {
 		when(submissionRepository.findByApplicationGrantApplicationId(APPLICATION_ID)).thenReturn(List.of(submission));
 		when(submissionMapper.submissionToSubmissionDto(submission)).thenCallRealMethod();
 
-		final SubmissionsDTO response = submissionsService.getSubmissionByApplicationId(APPLICATION_ID);
+		final SubmissionListDTO response = submissionsService.getSubmissionByApplicationId(APPLICATION_ID);
 
 		final SubmissionDTO submissionDTO = response.getSubmissions().get(0);
-		final SubmissionsDTO expectedResult = SubmissionsDTO.builder().submissions(List.of(submissionDTO)).build();
+		final SubmissionListDTO expectedResult = SubmissionListDTO.builder()
+			.submissions(List.of(submissionDTO))
+			.build();
 
 		assertEquals(submissionMapper.submissionToSubmissionDto(submission), submissionDTO);
 
