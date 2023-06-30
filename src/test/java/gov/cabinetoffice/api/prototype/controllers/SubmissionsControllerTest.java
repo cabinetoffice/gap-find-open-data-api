@@ -1,6 +1,10 @@
 package gov.cabinetoffice.api.prototype.controllers;
 
-import gov.cabinetoffice.api.prototype.dtos.submission.*;
+import gov.cabinetoffice.api.prototype.dtos.submission.AddressDTO;
+import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionDTO;
+import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionListDTO;
+import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionQuestionDTO;
+import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionSectionDTO;
 import gov.cabinetoffice.api.prototype.entities.ApplicationFormEntity;
 import gov.cabinetoffice.api.prototype.entities.SchemeEntity;
 import gov.cabinetoffice.api.prototype.enums.ResponseTypeEnum;
@@ -178,7 +182,7 @@ class SubmissionsControllerTest {
 		.sections(List.of(submissionSectionDTO1, submissionSectionDTO2))
 		.build();
 
-	final SubmissionsDTO submissionsDTO = SubmissionsDTO.builder().submissions(List.of(submissionDTO)).build();
+	final SubmissionListDTO submissionsDTO = SubmissionListDTO.builder().submissions(List.of(submissionDTO)).build();
 
 	@Mock
 	private SubmissionsService submissionService;
@@ -194,7 +198,7 @@ class SubmissionsControllerTest {
 	void getSubmissionByApplicationId_returnsExpectedResponse() {
 		when(submissionService.getSubmissionByApplicationId(APPLICATION_ID)).thenReturn(submissionsDTO);
 
-		final ResponseEntity<SubmissionsDTO> response = controllerUnderTest
+		final ResponseEntity<SubmissionListDTO> response = controllerUnderTest
 				.getSubmissionByApplicationId(APPLICATION_ID);
 
 		verify(submissionService).getSubmissionByApplicationId(APPLICATION_ID);

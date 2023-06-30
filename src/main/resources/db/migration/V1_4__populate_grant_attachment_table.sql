@@ -1,0 +1,2 @@
+INSERT INTO grant_attachment (grant_attachment_id, created, filename, last_updated, "location", question_id, status, "version", created_by, submission_id) VALUES
+('fd7fe160-6661-40f2-b8c8-784bdec0c84b', '2022-09-29 08:44:38.338', 'hello-world.txt', '2022-09-29 08:44:41.226', 'https://gap-sandbox-attachments.s3.eu-west-2.amazonaws.com/1/3a6cfe2d-bf58-440d-9e07-3579c7dcf207/testQuestionId/hello-world.txt', '28a96a4c-f2c1-4c20-8097-576ffa949630', 'AVAILABLE', 1, 1, NULL);

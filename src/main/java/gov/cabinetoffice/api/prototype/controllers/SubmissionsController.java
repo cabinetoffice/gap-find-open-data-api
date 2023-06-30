@@ -1,7 +1,7 @@
 package gov.cabinetoffice.api.prototype.controllers;
 
 import gov.cabinetoffice.api.prototype.dtos.GenericErrorDTO;
-import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionsDTO;
+import gov.cabinetoffice.api.prototype.dtos.submission.SubmissionListDTO;
 import gov.cabinetoffice.api.prototype.entities.Submission;
 import gov.cabinetoffice.api.prototype.services.SubmissionsService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,8 +33,8 @@ public class SubmissionsController {
 			@ApiResponse(responseCode = "404", description = "No submissions found with given application id",
 					content = @Content(mediaType = "application/json",
 							schema = @Schema(implementation = GenericErrorDTO.class))) })
-	public ResponseEntity<SubmissionsDTO> getSubmissionByApplicationId(@PathVariable @NotNull int applicationId) {
-		final SubmissionsDTO response = this.submissionsService.getSubmissionByApplicationId(applicationId);
+	public ResponseEntity<SubmissionListDTO> getSubmissionByApplicationId(@PathVariable @NotNull int applicationId) {
+		final SubmissionListDTO response = this.submissionsService.getSubmissionByApplicationId(applicationId);
 		return ResponseEntity.ok().body(response);
 	}
 

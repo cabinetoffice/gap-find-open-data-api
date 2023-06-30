@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @OpenAPIDefinition(info = @Info(title = "OpenApi Prototype",
-		description = "Prototype to give an idea on what is achievable", version = "2.0"))
+		description = "Prototype to give an idea on what is achievable", version = "4.0"))
 public class OpenApiConfig {
 
 }

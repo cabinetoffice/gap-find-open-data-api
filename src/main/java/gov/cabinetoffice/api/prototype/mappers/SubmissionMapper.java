@@ -16,7 +16,7 @@ import java.util.List;
 
 import static java.lang.Integer.parseInt;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { CustomSubmissionMapperImpl.class })
 public interface SubmissionMapper {
 
 	@Mapping(source = "id", target = "submissionId")
@@ -75,8 +75,15 @@ public interface SubmissionMapper {
 			case MultipleSelection -> multiResponse;
 			case AddressInput -> buildAddress(multiResponse);
 			case Date -> buildDate(multiResponse);
+			case SingleFileUpload -> buildUploadResponse(submissionQuestion);
 			default -> ""; // TODO do we want this to be null or an empty string?
 		};
+	}
+
+	// returns empty string, so it won't be overridden by auto generated
+	// SubmissionMapperImpl
+	default String buildUploadResponse(SubmissionQuestion submissionQuestion) {
+		return "";
 	}
 
 	default LocalDate buildDate(String[] multiResponse) {
