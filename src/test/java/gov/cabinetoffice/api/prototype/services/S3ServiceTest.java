@@ -1,10 +1,10 @@
 package gov.cabinetoffice.api.prototype.services;
 
-import gov.cabinetoffice.api.prototype.config.AwsClientConfig;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.mockito.junit.jupiter.MockitoExtension;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
@@ -15,14 +15,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@SpringJUnitConfig
+@ExtendWith(MockitoExtension.class)
 class S3ServiceTest {
 
 	@Mock
-	AwsClientConfig awsClientConfig;
-
-	@Mock
-	private S3Presigner s3Presigner;
+	private S3Presigner s3PresignerMock;
 
 	@InjectMocks
 	private S3Service s3Service;
@@ -38,15 +35,13 @@ class S3ServiceTest {
 		final String EXPECTED_URL_START = "https://" + BUCKET_NAME + ".s3." + REGION + ".amazonaws.com/" + OBJECT_KEY
 				+ "?";
 
+		final S3Presigner s3Presigner = S3Presigner.builder().build();
+
 		final PresignedGetObjectRequest presigned = s3Presigner.presignGetObject(
 				getObjectPresignerRequest -> getObjectPresignerRequest.signatureDuration(Duration.ofMinutes(15))
 					.getObjectRequest(getObjectRequest -> getObjectRequest.bucket(BUCKET_NAME).key(OBJECT_KEY)));
 
-		when(awsClientConfig.getAccessKeyId()).thenReturn("accessKeyId");
-		when(awsClientConfig.getSecretKey()).thenReturn("secretKey");
-		when(awsClientConfig.getRegion()).thenReturn(REGION);
-
-		when(s3Presigner.presignGetObject(any(GetObjectPresignRequest.class))).thenReturn(presigned);
+		when(s3PresignerMock.presignGetObject(any(GetObjectPresignRequest.class))).thenReturn(presigned);
 
 		final String resultUrl = s3Service.createPresignedURL(BUCKET_NAME, OBJECT_KEY);
 
