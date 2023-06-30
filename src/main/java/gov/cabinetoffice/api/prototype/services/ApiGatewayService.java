@@ -19,10 +19,6 @@ public class ApiGatewayService {
 
 	private final ApiGatewayClient apiGatewayClient;
 
-	private static GetApiKeysResponse getAllApiKeys(ApiGatewayClient client) {
-		return client.getApiKeys();
-	}
-
 	public void createApiKeys(String keyName, String keyDescription) {
 		checkIfKeyExistAlready(keyName);
 
@@ -52,14 +48,16 @@ public class ApiGatewayService {
 			.stream()
 			.filter(k -> k.name() != null && k.name().equals(keyName))
 			.findFirst()
-			.ifPresentOrElse(k -> {
-				apiGatewayClient.deleteApiKey(builder -> builder.apiKey(k.id()));
-			}, () -> {
+			.ifPresentOrElse(k -> apiGatewayClient.deleteApiKey(builder -> builder.apiKey(k.id())), () -> {
 				throw new ApiKeyDoesNotExistException("API Key with name " + keyName + " does not exist");
 			});
 	}
 
-	private void checkIfKeyExistAlready(String keyName) {
+	GetApiKeysResponse getAllApiKeys(ApiGatewayClient client) {
+		return client.getApiKeys();
+	}
+
+	void checkIfKeyExistAlready(String keyName) {
 		getAllApiKeys(apiGatewayClient).items()
 			.stream()
 			.filter(key -> key.name().equals(keyName))
