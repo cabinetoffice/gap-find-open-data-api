@@ -22,9 +22,10 @@ import gov.cabinetoffice.api.prototype.models.submission.SubmissionSection;
 import gov.cabinetoffice.api.prototype.services.GrantAttachmentService;
 import gov.cabinetoffice.api.prototype.services.S3Service;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -36,7 +37,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@SpringJUnitConfig
+@ExtendWith(MockitoExtension.class)
 class CustomSubmissionMapperImplTest {
 
 	@Mock

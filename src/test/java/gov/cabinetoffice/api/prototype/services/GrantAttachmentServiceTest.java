@@ -4,9 +4,10 @@ import gov.cabinetoffice.api.prototype.entities.GrantAttachment;
 import gov.cabinetoffice.api.prototype.exceptions.GrantAttachmentNotFoundException;
 import gov.cabinetoffice.api.prototype.repositories.GrantAttachmentRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.UUID;
 
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringJUnitConfig
+@ExtendWith(MockitoExtension.class)
 class GrantAttachmentServiceTest {
 
 	@Mock

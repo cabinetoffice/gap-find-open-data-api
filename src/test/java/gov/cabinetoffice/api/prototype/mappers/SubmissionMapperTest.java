@@ -18,7 +18,9 @@ import gov.cabinetoffice.api.prototype.models.submission.SubmissionQuestion;
 import gov.cabinetoffice.api.prototype.models.submission.SubmissionQuestionValidation;
 import gov.cabinetoffice.api.prototype.models.submission.SubmissionSection;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -29,6 +31,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+@ExtendWith(MockitoExtension.class)
 class SubmissionMapperTest {
 
 	private static final int APPLICATION_ID = 1;

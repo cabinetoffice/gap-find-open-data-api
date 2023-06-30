@@ -12,10 +12,11 @@ import gov.cabinetoffice.api.prototype.mappers.SubmissionMapper;
 import gov.cabinetoffice.api.prototype.mappers.SubmissionMapperImpl;
 import gov.cabinetoffice.api.prototype.repositories.SubmissionRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -28,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringJUnitConfig
+@ExtendWith(MockitoExtension.class)
 class SubmissionsServiceTest {
 
 	@Mock
