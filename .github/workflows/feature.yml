@@ -1,11 +1,6 @@
 name: Java CI with Maven
 
 on:
-  push:
-    branches:
-      - prototype/**
-      - develop
-      - main
   pull_request:
     branches:
       - prototype/**
@@ -68,7 +63,7 @@ jobs:
         working-directory: ./prototype
         run: |
           mvn spring-boot:build-image -DskipTests
-          docker compose -f docker-compose.yml up -d
+          docker compose -f docker-compose-integration-tests.yml up -d
 
       - name: Run Integration Tests
         working-directory: ./serenity
