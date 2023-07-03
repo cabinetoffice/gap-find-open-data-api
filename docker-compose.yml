@@ -1,13 +1,38 @@
-version: '3.8'
+# docker-compose.yml
+version: '3'
 services:
-  db:
+
+  #Postgres Database
+  postgres-database:
+    container_name: postgres-db
     image: postgres
-    restart: always
     environment:
-      POSTGRES_DB: gap-prototype
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: gap-prototype
     ports:
-      - 5433:5432
-    volumes:
-      - ./data:/var/lib/postgresql/data
+      - "5432:5432"
+    networks:
+      - testing-network
+
+  #GAP Open API prototype
+  prototype:
+    container_name: gap-prototype
+    image: gap-prototype:latest
+    depends_on:
+      - postgres-database
+    ports:
+      - "8080:8080"
+    networks:
+      - testing-network
+
+
+  #Serenity Integration Tests
+#  serenity:
+#    container_name: serenity-prototype
+#    image: maven:3.9.2-amazoncorretto-17
+#    networks:
+#      - testing-network
+
+networks:
+  testing-network:
