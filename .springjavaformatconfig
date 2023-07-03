@@ -1,8 +1,0 @@
-{
-  "indentation-style": "spaces",
-  "align_fields": true,
-  "align_parameter_comments": true,
-  "align_parameter_types": true,
-  "align_variable_comments": true,
-  "break_before_builder_method_chain": true
-}
