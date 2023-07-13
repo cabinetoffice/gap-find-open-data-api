@@ -36,7 +36,7 @@ class ApiGatewayControllerTest {
 		final ResponseEntity<String> response = controllerUnderTest.createKey(createApiKeyDTO);
 
 		verify(apiGatewayService).createApiKeys(API_KEY_NAME, API_KEY_DESCRIPTION);
-		assertThat(HttpStatus.OK).isEqualTo(response.getStatusCode());
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(response.getBody()).isEqualTo("Key created successfully");
 	}
 
@@ -45,7 +45,7 @@ class ApiGatewayControllerTest {
 		final ResponseEntity<String> response = controllerUnderTest.deleteKey(API_KEY_NAME);
 
 		verify(apiGatewayService).deleteApiKeys(API_KEY_NAME);
-		assertThat(HttpStatus.OK).isEqualTo(response.getStatusCode());
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(response.getBody()).isEqualTo("Key deleted successfully");
 	}
 

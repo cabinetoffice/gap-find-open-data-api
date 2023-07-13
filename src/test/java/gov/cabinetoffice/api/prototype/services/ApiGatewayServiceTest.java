@@ -18,7 +18,6 @@ import software.amazon.awssdk.services.apigateway.model.GetApiKeysResponse;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,66 +27,56 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ApiGatewayServiceTest {
 
-	@Mock
-	ApiGatewayConfigProperties apiGatewayConfigProperties;
+    private final String API_KEY_NAME = "apikeyName";
+    private final String API_KEY_DESCRIPTION = "apikeyDescription";
+    private final ApiKey apiKey = ApiKey.builder().name(API_KEY_NAME).build();
+    private final GetApiKeysResponse getApiKeysResponse = GetApiKeysResponse.builder().items(List.of(apiKey)).build();
+    @Mock
+    ApiGatewayConfigProperties apiGatewayConfigProperties;
+    @Mock
+    ApiGatewayClient apiGatewayClient;
+    @InjectMocks
+    ApiGatewayService apiGatewayService;
 
-	@Mock
-	ApiGatewayClient apiGatewayClient;
+    @Test
+    void createApiKeys() {
+        when(apiGatewayClient.getApiKeys()).thenReturn(GetApiKeysResponse.builder().build());
 
-	@InjectMocks
-	ApiGatewayService apiGatewayService;
+        CreateApiKeyResponse apiKeyRequest = CreateApiKeyResponse.builder().description(API_KEY_DESCRIPTION).name(API_KEY_NAME).build();
+        when(apiGatewayClient.createApiKey(any(CreateApiKeyRequest.class))).thenReturn(apiKeyRequest);
 
-	private final String API_KEY_NAME = "apikeyName";
+        CreateUsagePlanKeyResponse usagePlanKeyResponse = CreateUsagePlanKeyResponse.builder().build();
+        when(apiGatewayClient.createUsagePlanKey(any(CreateUsagePlanKeyRequest.class))).thenReturn(usagePlanKeyResponse);
 
-	private final String API_KEY_DESCRIPTION = "apikeyDescription";
+        apiGatewayService.createApiKeys(API_KEY_NAME, API_KEY_DESCRIPTION);
 
-	private final ApiKey apiKey = ApiKey.builder().name(API_KEY_NAME).build();
+        verify(apiGatewayClient).createApiKey(any(CreateApiKeyRequest.class));
+        verify(apiGatewayClient).createUsagePlanKey(any(CreateUsagePlanKeyRequest.class));
+    }
 
-	private final GetApiKeysResponse getApiKeysResponse = GetApiKeysResponse.builder().items(List.of(apiKey)).build();
+    @Test
+    void deleteApiKeys() {
+        when(apiGatewayClient.getApiKeys()).thenReturn(getApiKeysResponse);
+        assertDoesNotThrow(() -> apiGatewayService.deleteApiKeys(API_KEY_NAME));
+    }
 
-	@Test
-	void createApiKeys() {
-		when(apiGatewayService.getAllApiKeys(apiGatewayClient)).thenReturn(GetApiKeysResponse.builder().build());
-		CreateApiKeyResponse apiKeyRequest = CreateApiKeyResponse.builder().description(API_KEY_DESCRIPTION).name(API_KEY_NAME).build();
+    @Test
+    void deleteApiKeys_throwsApiKeyDoesNotExistException() {
+        when(apiGatewayClient.getApiKeys()).thenReturn(getApiKeysResponse);
+        assertThrows(ApiKeyDoesNotExistException.class, () -> apiGatewayService.deleteApiKeys("anotherKeyName"));
+    }
 
-		when(apiGatewayClient.createApiKey(any(CreateApiKeyRequest.class))).thenReturn(apiKeyRequest);
 
+    @Test
+    void checkIfKeyExistAlready_throwsApiKeyAlreadyExistException() {
+        when(apiGatewayClient.getApiKeys()).thenReturn(getApiKeysResponse);
+        assertThrows(ApiKeyAlreadyExistException.class, () -> apiGatewayService.checkIfKeyExistAlready(API_KEY_NAME));
+    }
 
-		CreateUsagePlanKeyResponse usagePlanKeyResponse = CreateUsagePlanKeyResponse.builder().build();
-		when(apiGatewayClient.createUsagePlanKey(any(CreateUsagePlanKeyRequest.class))).thenReturn(usagePlanKeyResponse);
-		apiGatewayService.createApiKeys(API_KEY_NAME, API_KEY_DESCRIPTION);
-		verify(apiGatewayClient).createApiKey(any(CreateApiKeyRequest.class));
-		verify(apiGatewayClient).createUsagePlanKey(any(CreateUsagePlanKeyRequest.class));
-	}
-
-	@Test
-	void deleteApiKeys() {
-		when(apiGatewayService.getAllApiKeys(apiGatewayClient)).thenReturn(getApiKeysResponse);
-		assertDoesNotThrow(() -> apiGatewayService.deleteApiKeys(API_KEY_NAME));
-	}
-
-	@Test
-	void deleteApiKeys_throwsApiKeyDoesNotExistException() {
-		when(apiGatewayService.getAllApiKeys(apiGatewayClient)).thenReturn(getApiKeysResponse);
-		assertThrows(ApiKeyDoesNotExistException.class, () -> apiGatewayService.deleteApiKeys("anotherKeyName"));	}
-
-	@Test
-	void getAllApiKeys() {
-		when(apiGatewayClient.getApiKeys()).thenReturn(getApiKeysResponse);
-		GetApiKeysResponse result = apiGatewayService.getAllApiKeys(apiGatewayClient);
-		assertThat(result).isEqualTo(getApiKeysResponse);
-	}
-
-	@Test
-	void checkIfKeyExistAlready_throwsApiKeyAlreadyExistException() {
-		when(apiGatewayService.getAllApiKeys(apiGatewayClient)).thenReturn(getApiKeysResponse);
-		assertThrows(ApiKeyAlreadyExistException.class, () -> apiGatewayService.checkIfKeyExistAlready(API_KEY_NAME));
-	}
-
-	@Test
-	void checkIfKeyExistAlready_doesNotThrowException() {
-		when(apiGatewayService.getAllApiKeys(apiGatewayClient)).thenReturn(getApiKeysResponse);
-		assertDoesNotThrow(() -> apiGatewayService.checkIfKeyExistAlready("anotherKeyName"));
-	}
+    @Test
+    void checkIfKeyExistAlready_doesNotThrowException() {
+        when(apiGatewayClient.getApiKeys()).thenReturn(getApiKeysResponse);
+        assertDoesNotThrow(() -> apiGatewayService.checkIfKeyExistAlready("anotherKeyName"));
+    }
 
 }

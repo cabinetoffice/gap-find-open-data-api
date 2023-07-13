@@ -9,62 +9,58 @@ import software.amazon.awssdk.services.apigateway.ApiGatewayClient;
 import software.amazon.awssdk.services.apigateway.model.CreateApiKeyRequest;
 import software.amazon.awssdk.services.apigateway.model.CreateApiKeyResponse;
 import software.amazon.awssdk.services.apigateway.model.CreateUsagePlanKeyRequest;
-import software.amazon.awssdk.services.apigateway.model.GetApiKeysResponse;
 
 @Service
 @RequiredArgsConstructor
 public class ApiGatewayService {
 
-	private final ApiGatewayConfigProperties apiGatewayConfigProperties;
+    private final ApiGatewayConfigProperties apiGatewayConfigProperties;
 
-	private final ApiGatewayClient apiGatewayClient;
+    private final ApiGatewayClient apiGatewayClient;
 
-	public void createApiKeys(String keyName, String keyDescription) {
-		checkIfKeyExistAlready(keyName);
+    public void createApiKeys(String keyName, String keyDescription) {
+        checkIfKeyExistAlready(keyName);
 
-		CreateApiKeyRequest apiKeyRequest = CreateApiKeyRequest.builder()
-			.name(keyName)
-			.description(keyDescription)
-			.enabled(true)
-			.generateDistinctId(true)
-			.build();
+        CreateApiKeyRequest apiKeyRequest = CreateApiKeyRequest.builder()
+                .name(keyName)
+                .description(keyDescription)
+                .enabled(true)
+                .generateDistinctId(true)
+                .build();
 
-		// Creating a api key
-		CreateApiKeyResponse response = apiGatewayClient.createApiKey(apiKeyRequest);
+        // Creating a api key
+        CreateApiKeyResponse response = apiGatewayClient.createApiKey(apiKeyRequest);
 
-		// set the usage plan for the created api key.
-		CreateUsagePlanKeyRequest planRequest = CreateUsagePlanKeyRequest.builder()
-			.usagePlanId(apiGatewayConfigProperties.getApiGatewayUsagePlanId())
-			.keyId(response.id())
-			.keyType("API_KEY")
-			.build();
+        // set the usage plan for the created api key.
+        CreateUsagePlanKeyRequest planRequest = CreateUsagePlanKeyRequest.builder()
+                .usagePlanId(apiGatewayConfigProperties.getApiGatewayUsagePlanId())
+                .keyId(response.id())
+                .keyType("API_KEY")
+                .build();
 
-		apiGatewayClient.createUsagePlanKey(planRequest);
+        apiGatewayClient.createUsagePlanKey(planRequest);
 
-	}
+    }
 
-	public void deleteApiKeys(String keyName) {
-		getAllApiKeys(apiGatewayClient).items()
-			.stream()
-			.filter(k -> k.name() != null && k.name().equals(keyName))
-			.findFirst()
-			.ifPresentOrElse(k -> apiGatewayClient.deleteApiKey(builder -> builder.apiKey(k.id())), () -> {
-				throw new ApiKeyDoesNotExistException("API Key with name " + keyName + " does not exist");
-			});
-	}
+    public void deleteApiKeys(String keyName) {
+        apiGatewayClient.getApiKeys().items()
+                .stream()
+                .filter(k -> k.name() != null && k.name().equals(keyName))
+                .findFirst()
+                .ifPresentOrElse(k -> apiGatewayClient.deleteApiKey(builder -> builder.apiKey(k.id())), () -> {
+                    throw new ApiKeyDoesNotExistException("API Key with name " + keyName + " does not exist");
+                });
+    }
 
-	GetApiKeysResponse getAllApiKeys(ApiGatewayClient client) {
-		return client.getApiKeys();
-	}
 
-	void checkIfKeyExistAlready(String keyName) {
-		getAllApiKeys(apiGatewayClient).items()
-			.stream()
-			.filter(key -> key.name().equals(keyName))
-			.findFirst()
-			.ifPresent(key -> {
-				throw new ApiKeyAlreadyExistException("API Key with name " + keyName + " already exists");
-			});
-	}
+    void checkIfKeyExistAlready(String keyName) {
+        apiGatewayClient.getApiKeys().items()
+                .stream()
+                .filter(key -> key.name().equals(keyName))
+                .findFirst()
+                .ifPresent(key -> {
+                    throw new ApiKeyAlreadyExistException("API Key with name " + keyName + " already exists");
+                });
+    }
 
 }
