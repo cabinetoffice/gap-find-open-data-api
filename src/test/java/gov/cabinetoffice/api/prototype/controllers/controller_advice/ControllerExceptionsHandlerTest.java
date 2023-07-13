@@ -24,115 +24,119 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ControllerExceptionsHandlerTest {
 
-	@Mock
-	private ApplicationFormNotFoundException applicationFormNotFoundException;
+    @Mock
+    private ApplicationFormNotFoundException applicationFormNotFoundException;
 
-	@Mock
-	private SubmissionNotFoundException submissionNotFoundException;
+    @Mock
+    private SubmissionNotFoundException submissionNotFoundException;
 
-	@Mock
-	private MethodArgumentTypeMismatchException methodArgumentTypeMismatchException;
+    @Mock
+    private MethodArgumentTypeMismatchException methodArgumentTypeMismatchException;
 
-	@Mock
-	private ApiKeyAlreadyExistException apiKeyAlreadyExistException;
+    @Mock
+    private ApiKeyAlreadyExistException apiKeyAlreadyExistException;
 
-	@Mock
-	private ApiKeyDoesNotExistException apiKeyDoesNotExistException;
+    @Mock
+    private ApiKeyDoesNotExistException apiKeyDoesNotExistException;
 
-	@Mock
-	private ApiGatewayException apiGatewayException;
+    @Mock
+    private ApiGatewayException apiGatewayException;
 
-	@Mock
-	private WebRequest webRequest;
+    @Mock
+    private WebRequest webRequest;
 
-	@InjectMocks
-	private ControllerExceptionsHandler controllerExceptionsHandler;
+    @InjectMocks
+    private ControllerExceptionsHandler controllerExceptionsHandler;
 
-	@Test
-	void testHandleException_applicationNotFound() {
-		final String errorMessage = "Application form not found";
+    @Test
+    void testHandleException_applicationNotFound() {
+        final String errorMessage = "Application form not found";
 
-		when(applicationFormNotFoundException.getMessage()).thenReturn(errorMessage);
+        when(applicationFormNotFoundException.getMessage()).thenReturn(errorMessage);
 
-		final ResponseEntity<Object> responseEntity = controllerExceptionsHandler
-			.handleException(applicationFormNotFoundException, webRequest);
+        final ResponseEntity<Object> responseEntity = controllerExceptionsHandler
+                .handleException(applicationFormNotFoundException, webRequest);
 
-		final String errorMessageFromResponse = ((ErrorMessage) Objects.requireNonNull(responseEntity.getBody()))
-			.getMessage();
-		assertThat(HttpStatus.NOT_FOUND).isEqualTo(responseEntity.getStatusCode());
-		assertThat(errorMessage).isEqualTo(errorMessageFromResponse);
-	}
+        final String errorMessageFromResponse = ((ErrorMessage) Objects.requireNonNull(responseEntity.getBody()))
+                .getMessage();
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(errorMessageFromResponse).isEqualTo(errorMessage);
+    }
 
-	@Test
-	void testHandleException_SubmissionNotFound() {
-		final String errorMessage = "Submission not found";
+    @Test
+    void testHandleException_SubmissionNotFound() {
+        final String errorMessage = "Submission not found";
 
-		when(submissionNotFoundException.getMessage()).thenReturn(errorMessage);
+        when(submissionNotFoundException.getMessage()).thenReturn(errorMessage);
 
-		final ResponseEntity<Object> responseEntity = controllerExceptionsHandler
-			.handleException(submissionNotFoundException, webRequest);
+        final ResponseEntity<Object> responseEntity = controllerExceptionsHandler
+                .handleException(submissionNotFoundException, webRequest);
 
-		final String errorMessageFromResponse = ((ErrorMessage) Objects.requireNonNull(responseEntity.getBody()))
-			.getMessage();
-		assertThat(HttpStatus.NOT_FOUND).isEqualTo(responseEntity.getStatusCode());
-		assertThat(errorMessage).isEqualTo(errorMessageFromResponse);
-	}
+        final String errorMessageFromResponse = ((ErrorMessage) Objects.requireNonNull(responseEntity.getBody()))
+                .getMessage();
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(errorMessageFromResponse).isEqualTo(errorMessage);
+    }
 
-	@Test
-	void testHandleException_MethodArgumentTypeMismatchException() {
+    @Test
+    void testHandleException_MethodArgumentTypeMismatchException() {
 
-		final ResponseEntity<Object> responseEntity = controllerExceptionsHandler
-			.handleMethodArgumentTypeMismatch(methodArgumentTypeMismatchException, webRequest);
+        final ResponseEntity<Object> responseEntity = controllerExceptionsHandler
+                .handleMethodArgumentTypeMismatch(methodArgumentTypeMismatchException, webRequest);
 
-		final String errorMessageFromResponse = ((ErrorMessage) Objects.requireNonNull(responseEntity.getBody()))
-			.getMessage();
-		assertThat(HttpStatus.BAD_REQUEST).isEqualTo(responseEntity.getStatusCode());
-		assertThat(errorMessageFromResponse).isEqualTo("Invalid parameter type passed");
-	}
+        final String errorMessageFromResponse = ((ErrorMessage) Objects.requireNonNull(responseEntity.getBody()))
+                .getMessage();
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(errorMessageFromResponse).isEqualTo("Invalid parameter type passed");
 
-	@Test
-	void testHandleException_ApiKeyAlreadyExists() {
-		final String errorMessage = "Api key already exist";
+    }
 
-		when(apiKeyAlreadyExistException.getMessage()).thenReturn(errorMessage);
+    @Test
+    void testHandleException_ApiKeyAlreadyExists() {
+        final String errorMessage = "Api key already exist";
 
-		final ResponseEntity<Object> responseEntity = controllerExceptionsHandler
-			.handleException(apiKeyAlreadyExistException, webRequest);
+        when(apiKeyAlreadyExistException.getMessage()).thenReturn(errorMessage);
 
-		final String errorMessageFromResponse = ((ErrorMessage) Objects.requireNonNull(responseEntity.getBody()))
-			.getMessage();
-		assertThat(HttpStatus.BAD_REQUEST).isEqualTo(responseEntity.getStatusCode());
-		assertThat(errorMessage).isEqualTo(errorMessageFromResponse);
-	}
+        final ResponseEntity<Object> responseEntity = controllerExceptionsHandler
+                .handleException(apiKeyAlreadyExistException, webRequest);
 
-	@Test
-	void testHandleException_ApiKeyDoesNotExist() {
-		final String errorMessage = "Api does not exist";
+        final String errorMessageFromResponse = ((ErrorMessage) Objects.requireNonNull(responseEntity.getBody()))
+                .getMessage();
 
-		when(apiKeyDoesNotExistException.getMessage()).thenReturn(errorMessage);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(errorMessageFromResponse).isEqualTo(errorMessage);
+    }
 
-		final ResponseEntity<Object> responseEntity = controllerExceptionsHandler
-			.handleException(apiKeyDoesNotExistException, webRequest);
+    @Test
+    void testHandleException_ApiKeyDoesNotExist() {
+        final String errorMessage = "Api does not exist";
 
-		final String errorMessageFromResponse = ((ErrorMessage) Objects.requireNonNull(responseEntity.getBody()))
-			.getMessage();
-		assertThat(HttpStatus.BAD_REQUEST).isEqualTo(responseEntity.getStatusCode());
-		assertThat(errorMessage).isEqualTo(errorMessageFromResponse);
-	}
+        when(apiKeyDoesNotExistException.getMessage()).thenReturn(errorMessage);
 
-	@Test
-	void testHandleException_ApiGatewayException() {
-		final String errorMessage = "Api gateway exception";
+        final ResponseEntity<Object> responseEntity = controllerExceptionsHandler
+                .handleException(apiKeyDoesNotExistException, webRequest);
 
-		when(apiGatewayException.getMessage()).thenReturn(errorMessage);
+        final String errorMessageFromResponse = ((ErrorMessage) Objects.requireNonNull(responseEntity.getBody()))
+                .getMessage();
 
-		final ResponseEntity<Object> responseEntity = controllerExceptionsHandler.handleException(apiGatewayException,
-				webRequest);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(errorMessageFromResponse).isEqualTo(errorMessage);
+    }
 
-		final String errorMessageFromResponse = ((ErrorMessage) Objects.requireNonNull(responseEntity.getBody()))
-			.getMessage();
-		assertThat(HttpStatus.BAD_REQUEST).isEqualTo(responseEntity.getStatusCode());
-		assertThat(errorMessage).isEqualTo(errorMessageFromResponse);
-	}
+    @Test
+    void testHandleException_ApiGatewayException() {
+        final String errorMessage = "Api gateway exception";
+
+        when(apiGatewayException.getMessage()).thenReturn(errorMessage);
+
+        final ResponseEntity<Object> responseEntity = controllerExceptionsHandler.handleException(apiGatewayException,
+                webRequest);
+
+        final String errorMessageFromResponse = ((ErrorMessage) Objects.requireNonNull(responseEntity.getBody()))
+                .getMessage();
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(errorMessageFromResponse).isEqualTo(errorMessage);
+    }
 
 }
