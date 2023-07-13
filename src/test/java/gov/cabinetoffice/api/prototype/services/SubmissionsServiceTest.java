@@ -39,7 +39,7 @@ class SubmissionsServiceTest {
 	private SubmissionsService submissionsService;
 
 	@Spy
-	private SubmissionMapper submissionMapper = new SubmissionMapperImpl();
+	private final SubmissionMapper submissionMapper = new SubmissionMapperImpl();
 
 	private final int APPLICATION_ID = 1;
 
