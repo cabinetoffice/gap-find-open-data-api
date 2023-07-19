@@ -41,7 +41,7 @@ jobs:
           JAVA_HOME: /opt/jdk
         id: DependencyCheck
         with:
-          project: "gap-find-api-prototype"
+          project: "gap-find-open-data-api"
           path: "."
           format: "HTML"
           args: >
