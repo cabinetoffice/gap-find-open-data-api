@@ -8,8 +8,8 @@
 		<version>3.1.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>gov.cabinetoffice.api.prototype</groupId>
-	<artifactId>gap-prototype</artifactId>
+	<groupId>gov.cabinetoffice.api</groupId>
+	<artifactId>gap-find-open-data-api</artifactId>
 	<version>latest</version>
 	<name>ApplicationRunner</name>
 	<description>Demo project for Spring Boot</description>
@@ -133,7 +133,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<outputFileName>ApiPrototype.json</outputFileName>
+					<outputFileName>Api.json</outputFileName>
 				</configuration>
 			</plugin>
 			<plugin>

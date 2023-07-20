@@ -15,10 +15,10 @@ services:
     networks:
       - testing-network
 
-  #GAP Open API prototype
+  #GAP Find Open Data API
   prototype:
-    container_name: gap-prototype
-    image: gap-prototype:latest
+    container_name: gap-find-open-data-api
+    image: gap-find-open-data-api:latest
     depends_on:
       - postgres-database
     ports:

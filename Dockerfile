@@ -1,4 +1,4 @@
-# Name: prototype
+# Name: GAP Find Open Data API
 # Desc: Creates a custom JRE image hosted on alpine for the backend JRE
 # Author: Chris Forbes
 # Version: 1.0 
