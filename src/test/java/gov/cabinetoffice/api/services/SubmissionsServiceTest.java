@@ -20,6 +20,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static gov.cabinetoffice.api.test_data_generator.RandomSubmissionGenerator.randomSubmission;
+import static gov.cabinetoffice.api.test_data_generator.RandomSubmissionGenerator.randomSubmissionDefinition;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.mockito.Mockito.verify;
@@ -47,7 +48,7 @@ class SubmissionsServiceTest {
 			.grantApplicationId(APPLICATION_ID)
 			.build();
 		final Submission submission = randomSubmission()
-			.definition(RandomSubmissionGenerator.randomSubmissionDefinition(RandomSubmissionGenerator.randomSubmissionDefinition().build()).build())
+			.definition(randomSubmissionDefinition(randomSubmissionDefinition().build()).build())
 			.gapId("testGapID")
 			.applicant(GrantApplicant.builder()
 				.organisationProfile(GrantApplicantOrganisationProfile.builder().legalName("testLegalName").build())
