@@ -16,7 +16,7 @@ services:
       - testing-network
 
   #GAP Find Open Data API
-  prototype:
+  api:
     container_name: gap-find-open-data-api
     image: gap-find-open-data-api:latest
     depends_on:

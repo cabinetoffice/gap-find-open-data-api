@@ -1,5 +1,5 @@
-# API-Prototype
-This repository is a API prototype for retrieving application form data from the admin database.
+# GAP Find Open Data API
+This repository is an API for retrieving application form data from the admin database.
 
 ## Running the app (locally)
 If you're using something like Intellij or Spring tool suite, there should be a green triangle somewhere or a "run" menu in the top nav bar. Either of these should allow you to run the application.
@@ -22,7 +22,7 @@ Check which version of Java your computer is currently using (if any) `java -v o
 Check if maven is installed `mvn -v`
 
 ### OpenJDK 17
-Using Homebrew is an easiest way to install and manage software on a Mac so you want to use it then run through these installation instructions.
+Using Homebrew is the easiest way to install and manage software on a Mac, so you want to use it then run through these installation instructions.
 
 https://docs.brew.sh/Installation
 
