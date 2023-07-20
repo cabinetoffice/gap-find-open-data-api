@@ -5,10 +5,10 @@ import gov.cabinetoffice.api.dtos.submission.SubmissionListDTO;
 import gov.cabinetoffice.api.entities.*;
 import gov.cabinetoffice.api.exceptions.SubmissionNotFoundException;
 import gov.cabinetoffice.api.mappers.SubmissionMapper;
-import gov.cabinetoffice.api.prototype.SubmissionMapperImpl;
+import gov.cabinetoffice.api.mappers.SubmissionMapperImpl;
 import gov.cabinetoffice.api.repositories.SubmissionRepository;
 import gov.cabinetoffice.api.test_data_generator.RandomSubmissionGenerator;
-import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,8 +19,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+import static gov.cabinetoffice.api.test_data_generator.RandomSubmissionGenerator.randomSubmission;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -45,7 +46,7 @@ class SubmissionsServiceTest {
 		final ApplicationFormEntity applicationForm = ApplicationFormEntity.builder()
 			.grantApplicationId(APPLICATION_ID)
 			.build();
-		final Submission submission = RandomSubmissionGenerator.randomSubmission()
+		final Submission submission = randomSubmission()
 			.definition(RandomSubmissionGenerator.randomSubmissionDefinition(RandomSubmissionGenerator.randomSubmissionDefinition().build()).build())
 			.gapId("testGapID")
 			.applicant(GrantApplicant.builder()
@@ -66,7 +67,7 @@ class SubmissionsServiceTest {
 			.submissions(List.of(submissionDTO))
 			.build();
 
-		Assertions.assertEquals(submissionMapper.submissionToSubmissionDto(submission), submissionDTO);
+		assertThat(submissionDTO).isEqualTo(submissionMapper.submissionToSubmissionDto(submission));
 
 		verify(submissionRepository).findByApplicationGrantApplicationId(APPLICATION_ID);
 
@@ -76,11 +77,13 @@ class SubmissionsServiceTest {
 	@Test
 	void getSubmissionByApplicationId_notFound() {
 		when(submissionRepository.findByApplicationGrantApplicationId(APPLICATION_ID)).thenReturn(List.of());
-		final Throwable exception = assertThrows(SubmissionNotFoundException.class,
-				() -> submissionsService.getSubmissionByApplicationId(APPLICATION_ID));
+
+		assertThatExceptionOfType(SubmissionNotFoundException.class)
+				.isThrownBy(() -> submissionsService.getSubmissionByApplicationId(APPLICATION_ID))
+				.withMessage("No submissions found with application id " + APPLICATION_ID);
 
 		verify(submissionRepository).findByApplicationGrantApplicationId(APPLICATION_ID);
-		assertThat(exception.getMessage()).isEqualTo("No submissions found with application id " + APPLICATION_ID);
+
 	}
 
 }
