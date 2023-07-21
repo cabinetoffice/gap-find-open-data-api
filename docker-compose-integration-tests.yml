@@ -1,0 +1,34 @@
+# docker-compose.yml
+version: '3'
+services:
+
+  #Postgres Database
+  postgres-database:
+    container_name: postgres-db
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: gap-prototype
+    ports:
+      - "5432:5432"
+    networks:
+      - testing-network
+
+  #GAP Find Open Data API
+  api:
+    container_name: gap-find-open-data-api
+    image: gap-find-open-data-api:latest
+    depends_on:
+      - postgres-database
+    ports:
+      - "8080:8080"
+    environment:
+      spring_datasource_url: jdbc:postgresql://postgres-database:5432/gap-prototype
+      spring_datasource_username: postgres
+      spring_datasource_password: mysecretpassword
+    networks:
+      - testing-network
+
+networks:
+  testing-network:
