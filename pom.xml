@@ -73,11 +73,6 @@
 			<version>1.5.5.Final</version>
 		</dependency>
 		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
-			<version>9.19.4</version>
-		</dependency>
-		<dependency>
 			<groupId>software.amazon.awssdk</groupId>
 			<artifactId>auth</artifactId>
 		</dependency>
@@ -160,16 +155,6 @@
 							<version>0.2.0</version>
 						</path>
 					</annotationProcessorPaths>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.flywaydb</groupId>
-				<artifactId>flyway-maven-plugin</artifactId>
-				<configuration>
-					<url>jdbc:postgresql://localhost:5432/gap-prototype</url>
-					<user>postgres</user>
-					<password>mysecretpassword</password>
-					<cleanDisabled>false</cleanDisabled>
 				</configuration>
 			</plugin>
 		</plugins>
