@@ -15,7 +15,7 @@ services:
     networks:
       - testing-network
     volumes: 
-      - ./db/integration-test-data.sql:/docker-entrypoint-initdb.d/integration-test-data.sql
+      - ./db/integration-test-data1.sql:/docker-entrypoint-initdb.d/integration-test-data.sql
 
   #GAP Find Open Data API
   api:
