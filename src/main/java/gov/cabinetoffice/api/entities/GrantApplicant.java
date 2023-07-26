@@ -33,7 +33,7 @@ public class GrantApplicant {
 	private long id;
 
 	@Column(name = "user_id")
-	private UUID userId;
+	private String userId;
 
 	@OneToOne(mappedBy = "applicant")
 	@JsonIgnoreProperties
