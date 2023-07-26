@@ -32,7 +32,7 @@ jobs:
 
       - name: Build with Maven
         working-directory: ./api
-        run: mvn -B package --file pom.xml -DskipTests
+        run: mvn -B package --file pom.xml -DskipTests -Pintegration
 
       - name: Dependency check
         uses: dependency-check/Dependency-Check_Action@main
@@ -61,7 +61,7 @@ jobs:
       - name: Build Integration Environment
         working-directory: ./api
         run: |
-          docker build -t gap-find-open-data-api -f Dockerfile.integration .
+          mvn spring-boot:build-image -DskipTests
           docker compose -f docker-compose-integration-tests.yml up -d
 
       - name: Run Integration Tests
