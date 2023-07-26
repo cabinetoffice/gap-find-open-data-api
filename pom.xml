@@ -36,6 +36,13 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<!--comment out the exclusion if you want to run it locally -->
+			<!--            <exclusions>-->
+			<!--                <exclusion>-->
+			<!--                    <groupId>org.springframework.boot</groupId>-->
+			<!--                    <artifactId>spring-boot-starter-tomcat</artifactId>-->
+			<!--                </exclusion>-->
+			<!--            </exclusions>-->
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -89,11 +96,72 @@
 			<artifactId>snakeyaml</artifactId>
 			<version>2.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.amazonaws.serverless</groupId>
+			<artifactId>aws-serverless-java-container-springboot3</artifactId>
+			<version>2.0.0-M1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.amazonaws.serverless</groupId>
+			<artifactId>aws-serverless-java-container-core</artifactId>
+			<version>2.0.0-M1</version>
+			<classifier>tests</classifier>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents.client5</groupId>
+			<artifactId>httpclient5</artifactId>
+			<version>5.2.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-resolver-dns-native-macos</artifactId>
+			<version>4.1.74.Final</version>
+			<scope>runtime</scope>
+			<classifier>osx-aarch_64</classifier>
+		</dependency>
 	</dependencies>
 
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.owasp</groupId>
+				<artifactId>dependency-check-maven</artifactId>
+				<version>7.1.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.2</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<!-- configure the plugin here -->
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -155,6 +223,29 @@
 							<version>0.2.0</version>
 						</path>
 					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.junit.jupiter</groupId>
+						<artifactId>junit-jupiter-engine</artifactId>
+						<version>5.9.1</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<environmentVariables>
+						<DB_URL>jdbc:postgresql://localhost:5432/gapapply</DB_URL>
+						<DB_USERNAME>postgres</DB_USERNAME>
+						<DB_PASSWORD>mysecretpassword</DB_PASSWORD>
+						<AWS_SECRET_KEY>awsSecretKey</AWS_SECRET_KEY>
+						<AWS_ACCESS_KEY_ID>awsAccessKeyId</AWS_ACCESS_KEY_ID>
+						<AWS_REGION>awsRegion</AWS_REGION>
+						<AWS_ATTACHMENT_SOURCE_BUCKET>awsAttachmentSourceBucket</AWS_ATTACHMENT_SOURCE_BUCKET>
+					</environmentVariables>
 				</configuration>
 			</plugin>
 		</plugins>
