@@ -36,13 +36,13 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-			<!--comment out the exclusion if you want to run it locally -->
-			<!--            <exclusions>-->
-			<!--                <exclusion>-->
-			<!--                    <groupId>org.springframework.boot</groupId>-->
-			<!--                    <artifactId>spring-boot-starter-tomcat</artifactId>-->
-			<!--                </exclusion>-->
-			<!--            </exclusions>-->
+<!--			comment out the exclusion if you want to run it locally -->
+			            <exclusions>
+			                <exclusion>
+			                    <groupId>org.springframework.boot</groupId>
+			                    <artifactId>spring-boot-starter-tomcat</artifactId>
+			                </exclusion>
+			            </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
