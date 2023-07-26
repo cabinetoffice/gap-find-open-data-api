@@ -232,7 +232,7 @@ class CustomSubmissionMapperImplTest {
 
 	final GrantApplicant grantApplicant = GrantApplicant.builder()
 		.id(APPLICANT_ID)
-		.userId(APPLICANT_USER_ID)
+		.userId(APPLICANT_USER_ID.toString())
 		.organisationProfile(grantApplicantOrganisationProfile)
 		.build();
 
