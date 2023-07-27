@@ -66,4 +66,4 @@ jobs:
 
       - name: Run Integration Tests
         working-directory: ./api
-        run: docker run --name newman-tests -v integrationTests:/opt/newman postman/newman run /opt/newman/api.postman_collection.json
+        run: docker run --name newman-tests -v /home/runner/work/gap-find-open-data-api/gap-find-open-data-api/api/integrationTests:/opt/newman postman/newman run /opt/newman/api.postman_collection.json
