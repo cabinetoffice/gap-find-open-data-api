@@ -57,6 +57,14 @@ jobs:
           mvn spring-boot:build-image -DskipTests
           docker compose -f docker-compose-integration-tests.yml up -d
 
+      - name: Let's see whats in here
+        working-directory: ./api
+        run: |
+          pwd
+          ls -a
+          cd integrationTests
+          ls -a
+
       - name: Run Integration Tests
         working-directory: ./api
-        run: docker run --name newman-tests -v "${pwd}":/opt/newman postman/newman run /opt/newman/integrationTests/api.postman_collection.json
+        run: docker run --name newman-tests -v "${pwd}/integrationTests":/opt/newman postman/newman run /opt/newman/api.postman_collection.json
