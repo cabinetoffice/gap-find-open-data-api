@@ -8,7 +8,6 @@ import com.amazonaws.serverless.proxy.spring.SpringBootLambdaContainerHandler;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import gov.cabinetoffice.api.exceptions.SpringBootInitializerException;
-import jakarta.ws.rs.core.Application;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,11 +15,12 @@ import java.io.OutputStream;
 
 
 public class LambdaHandler implements RequestStreamHandler {
+
     private static final SpringBootLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> handler;
 
     static {
         try {
-            handler = SpringBootLambdaContainerHandler.getAwsProxyHandler(Application.class);
+            handler = SpringBootLambdaContainerHandler.getAwsProxyHandler(ApplicationRunnerApplication.class);
 
         } catch (ContainerInitializationException e) {
             // if we fail here. We re-throw the exception to force another cold start
@@ -35,4 +35,5 @@ public class LambdaHandler implements RequestStreamHandler {
             throws IOException {
         handler.proxyStream(inputStream, outputStream, context);
     }
+
 }

@@ -130,28 +130,6 @@
 		</dependency>
 	</dependencies>
 
-	<profiles>
-		<!-- Profile for the local development environment -->
-		<profile>
-			<id>integration</id>
-			<dependencies>
-				<dependency>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-web</artifactId>
-					<!--
-                    <exclusions>
-                        <exclusion>
-                            <groupId>org.springframework.boot</groupId>
-                            <artifactId>spring-boot-starter-tomcat</artifactId>
-                        </exclusion>
-                    </exclusions>
-                    -->
-				</dependency>
-			</dependencies>
-		</profile>
-	</profiles>
-
-
 	<build>
 		<plugins>
 			<plugin>
@@ -184,23 +162,25 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.3.0</version>
 				<configuration>
-					<jvmArguments>-Dspring.application.admin.enabled=true</jvmArguments>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
+					<createDependencyReducedPom>false</createDependencyReducedPom>
 				</configuration>
 				<executions>
 					<execution>
+						<phase>package</phase>
 						<goals>
-							<goal>start</goal>
-							<goal>stop</goal>
+							<goal>shade</goal>
 						</goals>
+						<configuration>
+							<artifactSet>
+								<excludes>
+									<exclude>org.apache.tomcat.embed:*</exclude>
+								</excludes>
+							</artifactSet>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

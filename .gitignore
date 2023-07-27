@@ -37,3 +37,4 @@ build/
 
 /bin
 .idea/
+/.aws-sam/

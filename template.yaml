@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Timeout: 300
+
+Resources:
+  OpenApi:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: gov.cabinetoffice.api.LambdaHandler::handleRequest
+      Runtime: java17
+      AutoPublishAlias: sandbox
+      SnapStart:
+        ApplyOn: PublishedVersions
+      Architectures:
+        - x86_64
+      MemorySize: 2048
+      Environment:
+        Variables:
+          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+          AWS_ACCESS_KEY_ID: accessKey
+          AWS_ATTACHMENT_SOURCE_BUCKET: gap-sandbox-attachments
+          AWS_REGION: eu-west-2
+          AWS_SECRET_KEY: secretKey
+          DB_PASSWORD: mysecretpassword
+          DB_URL: jdbc:postgresql://host.docker.internal:5432/gapapply
+          DB_USERNAME: postgres
+      Events:
+        FindOpenDataApiGatewaySandbox:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY

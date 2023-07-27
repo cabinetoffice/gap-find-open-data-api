@@ -61,7 +61,7 @@ jobs:
       - name: Build Integration Environment
         working-directory: ./api
         run: |
-          mvn spring-boot:build-image -Dspring-boot.run.profiles=integration -DskipTests -DDB_PASSWORD=mysecretpassword -DDB_URL=jdbc:postgresql://localhost:5432/api-integration-tests -DDB_USERNAME=postgres 
+          mvn spring-boot:build-image -DskipTests 
           docker compose -f docker-compose-integration-tests.yml up -d
 
       - name: Run Integration Tests
