@@ -59,4 +59,4 @@ jobs:
 
       - name: Run Integration Tests
         working-directory: ./api
-        run: docker run --name newman-tests -v intTest:/opt/newman postman/newman run /opt/newman/integrationTests/api.postman_collection.json
+        run: docker run --name newman-tests -v "${pwd}":/opt/newman postman/newman run /opt/newman/integrationTests/api.postman_collection.json
