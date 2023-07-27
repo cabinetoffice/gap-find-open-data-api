@@ -60,11 +60,9 @@ jobs:
       - name: Let's see whats in here
         working-directory: ./api
         run: |
-          pwd
-          ls -a
-          cd integrationTests
-          ls -a
+          cd
+          less pwd
 
       - name: Run Integration Tests
         working-directory: ./api
-        run: docker run --name newman-tests -v "${pwd}/integrationTests":/opt/newman postman/newman run /opt/newman/api.postman_collection.json
+        run: docker run --name newman-tests -v integrationTests:/opt/newman postman/newman run /opt/newman/api.postman_collection.json
