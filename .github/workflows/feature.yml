@@ -61,7 +61,8 @@ jobs:
         working-directory: ./api
         run: |
           cd
-          less pwd
+          pwd
+          ls -a
 
       - name: Run Integration Tests
         working-directory: ./api
