@@ -28,8 +28,6 @@ public class SecurityConfig {
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .addFilterBefore(new ExceptionHandlerFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(jwtAuthorisationFilter, ExceptionHandlerFilter.class);
-                //.addFilterBefore(jwtAuthorisationFilter, UsernamePasswordAuthenticationFilter.class);
-
 
         return http.build();
     }

@@ -44,7 +44,7 @@ public class JwtAuthorisationFilter extends OncePerRequestFilter {
         if(funderId == null)
             throw new MissingClaimException("funder_id");
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(String.valueOf(funderId),null, null);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(funderId.asString(),null, null);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);

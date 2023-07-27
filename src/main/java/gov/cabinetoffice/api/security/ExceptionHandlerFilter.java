@@ -20,12 +20,12 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         }
         catch (TokenExpiredException e) { //expired JWT
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write(e.getMessage());
+            response.getWriter().write("JWT is expired");
             response.getWriter().flush();
         }
         catch (SignatureVerificationException e){ //Invalid signature
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write(e.getMessage());
+            response.getWriter().write("JWT is not valid");
             response.getWriter().flush();
         }
         catch (MissingClaimException e) { //missing properties
@@ -35,7 +35,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         }
         catch (RuntimeException e) { //null jwt or does not contain BEARER keyword
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write(e.getMessage());
+            response.getWriter().write("Bad request");
             response.getWriter().flush();
         }
     }
