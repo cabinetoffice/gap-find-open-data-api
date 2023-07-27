@@ -2,10 +2,13 @@ package gov.cabinetoffice.api.services;
 
 import gov.cabinetoffice.api.dtos.submission.SubmissionDTO;
 import gov.cabinetoffice.api.dtos.submission.SubmissionListDTO;
-import gov.cabinetoffice.api.mappers.SubmissionMapper;
 import gov.cabinetoffice.api.exceptions.SubmissionNotFoundException;
+import gov.cabinetoffice.api.mappers.SubmissionMapper;
 import gov.cabinetoffice.api.repositories.SubmissionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +24,13 @@ public class SubmissionsService {
 
 	public SubmissionListDTO getSubmissionByApplicationId(int applicationId) {
 
+		//TODO: remove this
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String funderId = authentication.getName();
+			System.out.println("Funder ID: " + funderId);
+
+		}
 		final List<SubmissionDTO> submissionDTOS = submissionRepository
 			.findByApplicationGrantApplicationId(applicationId)
 			.stream()
