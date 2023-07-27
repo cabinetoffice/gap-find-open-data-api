@@ -66,4 +66,8 @@ jobs:
 
       - name: Run Integration Tests
         working-directory: ./api
-        run: docker run --name newman-tests -v /home/runner/work/gap-find-open-data-api/gap-find-open-data-api/api/integrationTests:/opt/newman postman/newman run /opt/newman/api.postman_collection.json
+        #Newman needs an absolute path here. It does not like relative paths.
+        run: docker run --name newman-tests \
+              -v /home/runner/work/gap-find-open-data-api/gap-find-open-data-api/api/integrationTests:/opt/newman \
+              --network api_testing-network \
+              postman/newman run /opt/newman/api.postman_collection.json
