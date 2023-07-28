@@ -17,7 +17,6 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,7 +32,7 @@ public class GrantApplicant {
 	private long id;
 
 	@Column(name = "user_id")
-	private UUID userId;
+	private String userId;
 
 	@OneToOne(mappedBy = "applicant")
 	@JsonIgnoreProperties
