@@ -104,6 +104,9 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
+          echo lambda task root: ${LAMBDA_TASK_ROOT}
+          pwd
+          ls -a
           docker build --build-arg APP_NAME=${{ matrix.app_name }} -t $ECR_REGISTRY/${{ matrix.app_name }}:${{ env.BUILD_VERSION }} .
           docker push $ECR_REGISTRY/${{ matrix.app_name }}:${{ env.BUILD_VERSION }}
 
