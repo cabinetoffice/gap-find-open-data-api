@@ -19,7 +19,7 @@ jobs:
           ref: main
 
       - name: Checkout API
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3 aws-actions/aws-sam@v1
         with:
           path: api
 
@@ -29,6 +29,7 @@ jobs:
           java-version: "17"
           distribution: "temurin"
           cache: maven
+
 
       - name: Build with Maven
         working-directory: ./api
@@ -66,11 +67,12 @@ jobs:
           aws-region: eu-west-2
 
       - name: Spin up postgress DB
+        working-directory: ./api
         run: docker compose -f docker-compose-integration-tests.yml up -d
 
       - name: Build docker container with lambda function and api Gateway with AWS SAM
-        uses: aws-actions/aws-sam@v1
-            # sam build
+        working-directory: ./api
+        # sam build
         run: sam build --use-container -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} -e AWS_SECRET_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} -t template.yaml
 
 
