@@ -54,7 +54,7 @@
   "variable": [
     {
       "key": "host-name",
-      "value": "127.0.0.1"
+      "value": "host.docker.internal"
     }
   ]
 }

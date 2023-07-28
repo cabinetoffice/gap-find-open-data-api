@@ -83,7 +83,7 @@ jobs:
       - name: Start sam api
         working-directory: ./api
         # sam build
-        run: sam local start-api -p 8080 &
+        run: sam local start-api -p 8080 --warm-containers eager --container-host host.docker.internal &
 
       - name: run docker netwokr ls
         working-directory: ./api
