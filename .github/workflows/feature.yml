@@ -19,7 +19,7 @@ jobs:
           ref: main
 
       - name: Checkout API
-        uses: actions/checkout@v3 aws-actions/aws-sam@v1
+        uses: actions/checkout@v3
         with:
           path: api
 
