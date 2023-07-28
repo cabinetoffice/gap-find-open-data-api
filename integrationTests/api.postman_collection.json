@@ -50,11 +50,5 @@
       },
       "response": []
     }
-  ],
-  "variable": [
-    {
-      "key": "host-name",
-      "value": "localhost"
-    }
   ]
 }

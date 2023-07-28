@@ -98,11 +98,19 @@ jobs:
       - name: name of the container
         working-directory: ./api
         # sam build
-        run: docker ps -a --format "{{.Names}}" --filter "ancestor=public.ecr.aws/lambda/java:17-rapid-x86_64"
+        run: |
+          docker_ps_result=$(docker ps -a --format "{{.Names}}" --filter "ancestor=public.ecr.aws/lambda/java:17-rapid-x86_64")
+          echo "DOCKER_PS_RESULT=$docker_ps_result" >> $GITHUB_ENV
+          echo $DOCKER_PS_RESULT
+
+      - name: list container inside network
+        working-directory: ./api
+        # sam build
+        run: docker network inspect api_testing-network
 
       - name: Run Integration Tests
         working-directory: ./api
-        run: docker run --name newman-tests -v /home/runner/work/gap-find-open-data-api/gap-find-open-data-api/api/integrationTests:/opt/newman --network api_testing-network postman/newman run /opt/newman/api.postman_collection.json
+        run: docker run --name newman-tests -v /home/runner/work/gap-find-open-data-api/gap-find-open-data-api/api/integrationTests:/opt/newman --network api_testing-network postman/newman run /opt/newman/api.postman_collection.json --env-var "host-name=$DOCKER_PS_RESULT"
 
       - name: Log Integration Test Results
         if: always()
