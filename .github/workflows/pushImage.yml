@@ -98,7 +98,6 @@ jobs:
           echo BUILD_VERSION is ${{ env.BUILD_VERSION }}
 
       - name: Build, tag and push Docker image to AWS ECR
-        working-directory: /api
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
@@ -106,7 +105,6 @@ jobs:
           docker push $ECR_REGISTRY/${{ matrix.app_name }}:${{ env.BUILD_VERSION }}
 
       - name: Create env tag
-        working-directory: /api
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
@@ -115,7 +113,6 @@ jobs:
           docker push $ECR_REGISTRY/${{ matrix.app_name }}:$ENV_TAG
 
       - name: Create release tag - if we are committing to a release branch
-        working-directory: /api
         if: ${{ startsWith(github.ref, 'refs/heads/release/') }}
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
