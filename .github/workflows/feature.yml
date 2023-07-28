@@ -83,7 +83,7 @@ jobs:
       - name: Start sam api
         working-directory: ./api
         # sam build
-        run: sam local start-api -p 8080
+        run: sam local start-api -p 8080 &
 
 #      # TODO look into moving these docker steps into docker-compose.yml
 #      - name: Build Integration Environment
