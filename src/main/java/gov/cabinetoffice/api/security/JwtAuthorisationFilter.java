@@ -27,25 +27,25 @@ public class JwtAuthorisationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        String header = request.getHeader("Authorization");
+        final String header = request.getHeader("Authorization");
 
         if (header == null || !header.startsWith("Bearer")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = header.replace("Bearer ", "");
-        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(jwtProperties.getSecretKey()))
+        final String token = header.replace("Bearer ", "");
+        final DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(jwtProperties.getSecretKey()))
                 .build()
                 .verify(token);
 
-        Claim funderId = decodedJWT.getClaims().get(FUNDER_ID);
+        final Claim funderId = decodedJWT.getClaims().get(FUNDER_ID);
 
         if (funderId == null) {
-            throw new MissingClaimException("funder_id");
+            throw new MissingClaimException(FUNDER_ID);
         }
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(funderId.asString(),null, null);
+        final Authentication authentication = new UsernamePasswordAuthenticationToken(funderId.asString(),null, null);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
