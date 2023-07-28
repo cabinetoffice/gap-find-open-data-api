@@ -23,6 +23,11 @@ jobs:
         with:
           path: api
 
+      - name: Setup SAM
+        uses: aws-actions/aws-sam@v1
+        with:
+          path: api
+
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
