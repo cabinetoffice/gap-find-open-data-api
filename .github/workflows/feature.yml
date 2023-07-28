@@ -57,12 +57,29 @@ jobs:
         working-directory: ./api
         run: mvn test
 
-      # TODO look into moving these docker steps into docker-compose.yml
-      - name: Build Integration Environment
-        working-directory: ./api
-        run: |
-          mvn spring-boot:build-image -DskipTests 
-          docker compose -f docker-compose-integration-tests.yml up -d
+        #check if this step is needed
+      - name: Setup AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
+
+      - name: Spin up postgress DB
+        run: docker compose -f docker-compose-integration-tests.yml up -d
+
+      - name: Build docker container with lambda function and api Gateway with AWS SAM
+        uses: aws-actions/aws-sam@v1
+            # sam build
+        run: sam build --use-container -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} -e AWS_SECRET_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} -t template.yaml
+
+
+#      # TODO look into moving these docker steps into docker-compose.yml
+#      - name: Build Integration Environment
+#        working-directory: ./api
+#        run: |
+#          mvn spring-boot:build-image -DskipTests
+#          docker compose -f docker-compose-integration-tests.yml up -d
 
       - name: Run Integration Tests
         working-directory: ./serenity
