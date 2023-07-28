@@ -1,0 +1,60 @@
+{
+  "info": {
+    "_postman_id": "49c1fb4f-77f6-4381-96fe-39fc8373b917",
+    "name": "GAP Open Data API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Submissions by application form ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Returns expected number of submissions\", function () {",
+              "    let response = pm.response.json();",
+              "    pm.expect(response.submissions).to.have.length(2);",
+              "});",
+              "",
+              "",
+              "pm.test(\"Returns correct submissions\", function () {",
+              "    let responseData = pm.response.json();",
+              "    let submission1 = responseData.submissions[0];",
+              "    let submission2 = responseData.submissions[1];",
+              "",
+              "    pm.expect(submission1.submissionId).to.equal(\"3a6cfe2d-bf58-440d-9e07-3579c7dcf207\");",
+              "    pm.expect(submission2.submissionId).to.equal(\"3a6cfe2d-bf58-440d-9e07-3579c7dcf150\");",
+              "});",
+              "",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://{{host-name}}:8080/submissions/1",
+          "protocol": "http",
+          "host": ["{{host-name}}"],
+          "port": "8080",
+          "path": ["submissions", "1"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "host-name",
+      "value": "host.docker.internal"
+    }
+  ]
+}

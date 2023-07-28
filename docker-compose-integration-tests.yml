@@ -12,6 +12,10 @@ services:
       POSTGRES_DB: api-integration-tests
     ports:
       - "5432:5432"
+    networks:
+      - testing-network
     volumes: 
       - ./db/:/docker-entrypoint-initdb.d/
 
+networks:
+  testing-network:
