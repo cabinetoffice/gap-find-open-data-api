@@ -50,8 +50,8 @@ public class JwtAuthorisationFilterTest {
 
     @Test
     void doFilterInternal_validToken() throws ServletException, IOException {
-        String validToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE2MjczMTcyMjksImV4cCI6bnVsbCwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsImZ1bmRlcl9pZCI6IjEifQ.sAJYOAHiUMNsRC0m-nHkd0PbAnf_hXnejC7TOrhmJ9g";
-        String funderId = "1";
+        final String validToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmdW5kZXJfaWQiOiIxIn0.NbYwfVIpqalW1gM204pQXM7o6voNoO7EyFwl1XjXEQQ";
+        final String funderId = "1";
 
         when(request.getHeader("Authorization")).thenReturn("Bearer " + validToken);
         when(jwtProperties.getSecretKey()).thenReturn(secret);
@@ -68,7 +68,8 @@ public class JwtAuthorisationFilterTest {
 
     @Test
     public void doFilterInternal_expiredToken() {
-        String expiredToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE2MjczMTcyMjksImV4cCI6MTY1ODc2NjgyOSwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSJ9._GRx1ijhhNtc9-octUluGFZV4KMk840Do6v5JuypVNg";
+        final String expiredToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTg3NjY4Mjl9.q_Xbd-a0o48MDDJeO9O4-Bscc9NeHcOUMpqTM41C3Bw";
+
         when(request.getHeader("Authorization")).thenReturn("Bearer " + expiredToken);
         when(jwtProperties.getSecretKey()).thenReturn(secret);
 
@@ -78,7 +79,8 @@ public class JwtAuthorisationFilterTest {
     }
     @Test
     public void doFilterInternal_invalidSignature() {
-        String invalidSignatureToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE2OTA0NzIyNzEsImV4cCI6bnVsbCwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsImZ1bmRlcl9pZCI6IjEifQ.mOsIGE5FWjMC6GehQMurPuTnJ8Sk5Rp-DDai3YHCol8";
+        final String invalidSignatureToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmdW5kZXJfaWQiOiIxIn0.j_uP1WWerR1pSMetHh1sNXtbbK5R7uncKgX09maodRY";
+
         when(request.getHeader("Authorization")).thenReturn("Bearer " + invalidSignatureToken);
         when(jwtProperties.getSecretKey()).thenReturn(secret);
 
@@ -89,7 +91,8 @@ public class JwtAuthorisationFilterTest {
 
     @Test
     public void doFilterInternal_missingFunderIdClaim() {
-        String missingClaimToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE2MjczMTcyMjksImV4cCI6bnVsbCwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSJ9.9s-eCLOLEWCf59KnJdxPvscW7pzzzGB6u4i6sMh_8Fk";
+        final String missingClaimToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOm51bGx9.kBir5OUYCklX8bSu9j_74bkeywZmY95ockG7-driY9A";
+
         when(request.getHeader("Authorization")).thenReturn("Bearer " + missingClaimToken);
         when(jwtProperties.getSecretKey()).thenReturn(secret);
 

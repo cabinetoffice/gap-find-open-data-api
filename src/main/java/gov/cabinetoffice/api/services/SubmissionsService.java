@@ -23,14 +23,6 @@ public class SubmissionsService {
 	private final SubmissionMapper submissionMapper;
 
 	public SubmissionListDTO getSubmissionByApplicationId(int applicationId) {
-
-		//TODO: remove this
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (!(authentication instanceof AnonymousAuthenticationToken)) {
-			String funderId = authentication.getName();
-			System.out.println("Funder ID: " + funderId);
-
-		}
 		final List<SubmissionDTO> submissionDTOS = submissionRepository
 			.findByApplicationGrantApplicationId(applicationId)
 			.stream()
