@@ -95,14 +95,14 @@ jobs:
         # sam build
         run: docker ps -a
 
-      - name: Run Integration Tests
-        working-directory: ./api
-        run: docker run --name newman-tests -v /home/runner/work/gap-find-open-data-api/gap-find-open-data-api/api/integrationTests:/opt/newman --network api_testing-network postman/newman run /opt/newman/api.postman_collection.json
-
       - name: name of the container
         working-directory: ./api
         # sam build
         run: docker ps -a --format "{{.Names}}" --filter "ancestor=public.ecr.aws/lambda/java:17-rapid-x86_64"
+
+      - name: Run Integration Tests
+        working-directory: ./api
+        run: docker run --name newman-tests -v /home/runner/work/gap-find-open-data-api/gap-find-open-data-api/api/integrationTests:/opt/newman --network api_testing-network postman/newman run /opt/newman/api.postman_collection.json
 
       - name: Log Integration Test Results
         if: always()
