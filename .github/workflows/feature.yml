@@ -83,7 +83,7 @@ jobs:
       - name: Start sam api
         working-directory: ./api
         # sam build
-        run: sam local start-api -p 8080 --warm-containers eager --container-host host.docker.internal &
+        run: sam local start-api -p 8080 --warm-containers eager --container-host host.docker.internal --docker-network api_testing-network  &
 
       - name: run docker netwokr ls
         working-directory: ./api
@@ -97,7 +97,7 @@ jobs:
 
       - name: Run Integration Tests
         working-directory: ./api
-        run: docker run --name newman-tests -v /home/runner/work/gap-find-open-data-api/gap-find-open-data-api/api/integrationTests:/opt/newman postman/newman run /opt/newman/api.postman_collection.json
+        run: docker run --name newman-tests -v /home/runner/work/gap-find-open-data-api/gap-find-open-data-api/api/integrationTests:/opt/newman --network api_testing-network postman/newman run /opt/newman/api.postman_collection.json
 
       - name: Log Integration Test Results
         if: always()
