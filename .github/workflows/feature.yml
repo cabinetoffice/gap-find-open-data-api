@@ -85,6 +85,16 @@ jobs:
         # sam build
         run: sam local start-api -p 8080 &
 
+      - name: run docker netwokr ls
+        working-directory: ./api
+        # sam build
+        run: docker network ls
+
+      - name: run docker ps -a
+        working-directory: ./api
+        # sam build
+        run: docker ps -a
+
       - name: Run Integration Tests
         working-directory: ./api
         run: docker run --name newman-tests -v /home/runner/work/gap-find-open-data-api/gap-find-open-data-api/api/integrationTests:/opt/newman postman/newman run /opt/newman/api.postman_collection.json
