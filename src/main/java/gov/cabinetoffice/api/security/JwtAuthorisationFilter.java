@@ -41,7 +41,7 @@ public class JwtAuthorisationFilter extends OncePerRequestFilter {
 
         Claim funderId = decodedJWT.getClaims().get(FUNDER_ID);
 
-        if(funderId == null) {
+        if (funderId == null) {
             throw new MissingClaimException("funder_id");
         }
 
