@@ -24,7 +24,7 @@ jobs:
           path: api
 
       - name: Setup SAM
-        uses: aws-actions/aws-sam@v1
+        uses: aws-actions/setup-sam@v1
         with:
           path: api
 
