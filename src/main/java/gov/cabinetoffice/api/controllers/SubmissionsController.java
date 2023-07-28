@@ -22,19 +22,47 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Submissions", description = "API for handling applicants submissions")
 @RequiredArgsConstructor
 public class SubmissionsController {
+	private static final int FUNDING_ORG_ID = 1; // hard coding until we can take this value from pring security
 
 	private final SubmissionsService submissionsService;
 
-	@GetMapping("/{applicationId}")
+	@GetMapping
+		@ApiResponses(value = {
+			@ApiResponse(
+					responseCode = "200", description = "Submissions retrieved successfully.",
+					content = @Content(mediaType = "application/json",
+							schema = @Schema(implementation = Submission.class)
+					)
+			),
+			@ApiResponse(
+					responseCode = "404", description = "No submissions found for funding organisation",
+					content = @Content(mediaType = "application/json",
+							schema = @Schema(implementation = ErrorMessage.class)
+					)
+			)
+		})
+	public ResponseEntity<SubmissionListDTO> getSubmissions() {
+		final SubmissionListDTO response = this.submissionsService.getSubmissionsByFundingOrgId(FUNDING_ORG_ID);
+		return ResponseEntity.ok().body(response);
+	}
+
+	@GetMapping("/{ggisReferenceNumber}")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Submissions retrieved successfully.",
+			@ApiResponse(
+					responseCode = "200", description = "Submissions retrieved successfully.",
 					content = @Content(mediaType = "application/json",
-							schema = @Schema(implementation = Submission.class))),
-			@ApiResponse(responseCode = "404", description = "No submissions found with given application id",
+							schema = @Schema(implementation = Submission.class)
+					)
+			),
+			@ApiResponse(
+					responseCode = "404", description = "No submissions found for funding organisation or GGIS ID",
 					content = @Content(mediaType = "application/json",
-							schema = @Schema(implementation = ErrorMessage.class))) })
-	public ResponseEntity<SubmissionListDTO> getSubmissionByApplicationId(@PathVariable @NotNull int applicationId) {
-		final SubmissionListDTO response = this.submissionsService.getSubmissionByApplicationId(applicationId);
+							schema = @Schema(implementation = ErrorMessage.class)
+					)
+			)
+	})
+	public ResponseEntity<SubmissionListDTO> getSubmissionsByGgisRefNum(@PathVariable @NotNull String ggisReferenceNumber) {
+		final SubmissionListDTO response = this.submissionsService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(FUNDING_ORG_ID, ggisReferenceNumber);
 		return ResponseEntity.ok().body(response);
 	}
 

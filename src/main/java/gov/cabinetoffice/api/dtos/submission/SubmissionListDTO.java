@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -15,6 +16,9 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SubmissionListDTO {
 
-	private List<SubmissionDTO> submissions;
+	private int numberOfResults;
+
+	@Builder.Default
+	private List<SubmissionDTO> submissions = new ArrayList<>();
 
 }

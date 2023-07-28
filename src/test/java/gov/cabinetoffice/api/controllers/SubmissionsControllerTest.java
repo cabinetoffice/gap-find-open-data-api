@@ -13,9 +13,10 @@ import gov.cabinetoffice.api.dtos.submission.SubmissionQuestionDTO;
 import gov.cabinetoffice.api.dtos.submission.SubmissionSectionDTO;
 import gov.cabinetoffice.api.exceptions.SubmissionNotFoundException;
 import gov.cabinetoffice.api.services.SubmissionsService;
-import org.junit.jupiter.api.BeforeEach;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,7 @@ import static org.mockito.Mockito.when;
 class SubmissionsControllerTest {
 
 	private static final int APPLICATION_ID = 1;
+	private static final int FUNDING_ORGANISATION_ID = 1;
 
 	final ZonedDateTime zonedDateTime = ZonedDateTime.now();
 
@@ -182,39 +184,67 @@ class SubmissionsControllerTest {
 		.sections(List.of(submissionSectionDTO1, submissionSectionDTO2))
 		.build();
 
-	final SubmissionListDTO submissionsDTO = SubmissionListDTO.builder().submissions(List.of(submissionDTO)).build();
+	final SubmissionListDTO submissionsDTO = SubmissionListDTO.builder()
+			.submissions(List.of(submissionDTO))
+			.numberOfResults(List.of(submissionDTO).size())
+			.build();
+
+	final String GGIS_REFERENCE_NUMBER = "SCH-000003589";
+
+	// TODO find a nicer solution for the above objects and values
 
 	@Mock
 	private SubmissionsService submissionService;
 
+	@InjectMocks
 	private SubmissionsController controllerUnderTest;
 
-	@BeforeEach
-	void setup() {
-		controllerUnderTest = new SubmissionsController(submissionService);
+
+	@Test
+	void getSubmissions_ReturnsExpectedSubmissions() {
+
+		when(submissionService.getSubmissionsByFundingOrgId(FUNDING_ORGANISATION_ID))
+				.thenReturn(submissionsDTO);
+
+		final ResponseEntity<SubmissionListDTO> methodResponse = controllerUnderTest.getSubmissions();
+
+		verify(submissionService).getSubmissionsByFundingOrgId(FUNDING_ORGANISATION_ID);
+		assertThat(methodResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(methodResponse.getBody()).isEqualTo(submissionsDTO);
 	}
 
 	@Test
-	void getSubmissionByApplicationId_returnsExpectedResponse() {
-		when(submissionService.getSubmissionByApplicationId(APPLICATION_ID)).thenReturn(submissionsDTO);
+	void getSubmissions_ThrowsSubmissionNotFoundException() {
 
-		final ResponseEntity<SubmissionListDTO> response = controllerUnderTest
-				.getSubmissionByApplicationId(APPLICATION_ID);
+		when(submissionService.getSubmissionsByFundingOrgId(FUNDING_ORGANISATION_ID))
+				.thenThrow(new SubmissionNotFoundException("No submissions found"));
 
-		verify(submissionService).getSubmissionByApplicationId(APPLICATION_ID);
-		assertThat(HttpStatus.OK).isEqualTo(response.getStatusCode());
-		assertThat(response.getBody()).isEqualTo(submissionsDTO);
-
+		assertThatExceptionOfType(SubmissionNotFoundException.class)
+				.isThrownBy(() -> controllerUnderTest.getSubmissions())
+				.withMessage("No submissions found");
 	}
 
 	@Test
-	void getSubmissionByApplicationId_returns404WhenNoSubmissionFound() {
-		when(submissionService.getSubmissionByApplicationId(APPLICATION_ID))
-				.thenThrow(new SubmissionNotFoundException("error"));
-		final Exception result = assertThrows(SubmissionNotFoundException.class,
-				() -> controllerUnderTest.getSubmissionByApplicationId(APPLICATION_ID));
-		verify(submissionService).getSubmissionByApplicationId(APPLICATION_ID);
-		assertThat(result.getMessage()).contains("error");
+	void getSubmissionsByGgisRefNum_ReturnsExpectedSubmissions() {
+
+		when(submissionService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(FUNDING_ORGANISATION_ID, GGIS_REFERENCE_NUMBER))
+				.thenReturn(submissionsDTO);
+
+		final ResponseEntity<SubmissionListDTO> methodResponse = controllerUnderTest.getSubmissionsByGgisRefNum(GGIS_REFERENCE_NUMBER);
+
+		verify(submissionService).getSubmissionsByFundingOrgIdAndGgisReferenceNum(FUNDING_ORGANISATION_ID, GGIS_REFERENCE_NUMBER);
+		assertThat(methodResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(methodResponse.getBody()).isEqualTo(submissionsDTO);
 	}
 
+	@Test
+	void getSubmissionsByGgisRefNum_ThrowsSubmissionNotFoundException() {
+
+		when(submissionService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(FUNDING_ORGANISATION_ID, GGIS_REFERENCE_NUMBER))
+				.thenThrow(new SubmissionNotFoundException("No submissions found"));
+
+		assertThatExceptionOfType(SubmissionNotFoundException.class)
+				.isThrownBy(() -> controllerUnderTest.getSubmissionsByGgisRefNum(GGIS_REFERENCE_NUMBER))
+				.withMessage("No submissions found");
+	}
 }
