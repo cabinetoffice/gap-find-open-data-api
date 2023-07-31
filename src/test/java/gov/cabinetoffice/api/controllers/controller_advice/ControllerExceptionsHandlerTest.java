@@ -1,10 +1,10 @@
 package gov.cabinetoffice.api.controllers.controller_advice;
 
-import gov.cabinetoffice.api.models.ErrorMessage;
 import gov.cabinetoffice.api.exceptions.ApiKeyAlreadyExistException;
 import gov.cabinetoffice.api.exceptions.ApiKeyDoesNotExistException;
 import gov.cabinetoffice.api.exceptions.ApplicationFormNotFoundException;
 import gov.cabinetoffice.api.exceptions.SubmissionNotFoundException;
+import gov.cabinetoffice.api.models.ErrorMessage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import software.amazon.awssdk.services.apigateway.model.ApiGatewayException;
 
 import java.util.Objects;
 
@@ -38,9 +37,6 @@ class ControllerExceptionsHandlerTest {
 
     @Mock
     private ApiKeyDoesNotExistException apiKeyDoesNotExistException;
-
-    @Mock
-    private ApiGatewayException apiGatewayException;
 
     @Mock
     private WebRequest webRequest;
@@ -115,22 +111,6 @@ class ControllerExceptionsHandlerTest {
 
         final ResponseEntity<Object> responseEntity = controllerExceptionsHandler
                 .handleException(apiKeyDoesNotExistException, webRequest);
-
-        final String errorMessageFromResponse = ((ErrorMessage) Objects.requireNonNull(responseEntity.getBody()))
-                .getMessage();
-
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(errorMessageFromResponse).isEqualTo(errorMessage);
-    }
-
-    @Test
-    void testHandleException_ApiGatewayException() {
-        final String errorMessage = "Api gateway exception";
-
-        when(apiGatewayException.getMessage()).thenReturn(errorMessage);
-
-        final ResponseEntity<Object> responseEntity = controllerExceptionsHandler.handleException(apiGatewayException,
-                webRequest);
 
         final String errorMessageFromResponse = ((ErrorMessage) Objects.requireNonNull(responseEntity.getBody()))
                 .getMessage();
