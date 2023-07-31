@@ -76,7 +76,7 @@ public interface SubmissionMapper {
 			case AddressInput -> buildAddress(multiResponse);
 			case Date -> buildDate(multiResponse);
 			case SingleFileUpload -> buildUploadResponse(submissionQuestion);
-			default -> ""; // TODO do we want this to be null or an empty string?
+			default -> "";
 		};
 	}
 
