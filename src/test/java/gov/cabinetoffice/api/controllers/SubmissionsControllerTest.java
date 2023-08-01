@@ -1,23 +1,22 @@
 package gov.cabinetoffice.api.controllers;
 
-import gov.cabinetoffice.api.dtos.submission.AddressDTO;
-import gov.cabinetoffice.api.dtos.submission.SubmissionDTO;
+import gov.cabinetoffice.api.dtos.submission.*;
 import gov.cabinetoffice.api.entities.ApplicationFormEntity;
 import gov.cabinetoffice.api.entities.SchemeEntity;
 import gov.cabinetoffice.api.enums.ResponseTypeEnum;
+import gov.cabinetoffice.api.exceptions.SubmissionNotFoundException;
 import gov.cabinetoffice.api.models.application.ApplicationDefinition;
 import gov.cabinetoffice.api.models.submission.SubmissionQuestion;
 import gov.cabinetoffice.api.models.submission.SubmissionQuestionValidation;
-import gov.cabinetoffice.api.dtos.submission.SubmissionListDTO;
-import gov.cabinetoffice.api.dtos.submission.SubmissionQuestionDTO;
-import gov.cabinetoffice.api.dtos.submission.SubmissionSectionDTO;
-import gov.cabinetoffice.api.exceptions.SubmissionNotFoundException;
 import gov.cabinetoffice.api.services.SubmissionsService;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +25,6 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class SubmissionsControllerTest {
@@ -176,9 +170,6 @@ class SubmissionsControllerTest {
 
 	final SubmissionDTO submissionDTO = SubmissionDTO.builder()
 		.submissionId(SUBMISSION_ID)
-		.applicationFormName(application.getApplicationName())
-		.ggisReferenceNumber(scheme.getGgisIdentifier())
-		.grantAdminEmailAddress(scheme.getEmail())
 		.submittedTimeStamp(zonedDateTime)
 		.grantApplicantEmailAddress(scheme.getEmail())
 		.sections(List.of(submissionSectionDTO1, submissionSectionDTO2))
@@ -203,14 +194,16 @@ class SubmissionsControllerTest {
 	@Test
 	void getSubmissions_ReturnsExpectedSubmissions() {
 
-		when(submissionService.getSubmissionsByFundingOrgId(FUNDING_ORGANISATION_ID))
-				.thenReturn(submissionsDTO);
+		final ApplicationListDTO applications = ApplicationListDTO.builder().build();
 
-		final ResponseEntity<SubmissionListDTO> methodResponse = controllerUnderTest.getSubmissions();
+		when(submissionService.getSubmissionsByFundingOrgId(FUNDING_ORGANISATION_ID))
+				.thenReturn(applications);
+
+		final ResponseEntity<ApplicationListDTO> methodResponse = controllerUnderTest.getSubmissions();
 
 		verify(submissionService).getSubmissionsByFundingOrgId(FUNDING_ORGANISATION_ID);
 		assertThat(methodResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-		assertThat(methodResponse.getBody()).isEqualTo(submissionsDTO);
+		assertThat(methodResponse.getBody()).isEqualTo(applications);
 	}
 
 	@Test
@@ -227,14 +220,16 @@ class SubmissionsControllerTest {
 	@Test
 	void getSubmissionsByGgisRefNum_ReturnsExpectedSubmissions() {
 
-		when(submissionService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(FUNDING_ORGANISATION_ID, GGIS_REFERENCE_NUMBER))
-				.thenReturn(submissionsDTO);
+		final ApplicationListDTO applications = ApplicationListDTO.builder().build();
 
-		final ResponseEntity<SubmissionListDTO> methodResponse = controllerUnderTest.getSubmissionsByGgisRefNum(GGIS_REFERENCE_NUMBER);
+		when(submissionService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(FUNDING_ORGANISATION_ID, GGIS_REFERENCE_NUMBER))
+				.thenReturn(applications);
+
+		final ResponseEntity<ApplicationListDTO> methodResponse = controllerUnderTest.getSubmissionsByGgisRefNum(GGIS_REFERENCE_NUMBER);
 
 		verify(submissionService).getSubmissionsByFundingOrgIdAndGgisReferenceNum(FUNDING_ORGANISATION_ID, GGIS_REFERENCE_NUMBER);
 		assertThat(methodResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-		assertThat(methodResponse.getBody()).isEqualTo(submissionsDTO);
+		assertThat(methodResponse.getBody()).isEqualTo(applications);
 	}
 
 	@Test

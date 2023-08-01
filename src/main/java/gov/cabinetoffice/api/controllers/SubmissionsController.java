@@ -1,6 +1,6 @@
 package gov.cabinetoffice.api.controllers;
 
-import gov.cabinetoffice.api.dtos.submission.SubmissionListDTO;
+import gov.cabinetoffice.api.dtos.submission.ApplicationListDTO;
 import gov.cabinetoffice.api.entities.Submission;
 import gov.cabinetoffice.api.models.ErrorMessage;
 import gov.cabinetoffice.api.services.SubmissionsService;
@@ -41,8 +41,8 @@ public class SubmissionsController {
 					)
 			)
 		})
-	public ResponseEntity<SubmissionListDTO> getSubmissions() {
-		final SubmissionListDTO response = this.submissionsService.getSubmissionsByFundingOrgId(FUNDING_ORG_ID);
+	public ResponseEntity<ApplicationListDTO> getSubmissions() {
+		final ApplicationListDTO response = this.submissionsService.getSubmissionsByFundingOrgId(FUNDING_ORG_ID);
 		return ResponseEntity.ok().body(response);
 	}
 
@@ -61,8 +61,8 @@ public class SubmissionsController {
 					)
 			)
 	})
-	public ResponseEntity<SubmissionListDTO> getSubmissionsByGgisRefNum(@PathVariable @NotNull String ggisReferenceNumber) {
-		final SubmissionListDTO response = this.submissionsService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(FUNDING_ORG_ID, ggisReferenceNumber);
+	public ResponseEntity<ApplicationListDTO> getSubmissionsByGgisRefNum(@PathVariable @NotNull String ggisReferenceNumber) {
+		final ApplicationListDTO response = this.submissionsService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(FUNDING_ORG_ID, ggisReferenceNumber);
 		return ResponseEntity.ok().body(response);
 	}
 

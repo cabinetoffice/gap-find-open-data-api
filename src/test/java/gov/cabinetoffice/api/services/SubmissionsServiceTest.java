@@ -1,5 +1,7 @@
 package gov.cabinetoffice.api.services;
 
+import gov.cabinetoffice.api.dtos.submission.ApplicationDto;
+import gov.cabinetoffice.api.dtos.submission.ApplicationListDTO;
 import gov.cabinetoffice.api.dtos.submission.SubmissionDTO;
 import gov.cabinetoffice.api.dtos.submission.SubmissionListDTO;
 import gov.cabinetoffice.api.entities.Submission;
@@ -44,28 +46,29 @@ class SubmissionsServiceTest {
 				.build();
 		final List<SubmissionDTO> submissionDTOList = List.of(submissionDto);
 
+		final ApplicationDto application = ApplicationDto.builder()
+				.ggisReferenceNumber("SCH-001")
+				.applicationFormName("Woodland services grant")
+				.grantAdminEmailAddress("gavin.cook@and.digital")
+				.submissions(submissionDTOList)
+				.build();
+		final List<ApplicationDto> applications = List.of(application);
+
+		final ApplicationListDTO applicationListDTO = ApplicationListDTO.builder()
+				.numberOfResults(applications.size())
+				.applications(applications)
+				.build();
+
 		when(submissionRepository.findBySchemeFunderIdAndSchemeGgisIdentifier(FUNDING_ORG_ID, GGIS_REFERENCE_NUMBER))
 				.thenReturn(submissions);
 
-		when(submissionMapper.submissionToSubmissionDto(submission))
-				.thenReturn(submissionDto);
+		when(submissionMapper.submissionListToApplicationListDto(submissions))
+				.thenReturn(applicationListDTO);
 
-		final SubmissionListDTO methodResponse = submissionsService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(FUNDING_ORG_ID, GGIS_REFERENCE_NUMBER);
+		final ApplicationListDTO methodResponse = submissionsService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(FUNDING_ORG_ID, GGIS_REFERENCE_NUMBER);
 
 		verify(submissionRepository).findBySchemeFunderIdAndSchemeGgisIdentifier(FUNDING_ORG_ID, GGIS_REFERENCE_NUMBER);
-		assertThat(methodResponse.getNumberOfResults()).isEqualTo(List.of(submission).size());
-		assertThat(methodResponse.getSubmissions()).isEqualTo(submissionDTOList);
-	}
-
-	@Test
-	void getSubmissionsByFundingOrgIdAndGgisReferenceNum_ThrowsSubmissionNotFoundException() {
-
-		when(submissionRepository.findBySchemeFunderIdAndSchemeGgisIdentifier(FUNDING_ORG_ID, GGIS_REFERENCE_NUMBER))
-				.thenReturn(Collections.emptyList());
-
-		assertThatExceptionOfType(SubmissionNotFoundException.class)
-				.isThrownBy(() -> submissionsService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(FUNDING_ORG_ID, GGIS_REFERENCE_NUMBER))
-				.withMessage("No submissions found");
+		assertThat(methodResponse).isEqualTo(applicationListDTO);
 	}
 
 	@Test
@@ -80,27 +83,28 @@ class SubmissionsServiceTest {
 				.build();
 		final List<SubmissionDTO> submissionDTOList = List.of(submissionDto);
 
+		final ApplicationDto application = ApplicationDto.builder()
+				.ggisReferenceNumber("SCH-001")
+				.applicationFormName("Woodland services grant")
+				.grantAdminEmailAddress("gavin.cook@and.digital")
+				.submissions(submissionDTOList)
+				.build();
+		final List<ApplicationDto> applications = List.of(application);
+
+		final ApplicationListDTO applicationListDTO = ApplicationListDTO.builder()
+				.numberOfResults(applications.size())
+				.applications(applications)
+				.build();
+
 		when(submissionRepository.findBySchemeFunderId(FUNDING_ORG_ID))
 				.thenReturn(submissions);
 
-		when(submissionMapper.submissionToSubmissionDto(submission))
-				.thenReturn(submissionDto);
+		when(submissionMapper.submissionListToApplicationListDto(submissions))
+				.thenReturn(applicationListDTO);
 
-		final SubmissionListDTO methodResponse = submissionsService.getSubmissionsByFundingOrgId(FUNDING_ORG_ID);
+		final ApplicationListDTO methodResponse = submissionsService.getSubmissionsByFundingOrgId(FUNDING_ORG_ID);
 
 		verify(submissionRepository).findBySchemeFunderId(FUNDING_ORG_ID);
-		assertThat(methodResponse.getNumberOfResults()).isEqualTo(List.of(submission).size());
-		assertThat(methodResponse.getSubmissions()).isEqualTo(submissionDTOList);
-	}
-
-	@Test
-	void getSubmissionsByFundingOrgId_ThrowsSubmissionNotFoundException() {
-
-		when(submissionRepository.findBySchemeFunderId(FUNDING_ORG_ID))
-				.thenReturn(Collections.emptyList());
-
-		assertThatExceptionOfType(SubmissionNotFoundException.class)
-				.isThrownBy(() -> submissionsService.getSubmissionsByFundingOrgId(FUNDING_ORG_ID))
-				.withMessage("No submissions found");
+		assertThat(methodResponse).isEqualTo(applicationListDTO);
 	}
 }

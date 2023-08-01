@@ -15,6 +15,7 @@ import gov.cabinetoffice.api.models.submission.SubmissionQuestionValidation;
 import gov.cabinetoffice.api.models.submission.SubmissionSection;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -94,18 +95,23 @@ public class SubmissionMapperTestData {
             .validation(SubmissionQuestionValidation.builder().minLength(5).maxLength(100).build())
             .build();
 
+    private static final String[] date = { "01", "12", "1987" };
+    private static final SubmissionQuestion question4 = SubmissionQuestion.builder()
+            .questionId("test")
+            .responseType(ResponseTypeEnum.Date)
+            .multiResponse(date)
+            .build();
+
     private static final SubmissionSection section1 = SubmissionSection.builder()
             .sectionId(SECTION_ID_1)
             .sectionTitle(SECTION_TITLE_1)
             .sectionStatus(SubmissionSectionStatus.IN_PROGRESS)
-            .questions(List.of(question1, question2, question3))
+            .questions(List.of(question1, question2, question3, question4))
             .build();
 
     private static final SubmissionDefinition definition = SubmissionDefinition.builder()
             .sections(List.of(section1))
             .build();
-
-    private static final String[] date = { "01", "12", "1987" };
 
     private static final long APPLICANT_ID = 1;
 
@@ -150,6 +156,7 @@ public class SubmissionMapperTestData {
             .submittedDate(zonedDateTime)
             .build();
 
+
     private static final SubmissionQuestionDTO questionDTO1 = SubmissionQuestionDTO.builder()
             .questionId(question1.getQuestionId())
             .questionTitle(question1.getFieldTitle())
@@ -176,17 +183,20 @@ public class SubmissionMapperTestData {
             .questionResponse(addressDTO)
             .build();
 
+    private static final SubmissionQuestionDTO questionDTO4 = SubmissionQuestionDTO.builder()
+            .questionId(question4.getQuestionId())
+            .questionTitle(question4.getFieldTitle())
+            .questionResponse(LocalDate.of(1987, 12, 1))
+            .build();
+
     private static final SubmissionSectionDTO submissionSectionDTO1 = SubmissionSectionDTO.builder()
             .sectionId(SECTION_ID_1)
             .sectionTitle(SECTION_TITLE_1)
-            .questions(List.of(questionDTO1, questionDTO2, questionDTO3))
+            .questions(List.of(questionDTO1, questionDTO2, questionDTO3, questionDTO4))
             .build();
 
     private static final SubmissionDTO submissionDTO = SubmissionDTO.builder()
             .submissionId(SUBMISSION_ID)
-            .applicationFormName(application.getApplicationName())
-            .ggisReferenceNumber(scheme.getGgisIdentifier())
-            .grantAdminEmailAddress(scheme.getEmail())
             .submittedTimeStamp(zonedDateTime)
             .grantApplicantEmailAddress(scheme.getEmail())
             .sections(List.of(submissionSectionDTO1))
