@@ -16,5 +16,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ApplicationListDTO {
     private int numberOfResults;
+
+    @Builder.Default
     private List<ApplicationDto> applications = new ArrayList<>();
 }
