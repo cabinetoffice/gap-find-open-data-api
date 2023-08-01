@@ -10,7 +10,6 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class S3Service {
 
-	// TODO decide on duration
 	public static final int URL_DURATION = 15;
 
 	private final S3Presigner presigner;
@@ -19,7 +18,7 @@ public class S3Service {
 
 		// Create a GetObjectPresignRequest to specify the signature duration
 		final GetObjectPresignRequest getObjectPresignRequest = GetObjectPresignRequest.builder()
-			.signatureDuration(Duration.ofSeconds(URL_DURATION))
+			.signatureDuration(Duration.ofMinutes(URL_DURATION))
 			.getObjectRequest(getObjectRequest -> getObjectRequest.bucket(bucketName).key(objectKey))
 			.build();
 
