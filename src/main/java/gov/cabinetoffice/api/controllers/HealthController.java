@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class HealthController {
 
-    @GetMapping("/")
+    @GetMapping()
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Application is running.",
                     content = @Content(mediaType = "application/json",
