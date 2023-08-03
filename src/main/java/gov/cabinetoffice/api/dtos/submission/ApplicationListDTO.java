@@ -6,23 +6,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SubmissionDTO {
+public class ApplicationListDTO {
+    private int numberOfResults;
 
-	private UUID submissionId;
-
-	private String grantApplicantEmailAddress;
-
-	private ZonedDateTime submittedTimeStamp;
-
-	private List<SubmissionSectionDTO> sections;
-
+    @Builder.Default
+    private List<ApplicationDto> applications = new ArrayList<>();
 }

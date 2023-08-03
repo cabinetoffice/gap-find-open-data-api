@@ -12,4 +12,7 @@ public interface SubmissionRepository extends JpaRepository<Submission, UUID> {
 
 	List<Submission> findByApplicationGrantApplicationId(Integer applicationId);
 
+	List<Submission> findBySchemeFunderIdAndSchemeGgisIdentifier(int funderId, String ggisIdentifier);
+
+	List<Submission> findBySchemeFunderId(int fundingOrgId);
 }
