@@ -237,9 +237,6 @@ class SubmissionMapperTest {
 
 	final SubmissionDTO submissionDTO = SubmissionDTO.builder()
 		.submissionId(SUBMISSION_ID)
-		.applicationFormName(application.getApplicationName())
-		.ggisReferenceNumber(scheme.getGgisIdentifier())
-		.grantAdminEmailAddress(scheme.getEmail())
 		.submittedTimeStamp(zonedDateTime)
 		.grantApplicantEmailAddress(scheme.getEmail())
 		.sections(List.of(submissionSectionDTO1, submissionSectionDTO2))
@@ -254,6 +251,34 @@ class SubmissionMapperTest {
 	}
 
 	@Test
+	void submissionToSubmissionDto_ReturnsNull() {
+		SubmissionDTO result = submissionMapper.submissionToSubmissionDto(null);
+		assertThat(result).isNull();
+	}
+
+	@Test
+	void submissionToSubmissionDto_GrantAdminEmailAddress_isNull_IfSubmissionSchemeIsNull() {
+		final Submission submission = Submission.builder()
+				.definition(SubmissionDefinition.builder().build())
+				.build();
+		SubmissionDTO result = submissionMapper.submissionToSubmissionDto(submission);
+		assertThat(result.getGrantApplicantEmailAddress()).isNull();
+	}
+
+	@Test
+	void submissionToSubmissionDto_GrantAdminEmailAddress_isNull_IfSubmissionSchemeEmailAddressIsNull() {
+		final SchemeEntity scheme = SchemeEntity.builder().build();
+		final Submission submission = Submission.builder()
+				.definition(SubmissionDefinition.builder().build())
+				.scheme(scheme)
+				.build();
+
+		final SubmissionDTO result = submissionMapper.submissionToSubmissionDto(submission);
+
+		assertThat(result.getGrantApplicantEmailAddress()).isNull();
+	}
+
+	@Test
 	void mapSections() {
 		List<SubmissionSectionDTO> result = submissionMapper.mapSections(submission.getDefinition().getSections());
 		assertThat(result).isEqualTo(List.of(submissionSectionDTO1, submissionSectionDTO2));
@@ -263,6 +288,12 @@ class SubmissionMapperTest {
 	void submissionSectionToSubmissionSectionDto() {
 		SubmissionSectionDTO result = submissionMapper.submissionSectionToSubmissionSectionDto(section1);
 		assertThat(result).isEqualTo(submissionSectionDTO1);
+	}
+
+	@Test
+	void submissionSectionToSubmissionSectionDto_ReturnsNull() {
+		SubmissionSectionDTO result = submissionMapper.submissionSectionToSubmissionSectionDto(null);
+		assertThat(result).isNull();
 	}
 
 	@Test
@@ -283,6 +314,30 @@ class SubmissionMapperTest {
 	void submissionQuestionToSubmissionQuestionDto() {
 		SubmissionQuestionDTO result = submissionMapper.submissionQuestionToSubmissionQuestionDto(question1);
 		assertThat(result).isEqualTo(questionDTO1);
+	}
+
+	@Test
+	void submissionQuestionToSubmissionQuestionDto_HandlesNullValues() {
+		final String questionTitle = "Enter the name of your organisation";
+		final SubmissionQuestion question1 = SubmissionQuestion.builder()
+				.questionId(QUESTION_ID_1)
+				.profileField("ORG_NAME")
+				.fieldTitle(questionTitle)
+				.hintText(
+						"This is the official name of your organisation. It could be the name that is registered with Companies House or the Charities Commission")
+				.responseType(ResponseTypeEnum.ShortAnswer)
+				.response(null)
+				.multiResponse(null)
+				.validation(SubmissionQuestionValidation.builder().mandatory(true).minLength(2).maxLength(250).build())
+				.build();
+
+		final SubmissionQuestionDTO dto = SubmissionQuestionDTO.builder()
+				.questionId(QUESTION_ID_1)
+				.questionTitle(questionTitle)
+				.build();
+
+		SubmissionQuestionDTO result = submissionMapper.submissionQuestionToSubmissionQuestionDto(question1);
+		assertThat(result).isEqualTo(dto);
 	}
 
 	@Test
