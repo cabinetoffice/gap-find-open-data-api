@@ -2,8 +2,8 @@ package gov.cabinetoffice.api.services;
 
 import gov.cabinetoffice.api.dtos.submission.SubmissionDTO;
 import gov.cabinetoffice.api.dtos.submission.SubmissionListDTO;
-import gov.cabinetoffice.api.mappers.SubmissionMapper;
 import gov.cabinetoffice.api.exceptions.SubmissionNotFoundException;
+import gov.cabinetoffice.api.mappers.SubmissionMapper;
 import gov.cabinetoffice.api.repositories.SubmissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
