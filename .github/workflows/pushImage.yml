@@ -68,7 +68,7 @@ jobs:
 
     strategy:
       matrix:
-        app_name: ['gap-find-open-data-api']
+        app_name: ['gap-find-open-data-api-service']
 
     steps:
       - uses: actions/checkout@v3
