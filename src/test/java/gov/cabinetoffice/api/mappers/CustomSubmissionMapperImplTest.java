@@ -1,7 +1,7 @@
 package gov.cabinetoffice.api.mappers;
 
 import gov.cabinetoffice.api.config.S3ConfigProperties;
-import gov.cabinetoffice.api.dtos.submission.ApplicationDto;
+import gov.cabinetoffice.api.dtos.submission.ApplicationDTO;
 import gov.cabinetoffice.api.dtos.submission.ApplicationListDTO;
 import gov.cabinetoffice.api.dtos.submission.SubmissionDTO;
 import gov.cabinetoffice.api.dtos.submission.SubmissionSectionDTO;
@@ -262,13 +262,13 @@ class CustomSubmissionMapperImplTest {
 
 		assertThat(methodResponse.getNumberOfResults()).isEqualTo(2);
 
-		final ApplicationDto applicationDto1 = methodResponse.getApplications().get(0);
+		final ApplicationDTO applicationDto1 = methodResponse.getApplications().get(0);
 		assertThat(applicationDto1.getApplicationFormName()).isEqualTo(application.getApplicationName());
 		assertThat(applicationDto1.getGgisReferenceNumber()).isEqualTo(scheme.getGgisIdentifier());
 		assertThat(applicationDto1.getSubmissions()).hasSize(1);
 		assertThat(applicationDto1.getSubmissions().get(0).getSubmissionId()).isEqualTo(submissionId1);
 
-		final ApplicationDto applicationDto2 = methodResponse.getApplications().get(1);
+		final ApplicationDTO applicationDto2 = methodResponse.getApplications().get(1);
 		assertThat(applicationDto2.getApplicationFormName()).isEqualTo(application2.getApplicationName());
 		assertThat(applicationDto2.getGgisReferenceNumber()).isEqualTo(scheme2.getGgisIdentifier());
 		assertThat(applicationDto2.getSubmissions()).hasSize(1);

@@ -80,7 +80,7 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
 	// TODO - look into whether this is horrendously inefficient. Potentially more performant to do all this looping at query level.
 	@Override
 	public ApplicationListDTO submissionListToApplicationListDto(final List<Submission> submissions) {
-		final List<ApplicationDto> applicationSubmissions = Optional.ofNullable(submissions)
+		final List<ApplicationDTO> applicationSubmissions = Optional.ofNullable(submissions)
 				.orElse(Collections.emptyList())
 				.stream()
 				.map(Submission::getApplication)
@@ -96,7 +96,7 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
 				.build();
 	}
 
-	private ApplicationDto groupSubmissionsByApplicationForm(final ApplicationFormEntity form, final List<Submission> submissions) {
+	private ApplicationDTO groupSubmissionsByApplicationForm(final ApplicationFormEntity form, final List<Submission> submissions) {
 		final Pair<String, String> applicationDetails = submissions.stream()
 				.filter(submission -> form.getGrantApplicationId().equals(submission.getApplication().getGrantApplicationId()))
 				.findFirst()
@@ -113,7 +113,7 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
 				.map(this::submissionToSubmissionDto)
 				.toList();
 
-		return ApplicationDto.builder()
+		return ApplicationDTO.builder()
 				.grantAdminEmailAddress(applicationDetails.getValue0())
 				.ggisReferenceNumber(applicationDetails.getValue1())
 				.applicationFormName(form.getApplicationName())
