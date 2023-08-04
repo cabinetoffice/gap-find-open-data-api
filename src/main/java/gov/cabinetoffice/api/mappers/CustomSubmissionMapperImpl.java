@@ -1,12 +1,12 @@
 package gov.cabinetoffice.api.mappers;
 
-import gov.cabinetoffice.api.entities.GrantAttachment;
-import gov.cabinetoffice.api.entities.Submission;
 import gov.cabinetoffice.api.config.S3ConfigProperties;
 import gov.cabinetoffice.api.dtos.submission.AddressDTO;
 import gov.cabinetoffice.api.dtos.submission.SubmissionDTO;
 import gov.cabinetoffice.api.dtos.submission.SubmissionQuestionDTO;
 import gov.cabinetoffice.api.dtos.submission.SubmissionSectionDTO;
+import gov.cabinetoffice.api.entities.GrantAttachment;
+import gov.cabinetoffice.api.entities.Submission;
 import gov.cabinetoffice.api.models.submission.SubmissionQuestion;
 import gov.cabinetoffice.api.models.submission.SubmissionSection;
 import gov.cabinetoffice.api.services.GrantAttachmentService;

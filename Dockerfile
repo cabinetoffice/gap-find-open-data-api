@@ -1,10 +1,10 @@
 # Name: GAP Find Open Data API
 # Desc: Creates a custom JRE image hosted on alpine for the backend JRE
 # Author: Chris Forbes
-# Version: 1.0 
+# Version: 1.0
 # Change Log:
 # | Author       | Description of change | Version |
-# | Chris Forbes | Initial Version       | 1.0     | 
+# | Chris Forbes | Initial Version       | 1.0     |
 
 # ====================================================
 # Base image splits the jar into layers

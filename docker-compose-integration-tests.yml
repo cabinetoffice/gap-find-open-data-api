@@ -17,20 +17,5 @@ services:
     volumes: 
       - ./db/:/docker-entrypoint-initdb.d/
 
-  #GAP Find Open Data API
-  api:
-    container_name: gap-find-open-data-api
-    image: gap-find-open-data-api:latest
-    depends_on:
-      - postgres-database
-    ports:
-      - "8080:8080"
-    environment:
-      spring_datasource_url: jdbc:postgresql://postgres-database:5432/api-integration-tests
-      spring_datasource_username: postgres
-      spring_datasource_password: mysecretpassword
-    networks:
-      - testing-network
-
 networks:
   testing-network:
