@@ -65,5 +65,4 @@ public class SubmissionsController {
 		final ApplicationListDTO response = this.submissionsService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(FUNDING_ORG_ID, ggisReferenceNumber);
 		return ResponseEntity.ok().body(response);
 	}
-
 }

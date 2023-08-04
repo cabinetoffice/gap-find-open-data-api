@@ -18,5 +18,5 @@ public class ApplicationListDTO {
     private int numberOfResults;
 
     @Builder.Default
-    private List<ApplicationDto> applications = new ArrayList<>();
+    private List<ApplicationDTO> applications = new ArrayList<>();
 }

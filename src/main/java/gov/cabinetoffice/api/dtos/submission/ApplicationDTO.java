@@ -1,5 +1,6 @@
 package gov.cabinetoffice.api.dtos.submission;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,13 +15,16 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ApplicationDto {
+public class ApplicationDTO {
 
     private String applicationFormName;
 
     private String grantAdminEmailAddress;
 
     private String ggisReferenceNumber;
+
+    @JsonIgnore
+    private int applicationId;
 
     @Builder.Default
     private List<SubmissionDTO> submissions = new ArrayList<>();
