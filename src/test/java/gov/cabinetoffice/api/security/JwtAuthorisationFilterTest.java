@@ -53,7 +53,7 @@ public class JwtAuthorisationFilterTest {
         final String validToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmdW5kZXJfaWQiOiIxIn0.NbYwfVIpqalW1gM204pQXM7o6voNoO7EyFwl1XjXEQQ";
         final String funderId = "1";
 
-        when(request.getHeader("Authorization")).thenReturn("Bearer " + validToken);
+        when(request.getHeader("jwt")).thenReturn(validToken);
         when(jwtProperties.getSecretKey()).thenReturn(secret);
 
         jwtAuthorisationFilter.doFilterInternal(request, response, filterChain);
@@ -70,7 +70,7 @@ public class JwtAuthorisationFilterTest {
     public void doFilterInternal_expiredToken() {
         final String expiredToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTg3NjY4Mjl9.q_Xbd-a0o48MDDJeO9O4-Bscc9NeHcOUMpqTM41C3Bw";
 
-        when(request.getHeader("Authorization")).thenReturn("Bearer " + expiredToken);
+        when(request.getHeader("jwt")).thenReturn(expiredToken);
         when(jwtProperties.getSecretKey()).thenReturn(secret);
 
         assertThatExceptionOfType(TokenExpiredException.class)
@@ -81,7 +81,7 @@ public class JwtAuthorisationFilterTest {
     public void doFilterInternal_invalidSignature() {
         final String invalidSignatureToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmdW5kZXJfaWQiOiIxIn0.j_uP1WWerR1pSMetHh1sNXtbbK5R7uncKgX09maodRY";
 
-        when(request.getHeader("Authorization")).thenReturn("Bearer " + invalidSignatureToken);
+        when(request.getHeader("jwt")).thenReturn(invalidSignatureToken);
         when(jwtProperties.getSecretKey()).thenReturn(secret);
 
         assertThatExceptionOfType(SignatureVerificationException.class)
@@ -93,7 +93,7 @@ public class JwtAuthorisationFilterTest {
     public void doFilterInternal_missingFunderIdClaim() {
         final String missingClaimToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOm51bGx9.kBir5OUYCklX8bSu9j_74bkeywZmY95ockG7-driY9A";
 
-        when(request.getHeader("Authorization")).thenReturn("Bearer " + missingClaimToken);
+        when(request.getHeader("jwt")).thenReturn(missingClaimToken);
         when(jwtProperties.getSecretKey()).thenReturn(secret);
 
         assertThatExceptionOfType(MissingClaimException.class)

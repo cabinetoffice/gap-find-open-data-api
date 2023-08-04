@@ -27,14 +27,13 @@ public class JwtAuthorisationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        final String header = request.getHeader("Authorization");
+        final String token = request.getHeader("jwt");
 
-        if (header == null || !header.startsWith("Bearer")) {
+        if (token == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        final String token = header.replace("Bearer ", "");
         final DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(jwtProperties.getSecretKey()))
                 .build()
                 .verify(token);
