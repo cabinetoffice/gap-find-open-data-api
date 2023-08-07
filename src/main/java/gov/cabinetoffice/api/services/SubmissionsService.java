@@ -6,6 +6,9 @@ import gov.cabinetoffice.api.exceptions.SubmissionNotFoundException;
 import gov.cabinetoffice.api.mappers.SubmissionMapper;
 import gov.cabinetoffice.api.repositories.SubmissionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +23,6 @@ public class SubmissionsService {
 	private final SubmissionMapper submissionMapper;
 
 	public SubmissionListDTO getSubmissionByApplicationId(int applicationId) {
-
 		final List<SubmissionDTO> submissionDTOS = submissionRepository
 			.findByApplicationGrantApplicationId(applicationId)
 			.stream()
