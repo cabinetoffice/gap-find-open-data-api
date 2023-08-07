@@ -130,7 +130,7 @@ public class SubmissionMapperTestData {
             .county("Renfrewshire")
             .build();
 
-    private static final UUID APPLICANT_USER_ID = UUID.fromString("75ab5fbd-0682-4d3d-a467-01c7a447f07c");
+    private static final String APPLICANT_USER_ID = "75ab5fbd-0682-4d3d-a467-01c7a447f07c";
 
     private static final GrantApplicant grantApplicant = GrantApplicant.builder()
             .id(APPLICANT_ID)

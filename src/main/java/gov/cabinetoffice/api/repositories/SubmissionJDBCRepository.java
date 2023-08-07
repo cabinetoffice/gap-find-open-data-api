@@ -28,10 +28,8 @@ public class SubmissionJDBCRepository {
             "INNER JOIN grant_application ga \n" +
             "   ON ga.grant_application_id = s.application_id \n" +
             "WHERE s.status = 'SUBMITTED' \n";
-
     public static final String AND_FUNDING_ORG_CLAUSE = "AND gs.funder_id = :fundingOrgId \n";
     public static final String AND_GGIS_ID_CLAUSE = "AND gs.ggis_identifier = :ggisIdentifier \n";
-
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public ApplicationListDTO getApplicationSubmissionsByFundingOrganisationId(final int fundingOrgId) {
