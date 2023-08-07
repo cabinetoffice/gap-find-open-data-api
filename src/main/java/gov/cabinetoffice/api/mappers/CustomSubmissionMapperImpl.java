@@ -1,24 +1,22 @@
 package gov.cabinetoffice.api.mappers;
 
 import gov.cabinetoffice.api.config.S3ConfigProperties;
-import gov.cabinetoffice.api.dtos.submission.*;
-import gov.cabinetoffice.api.entities.ApplicationFormEntity;
+import gov.cabinetoffice.api.dtos.submission.AddressDTO;
+import gov.cabinetoffice.api.dtos.submission.SubmissionDTO;
+import gov.cabinetoffice.api.dtos.submission.SubmissionQuestionDTO;
+import gov.cabinetoffice.api.dtos.submission.SubmissionSectionDTO;
 import gov.cabinetoffice.api.entities.GrantAttachment;
 import gov.cabinetoffice.api.entities.Submission;
-import gov.cabinetoffice.api.exceptions.SubmissionNotFoundException;
 import gov.cabinetoffice.api.models.submission.SubmissionQuestion;
 import gov.cabinetoffice.api.models.submission.SubmissionSection;
 import gov.cabinetoffice.api.services.GrantAttachmentService;
 import gov.cabinetoffice.api.services.S3Service;
 import lombok.RequiredArgsConstructor;
-import org.javatuples.Pair;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -75,50 +73,6 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
 	@Override
 	public AddressDTO buildAddress(String[] multiResponse) {
 		return SubmissionMapper.super.buildAddress(multiResponse);
-	}
-
-	// TODO - look into whether this is horrendously inefficient. Potentially more performant to do all this looping at query level.
-	@Override
-	public ApplicationListDTO submissionListToApplicationListDto(final List<Submission> submissions) {
-		final List<ApplicationDTO> applicationSubmissions = Optional.ofNullable(submissions)
-				.orElse(Collections.emptyList())
-				.stream()
-				.map(Submission::getApplication)
-				.distinct()
-				.toList()
-				.stream()
-				.map(form -> groupSubmissionsByApplicationForm(form, submissions))
-				.toList();
-
-		return ApplicationListDTO.builder()
-				.numberOfResults(applicationSubmissions.size())
-				.applications(applicationSubmissions)
-				.build();
-	}
-
-	private ApplicationDTO groupSubmissionsByApplicationForm(final ApplicationFormEntity form, final List<Submission> submissions) {
-		final Pair<String, String> applicationDetails = submissions.stream()
-				.filter(submission -> form.getGrantApplicationId().equals(submission.getApplication().getGrantApplicationId()))
-				.findFirst()
-				.map(submission ->
-						Pair.with(
-								submission.getScheme().getEmail(),
-								submission.getScheme().getGgisIdentifier()
-						)
-				)
-				.orElseThrow(() -> new SubmissionNotFoundException("No submissions found"));
-
-		final List<SubmissionDTO> submissionDtos = submissions.stream()
-				.filter(submission -> form.getGrantApplicationId().equals(submission.getApplication().getGrantApplicationId()))
-				.map(this::submissionToSubmissionDto)
-				.toList();
-
-		return ApplicationDTO.builder()
-				.grantAdminEmailAddress(applicationDetails.getValue0())
-				.ggisReferenceNumber(applicationDetails.getValue1())
-				.applicationFormName(form.getApplicationName())
-				.submissions(submissionDtos)
-				.build();
 	}
 
 	@Override

@@ -1,15 +1,10 @@
 package gov.cabinetoffice.api.mappers;
 
 import gov.cabinetoffice.api.config.S3ConfigProperties;
-import gov.cabinetoffice.api.dtos.submission.ApplicationDTO;
-import gov.cabinetoffice.api.dtos.submission.ApplicationListDTO;
 import gov.cabinetoffice.api.dtos.submission.SubmissionDTO;
 import gov.cabinetoffice.api.dtos.submission.SubmissionSectionDTO;
-import gov.cabinetoffice.api.entities.ApplicationFormEntity;
 import gov.cabinetoffice.api.entities.GrantAttachment;
-import gov.cabinetoffice.api.entities.SchemeEntity;
 import gov.cabinetoffice.api.entities.Submission;
-import gov.cabinetoffice.api.models.submission.SubmissionDefinition;
 import gov.cabinetoffice.api.models.submission.SubmissionQuestion;
 import gov.cabinetoffice.api.models.submission.SubmissionSection;
 import gov.cabinetoffice.api.services.GrantAttachmentService;
@@ -23,7 +18,6 @@ import org.mockito.Mock;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -183,96 +177,4 @@ class CustomSubmissionMapperImplTest {
 		final List<SubmissionSection> result = customSubmissionMapperImpl.submissionDefinitionSections(submission);
 		assertThat(result).isNull();
 	}
-
-	@Test
-	void submissionListToApplicationListDto_HandlesEmptyList() {
-		final List<Submission> submissions = Collections.emptyList();
-
-		final ApplicationListDTO applications = customSubmissionMapperImpl.submissionListToApplicationListDto(submissions);
-
-		assertThat(applications.getApplications()).isEmpty();
-		assertThat(applications.getNumberOfResults()).isZero();
-	}
-
-	@Test
-	void submissionListToApplicationListDto_HandlesNullList() {
-		final List<Submission> submissions = null;
-
-		final ApplicationListDTO applications = customSubmissionMapperImpl.submissionListToApplicationListDto(submissions);
-
-		assertThat(applications.getApplications()).isEmpty();
-		assertThat(applications.getNumberOfResults()).isZero();
-	}
-
-	@Test
-	void submissionListToApplicationListDto_ReturnsExpectedResult() {
-
-		// build a submission for one application form
-		final ApplicationFormEntity application = ApplicationFormEntity.builder()
-				.grantApplicationId(1)
-				.applicationName("Woodland services grant")
-				.build();
-
-		final SchemeEntity scheme = SchemeEntity.builder()
-				.ggisIdentifier("WSG-001")
-				.email("gavin.cook@and.digital")
-				.build();
-
-		final UUID submissionId1 = UUID.randomUUID();
-		final Submission submission = Submission.builder()
-				.id(submissionId1)
-				.application(application)
-				.scheme(scheme)
-				.definition(
-						SubmissionDefinition
-						.builder()
-						.sections(Collections.emptyList())
-						.build()
-				)
-				.build();
-
-		// build a second submission for a different application form
-		final ApplicationFormEntity application2 = ApplicationFormEntity.builder()
-				.grantApplicationId(2)
-				.applicationName("Suburban services grant")
-				.build();
-
-		final SchemeEntity scheme2 = SchemeEntity.builder()
-				.ggisIdentifier("WSG-001")
-				.email("gavin.cook@and.digital")
-				.build();
-
-		final UUID submissionId2 = UUID.randomUUID();
-		final Submission submission2 = Submission.builder()
-				.id(submissionId2)
-				.application(application2)
-				.scheme(scheme2)
-				.definition(
-						SubmissionDefinition
-								.builder()
-								.sections(Collections.emptyList())
-								.build()
-				)
-				.build();
-
-		final List<Submission> submissions = List.of(submission, submission2);
-
-		// with a bit of luck, we'll have two Application DTOs here
-		final ApplicationListDTO methodResponse = customSubmissionMapperImpl.submissionListToApplicationListDto(submissions);
-
-		assertThat(methodResponse.getNumberOfResults()).isEqualTo(2);
-
-		final ApplicationDTO applicationDto1 = methodResponse.getApplications().get(0);
-		assertThat(applicationDto1.getApplicationFormName()).isEqualTo(application.getApplicationName());
-		assertThat(applicationDto1.getGgisReferenceNumber()).isEqualTo(scheme.getGgisIdentifier());
-		assertThat(applicationDto1.getSubmissions()).hasSize(1);
-		assertThat(applicationDto1.getSubmissions().get(0).getSubmissionId()).isEqualTo(submissionId1);
-
-		final ApplicationDTO applicationDto2 = methodResponse.getApplications().get(1);
-		assertThat(applicationDto2.getApplicationFormName()).isEqualTo(application2.getApplicationName());
-		assertThat(applicationDto2.getGgisReferenceNumber()).isEqualTo(scheme2.getGgisIdentifier());
-		assertThat(applicationDto2.getSubmissions()).hasSize(1);
-		assertThat(applicationDto2.getSubmissions().get(0).getSubmissionId()).isEqualTo(submissionId2);
-	}
-
 }
