@@ -15,21 +15,24 @@ import java.util.List;
 @Repository
 public class SubmissionJDBCRepository {
 
-    // leave the carriage returns in here, if we ever need to debug these queries you'll thank me.
-    public static final String APPLICATIONS_WITH_SUBMISSIONS_QUERY =
-            "SELECT \n" +
-            "   DISTINCT ga.grant_application_id AS applicationId, \n" +
-            "   gs.ggis_identifier AS ggisReferenceNumber, \n" +
-            "   ga.application_name AS applicationFormName, \n" +
-            "   gs.scheme_contact AS contactEmail \n" +
-            "FROM grant_submission s \n" +
-            "INNER JOIN grant_scheme gs \n" +
-            "   ON gs.grant_scheme_id = s.scheme_id \n" +
-            "INNER JOIN grant_application ga \n" +
-            "   ON ga.grant_application_id = s.application_id \n" +
-            "WHERE s.status = 'SUBMITTED' \n";
+    public static final String APPLICATIONS_WITH_SUBMISSIONS_QUERY = """
+            SELECT
+               DISTINCT ga.grant_application_id AS applicationId,
+               gs.ggis_identifier AS ggisReferenceNumber,
+               ga.application_name AS applicationFormName,
+               gs.scheme_contact AS contactEmail
+            FROM grant_submission s
+            INNER JOIN grant_scheme gs
+               ON gs.grant_scheme_id = s.scheme_id
+            INNER JOIN grant_application ga
+               ON ga.grant_application_id = s.application_id
+            WHERE s.status = 'SUBMITTED'
+            """;
+
     public static final String AND_FUNDING_ORG_CLAUSE = "AND gs.funder_id = :fundingOrgId \n";
+
     public static final String AND_GGIS_ID_CLAUSE = "AND gs.ggis_identifier = :ggisIdentifier \n";
+
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public ApplicationListDTO getApplicationSubmissionsByFundingOrganisationId(final int fundingOrgId) {
