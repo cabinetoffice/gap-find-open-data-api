@@ -12,22 +12,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-#      - name: Checkout Serenity
-#        uses: actions/checkout@v3
-#        with:
-#          path: serenity
-#          repository: cabinetoffice/gap-serenity-bdd-prototype
-#          ref: main
+      - name: Checkout Serenity
+        uses: actions/checkout@v3
+        with:
+          path: serenity
+          repository: cabinetoffice/gap-serenity-bdd-prototype
+          ref: main
 
       - name: Checkout API
         uses: actions/checkout@v3
         with:
           path: api
-
-#      - name: Setup SAM
-#        uses: aws-actions/setup-sam@v1
-#        with:
-#          path: api
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -63,34 +58,16 @@ jobs:
         working-directory: ./api
         run: mvn test
 
-#        #check if this step is needed
-#      - name: Setup AWS credentials
-#        uses: aws-actions/configure-aws-credentials@v1
-#        with:
-#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          aws-region: eu-west-2
-#
-#      - name: Spin up postgress DB
+#      # TODO look into moving these docker steps into docker-compose.yml
+#      - name: Build Integration Environment
 #        working-directory: ./api
-#        run: docker compose -f docker-compose-integration-tests.yml up -d
-#
-#      - name: run docker netwokr ls
-#        working-directory: ./api
-#        run: docker network ls
-#
-#      - name: run docker ps -a
-#        working-directory: ./api
-#        run: docker ps -a
-##
-#      - name: list container inside network
-#        working-directory: ./api
-#        # sam build
-#        run: docker network inspect api_testing-network
+#        run: |
+#          mvn spring-boot:build-image -DskipTests
+#          docker compose -f docker-compose-integration-tests.yml up -d
 #
 #      - name: Run Integration Tests
-#        working-directory: ./api
-#        run: docker run --name newman-tests -v /home/runner/work/gap-find-open-data-api/gap-find-open-data-api/api/integrationTests:/opt/newman --network api_testing-network postman/newman run /opt/newman/api.postman_collection.json --env-var "host-name=$DOCKER_PS_RESULT"
+#        working-directory: ./serenity
+#        run: docker run --name serenity-prototype -v "$(pwd)":/usr/src/serenity -w /usr/src/serenity --network api_testing-network maven:3-amazoncorretto-17 mvn clean verify
 #
 #      - name: Log Integration Test Results
 #        if: always()
