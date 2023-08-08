@@ -64,7 +64,12 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
 		final UUID grantAttachmentId = submissionQuestion.getAttachmentId();
 		final GrantAttachment grantAttachment = grantAttachmentService.getGrantAttachmentById(grantAttachmentId);
 		final String bucketName = s3ConfigProperties.getSourceBucket();
-		final String objectKey = grantAttachment.getLocation().split(".amazonaws.com/")[1];
+		boolean hasAmazonPrefix = grantAttachment.getLocation().contains(".amazonaws.com/");
+		if (hasAmazonPrefix) {
+			return "The url for this file is not available at the moment. It is undergoing our antivirus process. Please try later";
+				}
+		final String objectKey = grantAttachment.getLocation().split(s3ConfigProperties.getSourceBucket()+"/")[1];
+
 		return s3Service.createPresignedURL(bucketName, objectKey);
 
 	}
