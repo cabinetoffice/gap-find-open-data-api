@@ -92,6 +92,4 @@ public interface SubmissionMapper {
 			.postcode(multiResponse[4])
 			.build();
 	}
-
-	default ApplicationListDTO submissionListToApplicationListDto(final List<Submission> submissions) {return ApplicationListDTO.builder().build();}
 }

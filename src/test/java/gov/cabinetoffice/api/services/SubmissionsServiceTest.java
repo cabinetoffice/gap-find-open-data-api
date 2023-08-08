@@ -1,25 +1,22 @@
 package gov.cabinetoffice.api.services;
 
-import gov.cabinetoffice.api.dtos.submission.ApplicationDto;
+import gov.cabinetoffice.api.dtos.submission.ApplicationDTO;
 import gov.cabinetoffice.api.dtos.submission.ApplicationListDTO;
 import gov.cabinetoffice.api.dtos.submission.SubmissionDTO;
-import gov.cabinetoffice.api.dtos.submission.SubmissionListDTO;
 import gov.cabinetoffice.api.entities.Submission;
-import gov.cabinetoffice.api.exceptions.SubmissionNotFoundException;
+import gov.cabinetoffice.api.enums.SubmissionStatus;
 import gov.cabinetoffice.api.mappers.SubmissionMapper;
+import gov.cabinetoffice.api.repositories.SubmissionJDBCRepository;
 import gov.cabinetoffice.api.repositories.SubmissionRepository;
 import static gov.cabinetoffice.api.test_data_generator.RandomSubmissionGenerator.randomSubmission;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,11 +24,16 @@ class SubmissionsServiceTest {
 
 	@Mock
 	private SubmissionRepository submissionRepository;
+
+	@Mock
+	private SubmissionJDBCRepository submissionJDBCRepository;
+
 	@Mock
 	private SubmissionMapper submissionMapper;
 	@InjectMocks
 	private SubmissionsService submissionsService;
 	private final int FUNDING_ORG_ID = 1;
+	private final int APPLICATION_ID = 1234;
 	private final String GGIS_REFERENCE_NUMBER = "SCH-000003589";
 
 	@Test
@@ -41,34 +43,32 @@ class SubmissionsServiceTest {
 				.build();
 		final List<Submission> submissions = List.of(submission);
 
-		final SubmissionDTO submissionDto = SubmissionDTO
-				.builder()
-				.build();
-		final List<SubmissionDTO> submissionDTOList = List.of(submissionDto);
-
-		final ApplicationDto application = ApplicationDto.builder()
+		final ApplicationDTO application = ApplicationDTO.builder()
+				.applicationId(APPLICATION_ID)
 				.ggisReferenceNumber("SCH-001")
 				.applicationFormName("Woodland services grant")
 				.grantAdminEmailAddress("gavin.cook@and.digital")
-				.submissions(submissionDTOList)
 				.build();
-		final List<ApplicationDto> applications = List.of(application);
+		final List<ApplicationDTO> applications = List.of(application);
 
 		final ApplicationListDTO applicationListDTO = ApplicationListDTO.builder()
 				.numberOfResults(applications.size())
 				.applications(applications)
 				.build();
 
-		when(submissionRepository.findBySchemeFunderIdAndSchemeGgisIdentifier(FUNDING_ORG_ID, GGIS_REFERENCE_NUMBER))
+		when(submissionJDBCRepository.getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(FUNDING_ORG_ID, GGIS_REFERENCE_NUMBER))
+				.thenReturn(applicationListDTO);
+
+		when(submissionRepository.findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, APPLICATION_ID))
 				.thenReturn(submissions);
 
-		when(submissionMapper.submissionListToApplicationListDto(submissions))
-				.thenReturn(applicationListDTO);
+		assertThat(application.getSubmissions()).isEmpty();
 
 		final ApplicationListDTO methodResponse = submissionsService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(FUNDING_ORG_ID, GGIS_REFERENCE_NUMBER);
 
-		verify(submissionRepository).findBySchemeFunderIdAndSchemeGgisIdentifier(FUNDING_ORG_ID, GGIS_REFERENCE_NUMBER);
-		assertThat(methodResponse).isEqualTo(applicationListDTO);
+		verify(submissionJDBCRepository).getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(FUNDING_ORG_ID, GGIS_REFERENCE_NUMBER);
+		verify(submissionRepository, times(1)).findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, APPLICATION_ID);
+		assertThat(methodResponse.getApplications()).isEqualTo(applications);
 	}
 
 	@Test
@@ -78,33 +78,31 @@ class SubmissionsServiceTest {
 				.build();
 		final List<Submission> submissions = List.of(submission);
 
-		final SubmissionDTO submissionDto = SubmissionDTO
-				.builder()
-				.build();
-		final List<SubmissionDTO> submissionDTOList = List.of(submissionDto);
-
-		final ApplicationDto application = ApplicationDto.builder()
+		final ApplicationDTO application = ApplicationDTO.builder()
+				.applicationId(APPLICATION_ID)
 				.ggisReferenceNumber("SCH-001")
 				.applicationFormName("Woodland services grant")
 				.grantAdminEmailAddress("gavin.cook@and.digital")
-				.submissions(submissionDTOList)
 				.build();
-		final List<ApplicationDto> applications = List.of(application);
+		final List<ApplicationDTO> applications = List.of(application);
 
 		final ApplicationListDTO applicationListDTO = ApplicationListDTO.builder()
 				.numberOfResults(applications.size())
 				.applications(applications)
 				.build();
 
-		when(submissionRepository.findBySchemeFunderId(FUNDING_ORG_ID))
+		when(submissionJDBCRepository.getApplicationSubmissionsByFundingOrganisationId(FUNDING_ORG_ID))
+				.thenReturn(applicationListDTO);
+
+		when(submissionRepository.findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, APPLICATION_ID))
 				.thenReturn(submissions);
 
-		when(submissionMapper.submissionListToApplicationListDto(submissions))
-				.thenReturn(applicationListDTO);
+		assertThat(application.getSubmissions()).isEmpty();
 
 		final ApplicationListDTO methodResponse = submissionsService.getSubmissionsByFundingOrgId(FUNDING_ORG_ID);
 
-		verify(submissionRepository).findBySchemeFunderId(FUNDING_ORG_ID);
-		assertThat(methodResponse).isEqualTo(applicationListDTO);
+		verify(submissionJDBCRepository).getApplicationSubmissionsByFundingOrganisationId(FUNDING_ORG_ID);
+		verify(submissionRepository, times(1)).findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, APPLICATION_ID);
+		assertThat(methodResponse.getApplications()).isEqualTo(applications);
 	}
 }
