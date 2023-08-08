@@ -38,18 +38,19 @@ class CustomSubmissionMapperImplTest {
 
 	@Test
 	void buildUploadResponse_AttachmentHasURL() {
+		final UUID grantAttachmentId = UUID.randomUUID();
 		final String expectedResult = "The url for this file is not available at the moment. It is undergoing our antivirus process. Please try later";
 
         final SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
-                .attachmentId(GRANT_ATTACHMENT_ID)
+                .attachmentId(grantAttachmentId)
                 .build();
 
         final GrantAttachment grantAttachment = GrantAttachment.builder()
-                .id(GRANT_ATTACHMENT_ID)
+                .id(grantAttachmentId)
                 .location("www.amazonaws.com/location")
                 .build();
 
-        when(grantAttachmentService.getGrantAttachmentById(GRANT_ATTACHMENT_ID)).thenReturn(grantAttachment);
+        when(grantAttachmentService.getGrantAttachmentById(grantAttachmentId)).thenReturn(grantAttachment);
 
         final String result = customSubmissionMapperImpl.buildUploadResponse(submissionQuestion);
         assertThat(result).isEqualTo(expectedResult);
@@ -57,18 +58,20 @@ class CustomSubmissionMapperImplTest {
 
     @Test
     void buildUploadResponse_AttachmentHasURI() {
+		final UUID grantAttachmentId = UUID.randomUUID();
         final String expectedResult = "presignedUrl";
 
         final SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
-                .attachmentId(GRANT_ATTACHMENT_ID)
+                .attachmentId(grantAttachmentId)
                 .build();
 
         final GrantAttachment grantAttachment = GrantAttachment.builder()
-                .id(GRANT_ATTACHMENT_ID)
+                .id(grantAttachmentId)
                 .location("bucket/location")
                 .build();
+
         when(s3ConfigProperties.getSourceBucket()).thenReturn("bucket");
-        when(grantAttachmentService.getGrantAttachmentById(GRANT_ATTACHMENT_ID)).thenReturn(grantAttachment);
+        when(grantAttachmentService.getGrantAttachmentById(grantAttachmentId)).thenReturn(grantAttachment);
         when(s3Service.createPresignedURL(any(), any())).thenReturn(expectedResult);
 
         final String result = customSubmissionMapperImpl.buildUploadResponse(submissionQuestion);
