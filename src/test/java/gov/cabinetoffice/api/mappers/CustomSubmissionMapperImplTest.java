@@ -37,25 +37,43 @@ class CustomSubmissionMapperImplTest {
 	private CustomSubmissionMapperImpl customSubmissionMapperImpl;
 
 	@Test
-	void buildUploadResponse() {
-		final UUID GRANT_ATTACHMENT_ID = UUID.randomUUID();
-		final String expectedResult = "presignedUrl";
+	void buildUploadResponse_AttachmentHasURL() {
+		final String expectedResult = "The url for this file is not available at the moment. It is undergoing our antivirus process. Please try later";
 
-		final SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
-			.attachmentId(GRANT_ATTACHMENT_ID)
-			.build();
+        final SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
+                .attachmentId(GRANT_ATTACHMENT_ID)
+                .build();
 
-		final GrantAttachment grantAttachment = GrantAttachment.builder()
-			.id(GRANT_ATTACHMENT_ID)
-			.location("www.amazonaws.com/location")
-			.build();
+        final GrantAttachment grantAttachment = GrantAttachment.builder()
+                .id(GRANT_ATTACHMENT_ID)
+                .location("www.amazonaws.com/location")
+                .build();
 
-		when(grantAttachmentService.getGrantAttachmentById(GRANT_ATTACHMENT_ID)).thenReturn(grantAttachment);
-		when(s3Service.createPresignedURL(any(), any())).thenReturn(expectedResult);
+        when(grantAttachmentService.getGrantAttachmentById(GRANT_ATTACHMENT_ID)).thenReturn(grantAttachment);
 
-		final String result = customSubmissionMapperImpl.buildUploadResponse(submissionQuestion);
-		assertThat(result).isEqualTo(expectedResult);
-	}
+        final String result = customSubmissionMapperImpl.buildUploadResponse(submissionQuestion);
+        assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @Test
+    void buildUploadResponse_AttachmentHasURI() {
+        final String expectedResult = "presignedUrl";
+
+        final SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
+                .attachmentId(GRANT_ATTACHMENT_ID)
+                .build();
+
+        final GrantAttachment grantAttachment = GrantAttachment.builder()
+                .id(GRANT_ATTACHMENT_ID)
+                .location("bucket/location")
+                .build();
+        when(s3ConfigProperties.getSourceBucket()).thenReturn("bucket");
+        when(grantAttachmentService.getGrantAttachmentById(GRANT_ATTACHMENT_ID)).thenReturn(grantAttachment);
+        when(s3Service.createPresignedURL(any(), any())).thenReturn(expectedResult);
+
+        final String result = customSubmissionMapperImpl.buildUploadResponse(submissionQuestion);
+        assertThat(result).isEqualTo(expectedResult);
+    }
 
 	@Test
 	void submissionToSubmissionDto() {
@@ -143,18 +161,18 @@ class CustomSubmissionMapperImplTest {
 		assertThat(result).isEqualTo(submission.getScheme().getGgisIdentifier());
 	}
 
-	@Test
-	void submissionSchemeGgisIdentifier_returnNullIfSubmissionIsNull() {
-		final String result = customSubmissionMapperImpl.submissionSchemeGgisIdentifier(null);
-		assertThat(result).isNull();
-	}
+    @Test
+    void submissionSchemeGgisIdentifier_returnNullIfSubmissionIsNull() {
+        final String result = customSubmissionMapperImpl.submissionSchemeGgisIdentifier(null);
+        assertThat(result).isNull();
+    }
 
-	@Test
-	void submissionSchemeGgisIdentifier_returnNullIfSubmissionSchemeIsNull() {
-		final Submission submission = Submission.builder().scheme(null).build();
-		final String result = customSubmissionMapperImpl.submissionSchemeGgisIdentifier(submission);
-		assertThat(result).isNull();
-	}
+    @Test
+    void submissionSchemeGgisIdentifier_returnNullIfSubmissionSchemeIsNull() {
+        final Submission submission = Submission.builder().scheme(null).build();
+        final String result = customSubmissionMapperImpl.submissionSchemeGgisIdentifier(submission);
+        assertThat(result).isNull();
+    }
 
 	@Test
 	void submissionDefinitionSections() {

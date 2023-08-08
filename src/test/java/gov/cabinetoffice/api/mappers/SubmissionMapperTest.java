@@ -209,7 +209,7 @@ class SubmissionMapperTest {
 		.county("Renfrewshire")
 		.build();
 
-	private final String  APPLICANT_USER_ID = "75ab5fbd-0682-4d3d-a467-01c7a447f07c";
+	private final String APPLICANT_USER_ID = "75ab5fbd-0682-4d3d-a467-01c7a447f07c";
 
 	final GrantApplicant grantApplicant = GrantApplicant.builder()
 		.id(APPLICANT_ID)
