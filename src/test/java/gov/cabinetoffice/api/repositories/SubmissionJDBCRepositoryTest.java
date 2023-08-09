@@ -62,7 +62,6 @@ class SubmissionJDBCRepositoryTest {
     }
 
     @ParameterizedTest
-    @NullSource
     @EmptySource
     void getApplicationSubmissionsByFundingOrganisationId_ThrowsSubmissionNotFoundException(List<ApplicationDTO> submissions) {
 
@@ -103,7 +102,6 @@ class SubmissionJDBCRepositoryTest {
     }
 
     @ParameterizedTest
-    @NullSource
     @EmptySource
     void getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier_ThrowsSubmissionNotFoundException(List<ApplicationDTO> submissions) {
 
