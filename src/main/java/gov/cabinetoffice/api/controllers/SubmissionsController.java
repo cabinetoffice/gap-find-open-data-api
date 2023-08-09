@@ -26,7 +26,6 @@ import java.security.Principal;
 @Tag(name = "Submissions", description = "API for handling applicants submissions")
 @RequiredArgsConstructor
 public class SubmissionsController {
-	private static final int FUNDING_ORG_ID = 1; // TODO hard coding until we can take this value from spring security
 
 	private final SubmissionsService submissionsService;
 
