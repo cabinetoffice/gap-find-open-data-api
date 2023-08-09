@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -13,12 +14,9 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SubmissionSectionDTO {
+public class ApplicationListDTO {
+    private int numberOfResults;
 
-	private String sectionId;
-
-	private String sectionTitle;
-
-	private List<SubmissionQuestionDTO> questions;
-
+    @Builder.Default
+    private List<ApplicationDTO> applications = new ArrayList<>();
 }

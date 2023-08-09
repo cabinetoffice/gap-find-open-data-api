@@ -19,13 +19,7 @@ public class SubmissionDTO {
 
 	private UUID submissionId;
 
-	private String applicationFormName;
-
-	private String grantAdminEmailAddress;
-
 	private String grantApplicantEmailAddress;
-
-	private String ggisReferenceNumber;
 
 	private ZonedDateTime submittedTimeStamp;
 
