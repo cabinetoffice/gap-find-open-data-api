@@ -2,19 +2,27 @@ package gov.cabinetoffice.api.repositories;
 
 import gov.cabinetoffice.api.dtos.submission.ApplicationDTO;
 import gov.cabinetoffice.api.dtos.submission.ApplicationListDTO;
+import gov.cabinetoffice.api.exceptions.SubmissionNotFoundException;
 import gov.cabinetoffice.api.rowmappers.ApplicationDTORowMapper;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
@@ -53,6 +61,22 @@ class SubmissionJDBCRepositoryTest {
         assertThat(methodResponse.getApplications()).containsOnly(applicationDTO);
     }
 
+    @ParameterizedTest
+    @NullSource
+    @EmptySource
+    void getApplicationSubmissionsByFundingOrganisationId_ThrowsSubmissionNotFoundException(List<ApplicationDTO> submissions) {
+
+        final String query = new StringBuilder(SubmissionJDBCRepository.APPLICATIONS_WITH_SUBMISSIONS_QUERY)
+                .append(SubmissionJDBCRepository.AND_FUNDING_ORG_CLAUSE)
+                .toString();
+
+        when(jdbcTemplate.query(eq(query), any(SqlParameterSource.class), any(ApplicationDTORowMapper.class)))
+                .thenReturn(submissions);
+
+        assertThatExceptionOfType(SubmissionNotFoundException.class)
+                .isThrownBy(() -> repositoryUnderTest.getApplicationSubmissionsByFundingOrganisationId(FUNDING_ORG_ID));
+    }
+
     @Test
     void getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier_ReturnsExpectedSubmissions() {
         final ApplicationDTO applicationDTO = ApplicationDTO.builder()
@@ -76,5 +100,22 @@ class SubmissionJDBCRepositoryTest {
 
         assertThat(methodResponse.getNumberOfResults()).isEqualTo(1);
         assertThat(methodResponse.getApplications()).containsOnly(applicationDTO);
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @EmptySource
+    void getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier_ThrowsSubmissionNotFoundException(List<ApplicationDTO> submissions) {
+
+        final String query = new StringBuilder(SubmissionJDBCRepository.APPLICATIONS_WITH_SUBMISSIONS_QUERY)
+                .append(SubmissionJDBCRepository.AND_FUNDING_ORG_CLAUSE)
+                .append(SubmissionJDBCRepository.AND_GGIS_ID_CLAUSE)
+                .toString();
+
+        when(jdbcTemplate.query(eq(query), any(SqlParameterSource.class), any(ApplicationDTORowMapper.class)))
+                .thenReturn(submissions);
+
+        assertThatExceptionOfType(SubmissionNotFoundException.class)
+                .isThrownBy(() -> repositoryUnderTest.getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(FUNDING_ORG_ID, GGIS_IDENFIFIER));
     }
 }
