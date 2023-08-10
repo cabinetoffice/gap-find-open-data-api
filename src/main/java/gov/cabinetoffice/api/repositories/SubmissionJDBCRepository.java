@@ -2,8 +2,10 @@ package gov.cabinetoffice.api.repositories;
 
 import gov.cabinetoffice.api.dtos.submission.ApplicationDTO;
 import gov.cabinetoffice.api.dtos.submission.ApplicationListDTO;
+import gov.cabinetoffice.api.exceptions.SubmissionNotFoundException;
 import gov.cabinetoffice.api.rowmappers.ApplicationDTORowMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Repository
 public class SubmissionJDBCRepository {
@@ -45,6 +48,12 @@ public class SubmissionJDBCRepository {
 
         final List<ApplicationDTO> applications = jdbcTemplate.query(query, applicationParameters, new ApplicationDTORowMapper());
 
+        if (applications.isEmpty()) {
+            final String msg = "No applications found for this funding organisation";
+            log.info(msg);
+            throw new SubmissionNotFoundException(msg);
+        }
+
         return ApplicationListDTO.builder()
                 .applications(applications)
                 .numberOfResults(applications.size())
@@ -62,6 +71,12 @@ public class SubmissionJDBCRepository {
                 .toString();
 
         final List<ApplicationDTO> applications = jdbcTemplate.query(query, applicationParameters, new ApplicationDTORowMapper());
+
+        if (applications.isEmpty()) {
+            final String msg = "No applications found for this funding organisation with GGIS identifier " + ggisIdentifier;
+            log.info(msg);
+            throw new SubmissionNotFoundException(msg);
+        }
 
         return ApplicationListDTO.builder()
                 .applications(applications)

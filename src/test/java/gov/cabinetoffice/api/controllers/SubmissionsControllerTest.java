@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.security.Principal;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -190,16 +191,22 @@ class SubmissionsControllerTest {
 	@InjectMocks
 	private SubmissionsController controllerUnderTest;
 
+	@Mock
+	private Principal principal;
+
 
 	@Test
 	void getSubmissions_ReturnsExpectedSubmissions() {
 
 		final ApplicationListDTO applications = ApplicationListDTO.builder().build();
 
+		when(principal.getName())
+				.thenReturn(String.valueOf(FUNDING_ORGANISATION_ID));
+
 		when(submissionService.getSubmissionsByFundingOrgId(FUNDING_ORGANISATION_ID))
 				.thenReturn(applications);
 
-		final ResponseEntity<ApplicationListDTO> methodResponse = controllerUnderTest.getSubmissions();
+		final ResponseEntity<ApplicationListDTO> methodResponse = controllerUnderTest.getSubmissions(principal);
 
 		verify(submissionService).getSubmissionsByFundingOrgId(FUNDING_ORGANISATION_ID);
 		assertThat(methodResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -209,11 +216,14 @@ class SubmissionsControllerTest {
 	@Test
 	void getSubmissions_ThrowsSubmissionNotFoundException() {
 
+		when(principal.getName())
+				.thenReturn(String.valueOf(FUNDING_ORGANISATION_ID));
+
 		when(submissionService.getSubmissionsByFundingOrgId(FUNDING_ORGANISATION_ID))
 				.thenThrow(new SubmissionNotFoundException("No submissions found"));
 
 		assertThatExceptionOfType(SubmissionNotFoundException.class)
-				.isThrownBy(() -> controllerUnderTest.getSubmissions())
+				.isThrownBy(() -> controllerUnderTest.getSubmissions(principal))
 				.withMessage("No submissions found");
 	}
 
@@ -222,10 +232,13 @@ class SubmissionsControllerTest {
 
 		final ApplicationListDTO applications = ApplicationListDTO.builder().build();
 
+		when(principal.getName())
+				.thenReturn(String.valueOf(FUNDING_ORGANISATION_ID));
+
 		when(submissionService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(FUNDING_ORGANISATION_ID, GGIS_REFERENCE_NUMBER))
 				.thenReturn(applications);
 
-		final ResponseEntity<ApplicationListDTO> methodResponse = controllerUnderTest.getSubmissionsByGgisRefNum(GGIS_REFERENCE_NUMBER);
+		final ResponseEntity<ApplicationListDTO> methodResponse = controllerUnderTest.getSubmissionsByGgisRefNum(GGIS_REFERENCE_NUMBER, principal);
 
 		verify(submissionService).getSubmissionsByFundingOrgIdAndGgisReferenceNum(FUNDING_ORGANISATION_ID, GGIS_REFERENCE_NUMBER);
 		assertThat(methodResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -235,11 +248,14 @@ class SubmissionsControllerTest {
 	@Test
 	void getSubmissionsByGgisRefNum_ThrowsSubmissionNotFoundException() {
 
+		when(principal.getName())
+				.thenReturn(String.valueOf(FUNDING_ORGANISATION_ID));
+
 		when(submissionService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(FUNDING_ORGANISATION_ID, GGIS_REFERENCE_NUMBER))
 				.thenThrow(new SubmissionNotFoundException("No submissions found"));
 
 		assertThatExceptionOfType(SubmissionNotFoundException.class)
-				.isThrownBy(() -> controllerUnderTest.getSubmissionsByGgisRefNum(GGIS_REFERENCE_NUMBER))
+				.isThrownBy(() -> controllerUnderTest.getSubmissionsByGgisRefNum(GGIS_REFERENCE_NUMBER, principal))
 				.withMessage("No submissions found");
 	}
 }

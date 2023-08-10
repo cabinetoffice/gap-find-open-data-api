@@ -11,18 +11,21 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
+@Slf4j
 @RestController
 @RequestMapping("/submissions")
 @Tag(name = "Submissions", description = "API for handling applicants submissions")
 @RequiredArgsConstructor
 public class SubmissionsController {
-	private static final int FUNDING_ORG_ID = 1; // TODO hard coding until we can take this value from spring security
 
 	private final SubmissionsService submissionsService;
 
@@ -41,8 +44,14 @@ public class SubmissionsController {
 					)
 			)
 		})
-	public ResponseEntity<ApplicationListDTO> getSubmissions() {
-		final ApplicationListDTO response = this.submissionsService.getSubmissionsByFundingOrgId(FUNDING_ORG_ID);
+	public ResponseEntity<ApplicationListDTO> getSubmissions(final Principal principal) {
+		final int fundingOrganisationId = Integer.parseInt(principal.getName());
+		log.info("funding organisation: " + fundingOrganisationId);
+
+		final ApplicationListDTO response = this.submissionsService.getSubmissionsByFundingOrgId(fundingOrganisationId);
+		log.debug("results of submissionsService.getSubmissionsByFundingOrgId");
+		log.debug(response.toString());
+
 		return ResponseEntity.ok().body(response);
 	}
 
@@ -61,8 +70,14 @@ public class SubmissionsController {
 					)
 			)
 	})
-	public ResponseEntity<ApplicationListDTO> getSubmissionsByGgisRefNum(@PathVariable @NotNull String ggisReferenceNumber) {
-		final ApplicationListDTO response = this.submissionsService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(FUNDING_ORG_ID, ggisReferenceNumber);
+	public ResponseEntity<ApplicationListDTO> getSubmissionsByGgisRefNum(@PathVariable @NotNull final String ggisReferenceNumber, final Principal principal) {
+		final int fundingOrganisationId = Integer.parseInt(principal.getName());
+		log.info("funding organisation: " + fundingOrganisationId + ", GGIS ID: " + ggisReferenceNumber);
+
+		final ApplicationListDTO response = this.submissionsService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(fundingOrganisationId, ggisReferenceNumber);
+		log.debug("results of submissionsService.getSubmissionsByFundingOrgIdAndGgisReferenceNum");
+		log.debug(response.toString());
+
 		return ResponseEntity.ok().body(response);
 	}
 }

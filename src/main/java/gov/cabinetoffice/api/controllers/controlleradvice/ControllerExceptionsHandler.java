@@ -1,4 +1,4 @@
-package gov.cabinetoffice.api.controllers.controller_advice;
+package gov.cabinetoffice.api.controllers.controlleradvice;
 
 import gov.cabinetoffice.api.controllers.ApplicationFormController;
 import gov.cabinetoffice.api.controllers.SubmissionsController;
