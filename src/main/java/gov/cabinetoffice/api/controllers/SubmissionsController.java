@@ -46,9 +46,12 @@ public class SubmissionsController {
 		})
 	public ResponseEntity<ApplicationListDTO> getSubmissions(final Principal principal) {
 		final int fundingOrganisationId = Integer.parseInt(principal.getName());
-		log.info("funding organisation : " + fundingOrganisationId);
+		log.info("funding organisation: " + fundingOrganisationId);
 
 		final ApplicationListDTO response = this.submissionsService.getSubmissionsByFundingOrgId(fundingOrganisationId);
+		log.debug("results of submissionsService.getSubmissionsByFundingOrgId");
+		log.debug(response.toString());
+
 		return ResponseEntity.ok().body(response);
 	}
 
@@ -69,9 +72,12 @@ public class SubmissionsController {
 	})
 	public ResponseEntity<ApplicationListDTO> getSubmissionsByGgisRefNum(@PathVariable @NotNull final String ggisReferenceNumber, final Principal principal) {
 		final int fundingOrganisationId = Integer.parseInt(principal.getName());
-		log.info("funding organisation : " + fundingOrganisationId);
+		log.info("funding organisation: " + fundingOrganisationId + ", GGIS ID: " + ggisReferenceNumber);
 
 		final ApplicationListDTO response = this.submissionsService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(fundingOrganisationId, ggisReferenceNumber);
+		log.debug("results of submissionsService.getSubmissionsByFundingOrgIdAndGgisReferenceNum");
+		log.debug(response.toString());
+
 		return ResponseEntity.ok().body(response);
 	}
 }

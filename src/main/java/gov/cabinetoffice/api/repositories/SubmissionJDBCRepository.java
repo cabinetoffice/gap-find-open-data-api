@@ -49,7 +49,7 @@ public class SubmissionJDBCRepository {
         final List<ApplicationDTO> applications = jdbcTemplate.query(query, applicationParameters, new ApplicationDTORowMapper());
 
         if (applications.isEmpty()) {
-            final String msg = "No submissions found for funding org " + fundingOrgId;
+            final String msg = "No applications found for this funding organisation";
             log.info(msg);
             throw new SubmissionNotFoundException(msg);
         }
@@ -73,7 +73,7 @@ public class SubmissionJDBCRepository {
         final List<ApplicationDTO> applications = jdbcTemplate.query(query, applicationParameters, new ApplicationDTORowMapper());
 
         if (applications.isEmpty()) {
-            final String msg = "No submissions found for funding org " + fundingOrgId + " and GGIS identifier " + ggisIdentifier;
+            final String msg = "No applications found for this funding organisation with GGIS identifier " + ggisIdentifier;
             log.info(msg);
             throw new SubmissionNotFoundException(msg);
         }
