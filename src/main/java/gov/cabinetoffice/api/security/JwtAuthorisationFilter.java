@@ -50,7 +50,7 @@ public class JwtAuthorisationFilter extends OncePerRequestFilter {
             throw new MissingClaimException(FUNDER_ID);
         }
 
-        final Authentication authentication = new UsernamePasswordAuthenticationToken(funderId.toString(),null, null);
+        final Authentication authentication = new UsernamePasswordAuthenticationToken(funderId.asString(),null, null);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         log.info("Created security principal for funding organisation: " + authentication.getName());
 

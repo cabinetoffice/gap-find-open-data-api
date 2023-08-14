@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
-public class JwtAuthorisationFilterTest {
+class JwtAuthorisationFilterTest {
 
     private JwtAuthorisationFilter jwtAuthorisationFilter;
 
@@ -67,7 +67,7 @@ public class JwtAuthorisationFilterTest {
     }
 
     @Test
-    public void doFilterInternal_expiredToken() {
+    void doFilterInternal_expiredToken() {
         final String expiredToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTg3NjY4Mjl9.q_Xbd-a0o48MDDJeO9O4-Bscc9NeHcOUMpqTM41C3Bw";
 
         when(request.getHeader("jwt")).thenReturn(expiredToken);
@@ -78,7 +78,7 @@ public class JwtAuthorisationFilterTest {
                 .withMessage("The Token has expired on 2022-07-25T16:33:49Z.");
     }
     @Test
-    public void doFilterInternal_invalidSignature() {
+    void doFilterInternal_invalidSignature() {
         final String invalidSignatureToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmdW5kZXJfaWQiOiIxIn0.j_uP1WWerR1pSMetHh1sNXtbbK5R7uncKgX09maodRY";
 
         when(request.getHeader("jwt")).thenReturn(invalidSignatureToken);
@@ -90,7 +90,7 @@ public class JwtAuthorisationFilterTest {
     }
 
     @Test
-    public void doFilterInternal_missingFunderIdClaim() {
+    void doFilterInternal_missingFunderIdClaim() {
         final String missingClaimToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOm51bGx9.kBir5OUYCklX8bSu9j_74bkeywZmY95ockG7-driY9A";
 
         when(request.getHeader("jwt")).thenReturn(missingClaimToken);
