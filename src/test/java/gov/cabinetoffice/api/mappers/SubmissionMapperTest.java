@@ -121,7 +121,7 @@ class SubmissionMapperTest {
 	final SubmissionSection section1 = SubmissionSection.builder()
 		.sectionId(SECTION_ID_1)
 		.sectionTitle(SECTION_TITLE_1)
-		.sectionStatus(SubmissionSectionStatus.IN_PROGRESS)
+		.sectionStatus(String.valueOf(SubmissionSectionStatus.IN_PROGRESS))
 		.questions(List.of(question1, question2, question3))
 		.build();
 
@@ -150,7 +150,7 @@ class SubmissionMapperTest {
 	final SubmissionSection section2 = SubmissionSection.builder()
 		.sectionId(SECTION_ID_2)
 		.sectionTitle(SECTION_TITLE_2)
-		.sectionStatus(SubmissionSectionStatus.IN_PROGRESS)
+		.sectionStatus(String.valueOf(SubmissionSectionStatus.IN_PROGRESS))
 		.questions(List.of(question4))
 		.build();
 

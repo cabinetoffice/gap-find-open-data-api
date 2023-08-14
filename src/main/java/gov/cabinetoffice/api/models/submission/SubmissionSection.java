@@ -1,6 +1,5 @@
 package gov.cabinetoffice.api.models.submission;
 
-import gov.cabinetoffice.api.enums.SubmissionSectionStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +17,7 @@ public class SubmissionSection {
 
 	private String sectionTitle;
 
-	private SubmissionSectionStatus sectionStatus;
+	private String sectionStatus;
 
 	private List<SubmissionQuestion> questions;
 
