@@ -55,7 +55,6 @@ public interface SubmissionMapper {
 			return submissionQuestionDTO;
 
 		questionResponse = getQuestionResponseByResponseType(submissionQuestion);
-
 		submissionQuestionDTO.setQuestionResponse(questionResponse);
 		return submissionQuestionDTO;
 	}
@@ -80,7 +79,11 @@ public interface SubmissionMapper {
 	}
 
 	default LocalDate buildDate(String[] multiResponse) {
-		return LocalDate.of(parseInt(multiResponse[2]), parseInt(multiResponse[1]), parseInt(multiResponse[0]));
+		try {
+			return LocalDate.of(parseInt(multiResponse[2]), parseInt(multiResponse[1]), parseInt(multiResponse[0]));
+		} catch (NumberFormatException e) {
+			return null;
+		}
 	}
 
 	default AddressDTO buildAddress(String[] multiResponse) {

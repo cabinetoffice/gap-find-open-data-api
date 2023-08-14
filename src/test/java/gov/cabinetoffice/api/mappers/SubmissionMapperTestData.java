@@ -105,7 +105,7 @@ public class SubmissionMapperTestData {
     private static final SubmissionSection section1 = SubmissionSection.builder()
             .sectionId(SECTION_ID_1)
             .sectionTitle(SECTION_TITLE_1)
-            .sectionStatus(SubmissionSectionStatus.IN_PROGRESS)
+            .sectionStatus(String.valueOf(SubmissionSectionStatus.IN_PROGRESS))
             .questions(List.of(question1, question2, question3, question4))
             .build();
 
