@@ -1,7 +1,6 @@
 package gov.cabinetoffice.api.models.application;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import gov.cabinetoffice.api.enums.SectionStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +17,7 @@ public class ApplicationFormSection {
 
 	private String sectionTitle;
 
-	private SectionStatusEnum sectionStatus;
+	private String sectionStatus;
 
 	private List<ApplicationFormQuestion> questions;
 

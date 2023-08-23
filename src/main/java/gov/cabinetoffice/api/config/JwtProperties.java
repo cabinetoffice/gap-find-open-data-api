@@ -1,6 +1,5 @@
 package gov.cabinetoffice.api.config;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,14 +11,9 @@ import org.springframework.context.annotation.Configuration;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Configuration("apiGatewayConfigurationProperties")
-@ConfigurationProperties(prefix = "aws")
-public class ApiGatewayConfigProperties {
+@Configuration("jwtProperties")
+@ConfigurationProperties(prefix = "jwt")
+public class JwtProperties {
 
-	@NotNull
-	private String apiGatewayId;
-
-	@NotNull
-	private String apiGatewayUsagePlanId;
-
+    private String secretKey;
 }

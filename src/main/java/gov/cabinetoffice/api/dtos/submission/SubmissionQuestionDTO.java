@@ -18,7 +18,6 @@ public class SubmissionQuestionDTO {
 	private String questionTitle;
 
 	@Builder.Default
-	private Object questionResponse = ""; // TODO do we want this to be null or an empty
-											// string
+	private Object questionResponse = "";
 
 }

@@ -1,37 +1,51 @@
 package gov.cabinetoffice.api.services;
 
-import gov.cabinetoffice.api.dtos.submission.SubmissionDTO;
-import gov.cabinetoffice.api.dtos.submission.SubmissionListDTO;
+import gov.cabinetoffice.api.dtos.submission.ApplicationListDTO;
+import gov.cabinetoffice.api.entities.Submission;
+import gov.cabinetoffice.api.enums.SubmissionStatus;
 import gov.cabinetoffice.api.mappers.SubmissionMapper;
-import gov.cabinetoffice.api.exceptions.SubmissionNotFoundException;
+import gov.cabinetoffice.api.repositories.SubmissionJDBCRepository;
 import gov.cabinetoffice.api.repositories.SubmissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class SubmissionsService {
 
 	private final SubmissionRepository submissionRepository;
-
+	private final SubmissionJDBCRepository submissionJdbcRepository;
 	private final SubmissionMapper submissionMapper;
 
-	public SubmissionListDTO getSubmissionByApplicationId(int applicationId) {
+	public ApplicationListDTO getSubmissionsByFundingOrgId(int fundingOrgId) {
+		final ApplicationListDTO applicationDTO = submissionJdbcRepository.getApplicationSubmissionsByFundingOrganisationId(fundingOrgId);
 
-		final List<SubmissionDTO> submissionDTOS = submissionRepository
-			.findByApplicationGrantApplicationId(applicationId)
-			.stream()
-			.map(submissionMapper::submissionToSubmissionDto)
-			.collect(Collectors.collectingAndThen(Collectors.toList(), result -> {
-				if (result.isEmpty())
-					throw new SubmissionNotFoundException("No submissions found with application id " + applicationId);
-				return result;
-			}));
+		applicationDTO.getApplications().forEach(a -> {
+			final List<Submission> submissions = submissionRepository.findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId());
+			a.setSubmissions(
+					submissions.stream()
+							.map(submissionMapper::submissionToSubmissionDto)
+							.toList()
+			);
+		});
 
-		return SubmissionListDTO.builder().submissions(submissionDTOS).build();
+		return applicationDTO;
 	}
 
+	public ApplicationListDTO getSubmissionsByFundingOrgIdAndGgisReferenceNum(int fundingOrgId, String ggisReferenceNumber) {
+		final ApplicationListDTO applicationDTO = submissionJdbcRepository.getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(fundingOrgId, ggisReferenceNumber);
+
+		applicationDTO.getApplications().forEach(a -> {
+			final List<Submission> submissions = submissionRepository.findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId());
+			a.setSubmissions(
+					submissions.stream()
+							.map(submissionMapper::submissionToSubmissionDto)
+							.toList()
+			);
+		});
+
+		return applicationDTO;
+	}
 }

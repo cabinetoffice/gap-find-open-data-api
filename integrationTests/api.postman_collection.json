@@ -50,12 +50,5 @@
       },
       "response": []
     }
-  ],
-  "variable": [
-    {
-      "key": "host-name",
-      "value": "host.docker.internal"
-    }
   ]
 }
-
