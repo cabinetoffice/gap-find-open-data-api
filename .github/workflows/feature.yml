@@ -59,11 +59,19 @@ jobs:
         run: |
           mvn spring-boot:build-image -DskipTests
           docker compose -f docker-compose-integration-tests.yml up -d
+
+      - name: Let's nap for 30 seconds to make sure the app has started
+        run: |
           sleep 30
-          docker run --name newman-tests \
-              -v /home/runner/work/gap-find-open-data-api/gap-find-open-data-api/api/postman:/opt/newman \
-              --network api_testing-network \
-              postman/newman run /opt/newman/api.postman_collection.json \
-              -e /opt/newman/Integration_Tests.postman_environment.json \
-              --env-var "JWT_SECRET_KEY=${JWT_SECRET_KEY}" \
+
+      # TODO look into moving these docker steps into docker-compose.yml
+      - name: Run Integration Tests
+        working-directory: ./api
+        #Newman needs an absolute path here. It does not like relative paths.
+        run: docker run --name newman-tests 
+              -v /home/runner/work/gap-find-open-data-api/gap-find-open-data-api/api/postman:/opt/newman 
+              --network api_testing-network
+              postman/newman run /opt/newman/api.postman_collection.json
+              -e /opt/newman/Integration_Tests.postman_environment.json
+              --env-var "JWT_SECRET_KEY=${JWT_SECRET_KEY}"
               --env-var "JWT_TOKEN=${JWT_TOKEN}"
