@@ -27,7 +27,11 @@ jobs:
           distribution: "temurin"
           cache: maven
 
-#      - name: Dependency check
+      - name: Build with Maven
+          working-directory: ./api
+          run: mvn -B package --file pom.xml -DskipTests
+
+      #      - name: Dependency check
 #          uses: dependency-check/Dependency-Check_Action@main
 #          env:
 #            JAVA_HOME: /opt/jdk
@@ -53,9 +57,8 @@ jobs:
       - name: Build Integration Environment
         working-directory: ./api
         run: |
-  
+          mvn spring-boot:build-image -DskipTests
           docker compose -f docker-compose-integration-tests.yml up -d
-          
 
       - name: Let's nap for 30 seconds to make sure the app has started
         run: |
