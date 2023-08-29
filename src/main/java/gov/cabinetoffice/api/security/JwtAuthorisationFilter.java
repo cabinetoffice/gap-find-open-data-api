@@ -30,10 +30,9 @@ public class JwtAuthorisationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         final String token = request.getHeader("jwt"); //TODO I think we maybe want to move this into the authorization header
-        log.info("token: " + token);
+        log.info("token is " + token + " for request " + request.getMethod() + " " + request.getRequestURI());
 
         if (token == null) {
-            log.info("token is null");
             filterChain.doFilter(request, response);
             return;
         }
