@@ -60,6 +60,7 @@ jobs:
           mvn spring-boot:build-image -DskipTests
           docker compose -f docker-compose-integration-tests.yml up -d
           sleep 30
+          docker network ls -a
           docker run --name newman-tests \
               -v /home/runner/work/gap-find-open-data-api/gap-find-open-data-api/api/postman:/opt/newman \
               --network gap-find-open-data-api_testing-network \
