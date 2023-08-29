@@ -1,5 +1,9 @@
 name: Java CI with Maven
 
+env:
+  JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
+  JWT_TOKEN: ${{secrets.JWT_TOKEN}}
+
 on:
   pull_request:
     branches:
@@ -23,51 +27,48 @@ jobs:
           distribution: "temurin"
           cache: maven
 
-#      - name: Build with Maven
-#        working-directory: ./api
-#        run: mvn -B package --file pom.xml -DskipTests
-
 #      - name: Dependency check
-#        uses: dependency-check/Dependency-Check_Action@main
-#        env:
-#          JAVA_HOME: /opt/jdk
-#        id: DependencyCheck
-#        with:
-#          project: "gap-find-open-data-api"
-#          path: "."
-#          format: "HTML"
-#          args: >
-#            --enableRetired
-#            --disableOssIndex true
+#          uses: dependency-check/Dependency-Check_Action@main
+#          env:
+#            JAVA_HOME: /opt/jdk
+#          id: DependencyCheck
+#          with:
+#            project: "gap-find-open-data-api"
+#            path: "."
+#            format: "HTML"
+#            args: >
+#              --enableRetired
+#              --disableOssIndex true
 #
-#      - name: Upload dependency check report
-#        uses: actions/upload-artifact@master
-#        with:
-#          name: DependencyCheck report
-#          path: ${{github.workspace}}/reports
+#            - name: Upload dependency check report
+#              uses: actions/upload-artifact@master
+#              with:
+#                name: DependencyCheck report
+#                path: ${{github.workspace}}/reports
 #
-#      - name: Unit tests
-#        working-directory: ./api
-#        run: mvn test
+#            - name: Unit tests
+#              working-directory: ./api
+#              run: mvn test
 
-      # TODO look into moving these docker steps into docker-compose.yml
       - name: Build Integration Environment
         working-directory: ./api
         run: |
-          mvn spring-boot:build-image -DskipTests
+  
           docker compose -f docker-compose-integration-tests.yml up -d
+          
 
-      - name: Let's see whats in here
-        working-directory: ./api
+      - name: Let's nap for 30 seconds to make sure the app has started
         run: |
-          cd
-          pwd
-          ls -a
+          sleep 30
 
+      # TODO look into moving these docker steps into docker-compose.yml
       - name: Run Integration Tests
         working-directory: ./api
         #Newman needs an absolute path here. It does not like relative paths.
         run: docker run --name newman-tests 
-              -v /home/runner/work/gap-find-open-data-api/gap-find-open-data-api/api/integrationTests:/opt/newman 
-              --network api_testing-network 
+              -v /home/runner/work/gap-find-open-data-api/gap-find-open-data-api/api/postman:/opt/newman 
+              --network gap-find-open-data-api_testing-network
               postman/newman run /opt/newman/api.postman_collection.json
+              -e /opt/newman/Integration_tests.postman_environment.json
+              --env-var "JWT_SECRET_KEY=${JWT_SECRET_KEY}"
+              --env-var "JWT_TOKEN=${JWT_TOKEN}"
