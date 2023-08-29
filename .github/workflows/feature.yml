@@ -28,10 +28,10 @@ jobs:
           cache: maven
 
       - name: Build with Maven
-          working-directory: ./api
-          run: mvn -B package --file pom.xml -DskipTests
+        working-directory: ./api
+        run: mvn -B package --file pom.xml -DskipTests
 
-      #      - name: Dependency check
+#      - name: Dependency check
 #          uses: dependency-check/Dependency-Check_Action@main
 #          env:
 #            JAVA_HOME: /opt/jdk
