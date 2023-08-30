@@ -73,5 +73,5 @@ jobs:
               --network api_testing-network
               postman/newman run /opt/newman/api.postman_collection.json
               -e /opt/newman/Integration_Tests.postman_environment.json
-              --env-var "JWT_SECRET_KEY=${JWT_SECRET_KEY}"
+              --env-var "JWT_SECRETKEY=${JWT_SECRET_KEY}"
               --env-var "JWT_TOKEN=${JWT_TOKEN}"
