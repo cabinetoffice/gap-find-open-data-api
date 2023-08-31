@@ -86,7 +86,7 @@ jobs:
 
       - name: Build project
         run: |
-          ./mvnw package
+          mvn package
 
       - name: Build, tag and push Docker image to AWS ECR
         env:
