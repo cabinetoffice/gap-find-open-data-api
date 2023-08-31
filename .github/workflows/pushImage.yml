@@ -36,7 +36,7 @@ jobs:
           JAVA_HOME: /opt/jdk
         id: DependencyCheck
         with:
-          project: "gap-find-open-data-api-service"
+          project: "gap-find-open-data-api"
           path: "."
           format: "HTML"
           args: >
@@ -86,7 +86,7 @@ jobs:
 
       - name: Build project
         run: |
-          ./mvnw package
+          mvn package
 
       - name: Build, tag and push Docker image to AWS ECR
         env:
