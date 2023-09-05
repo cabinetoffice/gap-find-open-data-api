@@ -14,7 +14,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @Configuration
 public class SecurityConfig {
 
-    private static final String[] WHITE_LIST = {"/health"};
+    private static final String[] WHITE_LIST = {"/actuator/health"};
     private final JwtAuthorisationFilter jwtAuthorisationFilter;
 
     public SecurityConfig(final JwtProperties jwtProperties) {
