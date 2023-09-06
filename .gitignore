@@ -38,3 +38,7 @@ build/
 /bin
 .idea/
 /.aws-sam/
+
+### Local properties ###
+application-local.properties
+.env.local
