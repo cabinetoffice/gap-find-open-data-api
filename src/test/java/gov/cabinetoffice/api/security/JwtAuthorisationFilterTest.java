@@ -20,8 +20,7 @@ import java.io.IOException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -53,6 +52,7 @@ class JwtAuthorisationFilterTest {
         final String validToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmdW5kZXJfaWQiOiIxIn0.NbYwfVIpqalW1gM204pQXM7o6voNoO7EyFwl1XjXEQQ";
         final String funderId = "1";
 
+        when(request.getRequestURI()).thenReturn("thisisaurl");
         when(request.getHeader("jwt")).thenReturn(validToken);
         when(jwtProperties.getSecretKey()).thenReturn(secret);
 
@@ -70,6 +70,7 @@ class JwtAuthorisationFilterTest {
     void doFilterInternal_expiredToken() {
         final String expiredToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTg3NjY4Mjl9.q_Xbd-a0o48MDDJeO9O4-Bscc9NeHcOUMpqTM41C3Bw";
 
+        when(request.getRequestURI()).thenReturn("thisisaurl");
         when(request.getHeader("jwt")).thenReturn(expiredToken);
         when(jwtProperties.getSecretKey()).thenReturn(secret);
 
@@ -81,6 +82,7 @@ class JwtAuthorisationFilterTest {
     void doFilterInternal_invalidSignature() {
         final String invalidSignatureToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmdW5kZXJfaWQiOiIxIn0.j_uP1WWerR1pSMetHh1sNXtbbK5R7uncKgX09maodRY";
 
+        when(request.getRequestURI()).thenReturn("thisisaurl");
         when(request.getHeader("jwt")).thenReturn(invalidSignatureToken);
         when(jwtProperties.getSecretKey()).thenReturn(secret);
 
@@ -92,13 +94,23 @@ class JwtAuthorisationFilterTest {
     @Test
     void doFilterInternal_missingFunderIdClaim() {
         final String missingClaimToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOm51bGx9.kBir5OUYCklX8bSu9j_74bkeywZmY95ockG7-driY9A";
-
+        when(request.getRequestURI()).thenReturn("thisisaurl");
         when(request.getHeader("jwt")).thenReturn(missingClaimToken);
         when(jwtProperties.getSecretKey()).thenReturn(secret);
 
         assertThatExceptionOfType(MissingClaimException.class)
                 .isThrownBy(() -> jwtAuthorisationFilter.doFilterInternal(request, response, filterChain))
                 .withMessage("The Claim 'funder_id' is not present in the JWT.");
+    }
+
+    @Test
+    void doFilterInternal_actuator() throws ServletException, IOException {
+        when(request.getRequestURI()).thenReturn("thisisa_healthcheck/actuator/health");
+
+        jwtAuthorisationFilter.doFilterInternal(request, response, filterChain);
+
+        verifyNoInteractions(jwtProperties);
+        verify(filterChain).doFilter(request, response);
     }
 
 }
