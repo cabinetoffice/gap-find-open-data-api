@@ -29,7 +29,7 @@ public class JwtAuthorisationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        if(!request.getRequestURI().contains("actuator")){
+        if (!request.getRequestURI().contains("actuator")) {
             final String token = request.getHeader("jwt"); //TODO I think we maybe want to move this into the authorization header
             log.info("token is {} for request {} {}", token, request.getMethod(), request.getRequestURI());
 
@@ -38,9 +38,7 @@ public class JwtAuthorisationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            final DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(jwtProperties.getSecretKey()))
-                    .build()
-                    .verify(token);
+            final DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(jwtProperties.getSecretKey())).build().verify(token);
 
             final Claim funderId = decodedJWT.getClaims().get(FUNDER_ID);
             log.info("funder ID from token: " + funderId);
@@ -50,7 +48,7 @@ public class JwtAuthorisationFilter extends OncePerRequestFilter {
                 throw new MissingClaimException(FUNDER_ID);
             }
 
-            final Authentication authentication = new UsernamePasswordAuthenticationToken(funderId.asString(),null, null);
+            final Authentication authentication = new UsernamePasswordAuthenticationToken(funderId.asString(), null, null);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             log.info("Created security principal for funding organisation: " + authentication.getName());
         }
