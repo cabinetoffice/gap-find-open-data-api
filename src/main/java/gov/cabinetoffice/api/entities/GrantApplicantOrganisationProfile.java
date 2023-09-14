@@ -18,7 +18,7 @@ public class GrantApplicantOrganisationProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    //Uncommented this because it's an unnecessary join that we don't use
+    //commented this out because it's an unused property
 //    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 //    @JoinColumn(name = "applicant_id", referencedColumnName = "id")
 //    private GrantApplicant applicant;

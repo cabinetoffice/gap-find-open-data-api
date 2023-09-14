@@ -31,7 +31,7 @@ public class Submission {
 	@GeneratedValue
 	private UUID id;
 
-	//Uncommented these because it's an unnecessary join that we don't use
+	//commented this out because it's an unused property
 //	@ManyToOne(cascade = CascadeType.ALL)
 //	@JoinColumn(name = "applicant_id", referencedColumnName = "id")
 //	@JsonIgnoreProperties("submissions")

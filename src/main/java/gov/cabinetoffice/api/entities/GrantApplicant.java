@@ -19,7 +19,7 @@ public class GrantApplicant {
 	@Column(name = "user_id")
 	private String userId;
 
-	//Uncommented this because it's an unnecessary join that we don't use
+	//commented this out because it's an unused property
 //	@OneToOne(mappedBy = "applicant")
 //	@JsonIgnoreProperties
 //	private GrantApplicantOrganisationProfile organisationProfile;
