@@ -1,8 +1,6 @@
 package gov.cabinetoffice.api.controllers.controlleradvice;
 
-import gov.cabinetoffice.api.controllers.ApplicationFormController;
 import gov.cabinetoffice.api.controllers.SubmissionsController;
-import gov.cabinetoffice.api.exceptions.ApplicationFormNotFoundException;
 import gov.cabinetoffice.api.exceptions.SubmissionNotFoundException;
 import gov.cabinetoffice.api.models.ErrorMessage;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -21,14 +19,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice(
-        assignableTypes = {ApplicationFormController.class, SubmissionsController.class})
+        assignableTypes = {SubmissionsController.class})
 public class ControllerExceptionsHandler extends ResponseEntityExceptionHandler {
-
-    @ExceptionHandler(value = {ApplicationFormNotFoundException.class})
-    protected ResponseEntity<Object> handleException(ApplicationFormNotFoundException ex, WebRequest request) {
-        return handleExceptionInternal(ex, ErrorMessage.builder().message(ex.getMessage()).build(), new HttpHeaders(),
-                HttpStatus.NOT_FOUND, request);
-    }
 
     @ExceptionHandler(value = {SubmissionNotFoundException.class})
     protected ResponseEntity<Object> handleException(SubmissionNotFoundException ex, WebRequest request) {

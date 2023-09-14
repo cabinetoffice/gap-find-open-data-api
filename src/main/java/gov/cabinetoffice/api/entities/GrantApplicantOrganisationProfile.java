@@ -1,14 +1,6 @@
 package gov.cabinetoffice.api.entities;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,9 +18,10 @@ public class GrantApplicantOrganisationProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "applicant_id", referencedColumnName = "id")
-    private GrantApplicant applicant;
+    //Uncommented this because it's an unnecessary join that we don't use
+//    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "applicant_id", referencedColumnName = "id")
+//    private GrantApplicant applicant;
 
     @Column(name = "legal_name")
     private String legalName;

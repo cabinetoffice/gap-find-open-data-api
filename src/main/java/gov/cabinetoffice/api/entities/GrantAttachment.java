@@ -1,22 +1,8 @@
 package gov.cabinetoffice.api.entities;
 
 import gov.cabinetoffice.api.enums.GrantAttachmentStatus;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -36,9 +22,14 @@ public class GrantAttachment {
 	@Column(name = "grant_attachment_id")
 	private UUID id;
 
-	@ManyToOne
-	@JoinColumn(name = "submission_id", referencedColumnName = "id")
-	private Submission submission;
+	//Uncommented this because it's an unnecessary join that we don't use
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "submission_id", referencedColumnName = "id")
+//	private Submission submission;
+
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "created_by", referencedColumnName = "id")
+//	private GrantApplicant createdBy;
 
 	@Column(name = "question_id", nullable = false)
 	private String questionId;
@@ -50,10 +41,6 @@ public class GrantAttachment {
 	@Column(name = "created", nullable = false)
 	@Builder.Default
 	private Instant created = Instant.now();
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "created_by", referencedColumnName = "id")
-	private GrantApplicant createdBy;
 
 	@Column(name = "last_updated", nullable = false)
 	private Instant lastUpdated;

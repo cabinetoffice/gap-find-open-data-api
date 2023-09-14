@@ -4,22 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import gov.cabinetoffice.api.enums.SubmissionStatus;
 import gov.cabinetoffice.api.models.submission.SubmissionDefinition;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
@@ -45,11 +31,24 @@ public class Submission {
 	@GeneratedValue
 	private UUID id;
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "applicant_id", referencedColumnName = "id")
-	@JsonIgnoreProperties("submissions")
-	@ToString.Exclude
-	private GrantApplicant applicant;
+	//Uncommented these because it's an unnecessary join that we don't use
+//	@ManyToOne(cascade = CascadeType.ALL)
+//	@JoinColumn(name = "applicant_id", referencedColumnName = "id")
+//	@JsonIgnoreProperties("submissions")
+//	@ToString.Exclude
+//	private GrantApplicant applicant;
+
+//		@ManyToOne(cascade = CascadeType.ALL)
+//	@JoinColumn(name = "created_by", referencedColumnName = "id")
+//	@JsonIgnoreProperties("submissions")
+//	@ToString.Exclude
+//	private GrantApplicant createdBy;
+
+//	@ManyToOne(cascade = CascadeType.ALL)
+//	@JoinColumn(name = "last_updated_by", referencedColumnName = "id")
+//	@JsonIgnoreProperties("submissions")
+//	@ToString.Exclude
+//	private GrantApplicant lastUpdatedBy;
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "scheme_id")
@@ -68,21 +67,9 @@ public class Submission {
 	@CreatedDate
 	private LocalDateTime created;
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "created_by", referencedColumnName = "id")
-	@JsonIgnoreProperties("submissions")
-	@ToString.Exclude
-	private GrantApplicant createdBy;
-
 	@LastModifiedDate
 	@Column(name = "last_updated")
 	private LocalDateTime lastUpdated;
-
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "last_updated_by", referencedColumnName = "id")
-	@JsonIgnoreProperties("submissions")
-	@ToString.Exclude
-	private GrantApplicant lastUpdatedBy;
 
 	@Column(name = "submitted_date")
 	private ZonedDateTime submittedDate;
