@@ -11,11 +11,11 @@ import org.springframework.context.annotation.Configuration;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Configuration("cognitoConfigurationProperties")
+@Configuration
 @ConfigurationProperties(prefix = "user-service")
 public class UserServiceConfig {
 
     private String domain;
-
+    private String secret;
 
 }

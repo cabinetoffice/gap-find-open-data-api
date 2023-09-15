@@ -7,10 +7,12 @@ import gov.cabinetoffice.api.dtos.submission.SubmissionQuestionDTO;
 import gov.cabinetoffice.api.dtos.submission.SubmissionSectionDTO;
 import gov.cabinetoffice.api.entities.GrantAttachment;
 import gov.cabinetoffice.api.entities.Submission;
+import gov.cabinetoffice.api.exceptions.UserNotFoundException;
 import gov.cabinetoffice.api.models.submission.SubmissionQuestion;
 import gov.cabinetoffice.api.models.submission.SubmissionSection;
 import gov.cabinetoffice.api.services.GrantAttachmentService;
 import gov.cabinetoffice.api.services.S3Service;
+import gov.cabinetoffice.api.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -28,6 +30,7 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
 	private final GrantAttachmentService grantAttachmentService;
 	private final S3Service s3Service;
 	private final S3ConfigProperties s3ConfigProperties;
+	private final UserService userService;
 
 	@Override
 	public List<SubmissionSectionDTO> mapSections(List<SubmissionSection> sections) {
@@ -89,7 +92,7 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
 		final List<SubmissionSection> sections = submissionDefinitionSections(submission);
 		return SubmissionDTO.builder()
 			.submissionId(submission.getId())
-			.grantApplicantEmailAddress(submissionSchemeEmail(submission))
+			.grantApplicantEmailAddress(getUserEmail(submission.getApplicant().getUserId()))
 			.submittedTimeStamp(submission.getSubmittedDate())
 			.sections(mapSections(sections))
 			.build();
@@ -126,6 +129,14 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
 	public List<SubmissionSection> submissionDefinitionSections(Submission submission) {
 		return (submission != null && submission.getDefinition() != null) ? submission.getDefinition().getSections()
 				: null;
+	}
+
+	private String getUserEmail(String sub) {
+		try {
+			return userService.getUserEmailForSub(sub);
+		} catch (UserNotFoundException e) {
+			return "User not found";
+		}
 	}
 
 }

@@ -130,7 +130,7 @@ public class SubmissionMapperTestData {
             .county("Renfrewshire")
             .build();
 
-    private static final String APPLICANT_USER_ID = "75ab5fbd-0682-4d3d-a467-01c7a447f07c";
+    public static final String APPLICANT_USER_ID = "75ab5fbd-0682-4d3d-a467-01c7a447f07c";
 
     private static final GrantApplicant grantApplicant = GrantApplicant.builder()
             .id(APPLICANT_ID)
@@ -195,10 +195,12 @@ public class SubmissionMapperTestData {
             .questions(List.of(questionDTO1, questionDTO2, questionDTO3, questionDTO4))
             .build();
 
+    public static final String GRANT_APPLICANT_EMAIL_ADDRESS = "testemail@applicant.com";
+
     private static final SubmissionDTO submissionDTO = SubmissionDTO.builder()
             .submissionId(SUBMISSION_ID)
             .submittedTimeStamp(zonedDateTime)
-            .grantApplicantEmailAddress(scheme.getEmail())
+            .grantApplicantEmailAddress(GRANT_APPLICANT_EMAIL_ADDRESS)
             .sections(List.of(submissionSectionDTO1))
             .build();
 

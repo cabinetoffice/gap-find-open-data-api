@@ -5,21 +5,24 @@ import gov.cabinetoffice.api.dtos.submission.SubmissionDTO;
 import gov.cabinetoffice.api.dtos.submission.SubmissionSectionDTO;
 import gov.cabinetoffice.api.entities.GrantAttachment;
 import gov.cabinetoffice.api.entities.Submission;
+import gov.cabinetoffice.api.exceptions.UserNotFoundException;
 import gov.cabinetoffice.api.models.submission.SubmissionQuestion;
 import gov.cabinetoffice.api.models.submission.SubmissionSection;
 import gov.cabinetoffice.api.services.GrantAttachmentService;
 import gov.cabinetoffice.api.services.S3Service;
-import static org.assertj.core.api.Assertions.assertThat;
+import gov.cabinetoffice.api.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CustomSubmissionMapperImplTest {
@@ -32,6 +35,9 @@ class CustomSubmissionMapperImplTest {
 
 	@Mock
 	private S3ConfigProperties s3ConfigProperties;
+
+	@Mock
+	private UserService userService;
 
 	@InjectMocks
 	private CustomSubmissionMapperImpl customSubmissionMapperImpl;
@@ -82,6 +88,20 @@ class CustomSubmissionMapperImplTest {
 	void submissionToSubmissionDto() {
 		final Submission submission = SubmissionMapperTestData.getSubmission();
 		final SubmissionDTO submissionDto = SubmissionMapperTestData.getSubmissionDto();
+
+		when(userService.getUserEmailForSub(SubmissionMapperTestData.APPLICANT_USER_ID)).thenReturn(SubmissionMapperTestData.GRANT_APPLICANT_EMAIL_ADDRESS);
+
+		final SubmissionDTO result = customSubmissionMapperImpl.submissionToSubmissionDto(submission);
+
+		assertThat(result).isEqualTo(submissionDto);
+	}
+
+	@Test
+	void submissionToSubmissionDto_UserNotFoundException() {
+		final Submission submission = SubmissionMapperTestData.getSubmission();
+		final SubmissionDTO submissionDto = SubmissionMapperTestData.getSubmissionDto();
+		submissionDto.setGrantApplicantEmailAddress("User not found");
+		when(userService.getUserEmailForSub(SubmissionMapperTestData.APPLICANT_USER_ID)).thenThrow(new UserNotFoundException("User not found"));
 
 		final SubmissionDTO result = customSubmissionMapperImpl.submissionToSubmissionDto(submission);
 
