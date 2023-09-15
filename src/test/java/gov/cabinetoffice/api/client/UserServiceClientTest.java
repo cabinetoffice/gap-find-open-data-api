@@ -42,7 +42,7 @@ class UserServiceClientTest {
         final String expectedUrl = domain + "/user?userSub={userSub}";
         final UserDto expectedUserDto = UserDto.builder().emailAddress("").build();
         when(userServiceConfig.getDomain()).thenReturn(domain);
-        when(userServiceConfig.getSecret()).thenReturn("secret");
+        when(userServiceConfig.getLambdaSecret()).thenReturn("secret");
         when(restTemplate.exchange(eq(expectedUrl), eq(HttpMethod.GET), any(HttpEntity.class), any(Class.class), any(Map.class)))
                 .thenReturn(new ResponseEntity(expectedUserDto, HttpStatus.OK));
 
@@ -58,7 +58,7 @@ class UserServiceClientTest {
         final String domain = "domain";
         final String expectedUrl = domain + "/user?userSub={userSub}";
         when(userServiceConfig.getDomain()).thenReturn(domain);
-        when(userServiceConfig.getSecret()).thenReturn("secret");
+        when(userServiceConfig.getLambdaSecret()).thenReturn("secret");
         when(restTemplate.exchange(eq(expectedUrl), eq(HttpMethod.GET), any(HttpEntity.class), any(Class.class), any(Map.class)))
                 .thenReturn(new ResponseEntity(HttpStatus.OK));
 
@@ -75,7 +75,7 @@ class UserServiceClientTest {
         final String domain = "domain";
         final String expectedUrl = domain + "/user?userSub={userSub}";
         when(userServiceConfig.getDomain()).thenReturn(domain);
-        when(userServiceConfig.getSecret()).thenReturn("secret");
+        when(userServiceConfig.getLambdaSecret()).thenReturn("secret");
         when(restTemplate.exchange(eq(expectedUrl), eq(HttpMethod.GET), any(HttpEntity.class), any(Class.class), any(Map.class)))
                 .thenReturn(new ResponseEntity(HttpStatus.NOT_FOUND));
 
@@ -92,7 +92,7 @@ class UserServiceClientTest {
         final String domain = "domain";
         final String expectedUrl = domain + "/user?userSub={userSub}";
         when(userServiceConfig.getDomain()).thenReturn(domain);
-        when(userServiceConfig.getSecret()).thenReturn("secret");
+        when(userServiceConfig.getLambdaSecret()).thenReturn("secret");
         when(restTemplate.exchange(eq(expectedUrl), eq(HttpMethod.GET), any(HttpEntity.class), any(Class.class), any(Map.class)))
                 .thenThrow(new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR));
 

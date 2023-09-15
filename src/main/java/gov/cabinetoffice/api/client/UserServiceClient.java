@@ -25,7 +25,7 @@ public class UserServiceClient {
     public UserDto getUserForSub(String sub) {
         final String url = userServiceConfig.getDomain() + "/apply/user/user?userSub={userSub}";
         final HttpHeaders requestHeaders = new HttpHeaders();
-        requestHeaders.add("Authorization", userServiceConfig.getSecret());
+        requestHeaders.add("Authorization", userServiceConfig.getLambdaSecret());
         final HttpEntity<String> requestEntity = new HttpEntity<>(null, requestHeaders);
         final Map<String, String> params = Collections.singletonMap("userSub", sub);
 
