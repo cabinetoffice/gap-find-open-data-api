@@ -193,7 +193,7 @@ class CustomSubmissionMapperImplTest {
 	}
 
 	@Test
-	void submissionDefinitionSections_returnNullIfSubmissionDefintionIsNull() {
+	void submissionDefinitionSections_returnNullIfSubmissionDefinitionIsNull() {
 		final Submission submission = Submission.builder().definition(null).build();
 		final List<SubmissionSection> result = customSubmissionMapperImpl.submissionDefinitionSections(submission);
 		assertThat(result).isNull();

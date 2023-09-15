@@ -1,7 +1,6 @@
 package gov.cabinetoffice.api.controllers.controlleradvice;
 
 import gov.cabinetoffice.api.models.ErrorMessage;
-import gov.cabinetoffice.api.exceptions.ApplicationFormNotFoundException;
 import gov.cabinetoffice.api.exceptions.SubmissionNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,9 +21,6 @@ import static org.mockito.Mockito.when;
 class ControllerExceptionsHandlerTest {
 
     @Mock
-    private ApplicationFormNotFoundException applicationFormNotFoundException;
-
-    @Mock
     private SubmissionNotFoundException submissionNotFoundException;
 
     @Mock
@@ -35,21 +31,6 @@ class ControllerExceptionsHandlerTest {
 
     @InjectMocks
     private ControllerExceptionsHandler controllerExceptionsHandler;
-
-    @Test
-    void testHandleException_applicationNotFound() {
-        final String errorMessage = "Application form not found";
-
-        when(applicationFormNotFoundException.getMessage()).thenReturn(errorMessage);
-
-        final ResponseEntity<Object> responseEntity = controllerExceptionsHandler
-                .handleException(applicationFormNotFoundException, webRequest);
-
-        final String errorMessageFromResponse = ((ErrorMessage) Objects.requireNonNull(responseEntity.getBody()))
-                .getMessage();
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(errorMessageFromResponse).isEqualTo(errorMessage);
-    }
 
     @Test
     void testHandleException_SubmissionNotFound() {
