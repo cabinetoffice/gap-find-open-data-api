@@ -31,7 +31,7 @@ public class Submission {
 	@GeneratedValue
 	private UUID id;
 
-//	commented this out because it's an unused property
+//	commented this out because it's an unused property that negatively impacts performance
 //	@ManyToOne(cascade = CascadeType.ALL)
 //	@JoinColumn(name = "applicant_id", referencedColumnName = "id")
 //	@JsonIgnoreProperties("submissions")
