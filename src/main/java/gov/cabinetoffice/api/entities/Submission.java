@@ -31,14 +31,14 @@ public class Submission {
 	@GeneratedValue
 	private UUID id;
 
-	//commented this out because it's an unused property
+//	commented this out because it's an unused property
 //	@ManyToOne(cascade = CascadeType.ALL)
 //	@JoinColumn(name = "applicant_id", referencedColumnName = "id")
 //	@JsonIgnoreProperties("submissions")
 //	@ToString.Exclude
 //	private GrantApplicant applicant;
 
-//		@ManyToOne(cascade = CascadeType.ALL)
+//	@ManyToOne(cascade = CascadeType.ALL)
 //	@JoinColumn(name = "created_by", referencedColumnName = "id")
 //	@JsonIgnoreProperties("submissions")
 //	@ToString.Exclude

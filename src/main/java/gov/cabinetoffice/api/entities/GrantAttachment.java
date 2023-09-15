@@ -22,7 +22,7 @@ public class GrantAttachment {
 	@Column(name = "grant_attachment_id")
 	private UUID id;
 
-	//commented this out because it's an unused property
+//	commented this out because it's an unused property
 //	@ManyToOne(fetch = FetchType.LAZY)
 //	@JoinColumn(name = "submission_id", referencedColumnName = "id")
 //	private Submission submission;
