@@ -14,6 +14,7 @@ import gov.cabinetoffice.api.services.GrantAttachmentService;
 import gov.cabinetoffice.api.services.S3Service;
 import gov.cabinetoffice.api.services.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +25,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Component
 @Primary
+@Slf4j
 public class CustomSubmissionMapperImpl implements SubmissionMapper {
 
 	public static final String AMAZON_AWS_URL = ".amazonaws.com/";
@@ -135,6 +137,7 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
 		try {
 			return userService.getUserEmailForSub(sub);
 		} catch (UserNotFoundException e) {
+			log.error("User not found");
 			return "User not found";
 		}
 	}

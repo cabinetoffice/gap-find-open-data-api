@@ -23,7 +23,7 @@ public class UserServiceClient {
     private final RestTemplate restTemplate;
 
     public UserDto getUserForSub(String sub) {
-        final String url = userServiceConfig.getDomain() + "/apply/user/user?userSub={userSub}";
+        final String url = userServiceConfig.getDomain() + "/user?userSub={userSub}";
         final HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.add("Authorization", userServiceConfig.getLambdaSecret());
         final HttpEntity<String> requestEntity = new HttpEntity<>(null, requestHeaders);

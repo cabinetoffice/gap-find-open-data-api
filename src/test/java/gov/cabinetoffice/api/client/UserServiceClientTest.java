@@ -40,7 +40,7 @@ class UserServiceClientTest {
     public void getUserForSub_Successful() {
         final String sub = "d522c5ac-dea1-4d79-ba07-62d5c7203da1";
         final String domain = "domain";
-        final String url = domain + "/apply/user/user?userSub={userSub}";
+        final String url = domain + "/user?userSub={userSub}";
         final UserDto expectedUserDto = UserDto.builder().emailAddress("").build();
 
         when(userServiceConfig.getDomain()).thenReturn(domain);
@@ -58,7 +58,7 @@ class UserServiceClientTest {
     public void getUserForSub_EmptyBody() {
         final String sub = "d522c5ac-dea1-4d79-ba07-62d5c7203da1";
         final String domain = "domain";
-        final String expectedUrl = domain + "/apply/user/user?userSub={userSub}";
+        final String expectedUrl = domain + "/user?userSub={userSub}";
 
         when(userServiceConfig.getDomain()).thenReturn(domain);
         when(userServiceConfig.getLambdaSecret()).thenReturn("secret");
@@ -76,7 +76,7 @@ class UserServiceClientTest {
     public void getUserForSub_404() {
         final String sub = "d522c5ac-dea1-4d79-ba07-62d5c7203da1";
         final String domain = "domain";
-        final String expectedUrl = domain + "/apply/user/user?userSub={userSub}";
+        final String expectedUrl = domain + "/user?userSub={userSub}";
 
         when(userServiceConfig.getDomain()).thenReturn(domain);
         when(userServiceConfig.getLambdaSecret()).thenReturn("secret");
@@ -94,7 +94,7 @@ class UserServiceClientTest {
     public void getUserForSub_Exception() {
         final String sub = "d522c5ac-dea1-4d79-ba07-62d5c7203da1";
         final String domain = "domain";
-        final String expectedUrl = domain + "/apply/user/user?userSub={userSub}";
+        final String expectedUrl = domain + "/user?userSub={userSub}";
 
         when(userServiceConfig.getDomain()).thenReturn(domain);
         when(userServiceConfig.getLambdaSecret()).thenReturn("secret");
