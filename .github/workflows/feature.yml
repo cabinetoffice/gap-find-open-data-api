@@ -5,10 +5,16 @@ env:
   JWT_TOKEN: ${{secrets.JWT_TOKEN}}
 
 on:
+  push:
+    branches:
+      - feature/**
+      - TMI2-**
+      - bug/**
   pull_request:
     branches:
-      - develop
-      - main
+      - feature/**
+      - TMI2-**
+      - bug/**
 
 jobs:
   build:
