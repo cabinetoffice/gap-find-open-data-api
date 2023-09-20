@@ -142,6 +142,7 @@ public class SubmissionMapperTestData {
     private static final Submission submission = Submission.builder()
             .id(SUBMISSION_ID)
             .scheme(scheme)
+            .applicant(grantApplicant)
             .application(application)
             .version(1)
             .created(timestamp)
