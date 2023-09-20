@@ -11,7 +11,7 @@
   },
   "response": {
     "status": 200,
-    "bodyFileName": "UserDTO.json",
+    "bodyFileName": "userDTO.json",
     "headers": {
       "content-type": "application/json"
     }
