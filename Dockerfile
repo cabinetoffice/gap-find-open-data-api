@@ -47,5 +47,5 @@ COPY --from=builder application/snapshot-dependencies/ ./
 # Necessary to prevent a layer not found exception, similar to issue described here - https://github.com/moby/moby/issues/33974
 RUN true
 COPY --from=builder application/application/ ./
-EXPOSE 8080
+EXPOSE 8086
 ENTRYPOINT ["/jre/bin/java", "org.springframework.boot.loader.JarLauncher"]

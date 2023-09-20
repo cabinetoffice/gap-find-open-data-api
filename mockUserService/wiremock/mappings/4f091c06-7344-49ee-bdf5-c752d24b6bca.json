@@ -1,0 +1,20 @@
+{
+  "id": "4f091c06-7344-49ee-bdf5-c752d24b6bca",
+  "request": {
+    "urlPathPattern": "/user",
+    "method": "GET",
+    "queryParameters": {
+      "userSub": {
+        "matches": ".*"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": "true",
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  "uuid": "4f091c06-7344-49ee-bdf5-c752d24b6bca"
+}
