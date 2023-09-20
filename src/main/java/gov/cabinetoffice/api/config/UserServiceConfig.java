@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @AllArgsConstructor
 @NoArgsConstructor
 @Configuration
-@ConfigurationProperties(prefix = "user-service")
+@ConfigurationProperties(prefix = "userservice")
 public class UserServiceConfig {
 
     private String domain;
