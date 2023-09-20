@@ -67,6 +67,7 @@ jobs:
           docker compose -f docker-compose-integration-tests.yml up -d
 
       - name: Check Health Endpoint
+        working-directory: ./api
         run: |
           chmod +x ./scripts/healthCheckScript.sh
           ./scripts/healthCheckScript.sh "http://localhost:8086/apply/open-data/actuator/health"
