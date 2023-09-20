@@ -135,21 +135,17 @@ public class SubmissionMapperTestData {
     private static final GrantApplicant grantApplicant = GrantApplicant.builder()
             .id(APPLICANT_ID)
             .userId(APPLICANT_USER_ID)
-            .organisationProfile(grantApplicantOrganisationProfile)
             .build();
 
     private static final UUID SUBMISSION_ID = UUID.fromString("1c2eabf0-b33c-433a-b00f-e73d8efca929");
 
     private static final Submission submission = Submission.builder()
             .id(SUBMISSION_ID)
-            .applicant(grantApplicant)
             .scheme(scheme)
             .application(application)
             .version(1)
             .created(timestamp)
-            .createdBy(grantApplicant)
             .lastUpdated(timestamp)
-            .lastUpdatedBy(grantApplicant)
             .applicationName("Test Submission")
             .status(SubmissionStatus.IN_PROGRESS)
             .definition(definition)
