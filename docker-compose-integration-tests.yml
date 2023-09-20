@@ -30,7 +30,7 @@ services:
       spring_datasource_username: postgres
       spring_datasource_password: mysecretpassword
       jwt_secretKey: ${JWT_SECRET_KEY}
-      userservice_domin: http://wiremock:8080
+      userservice_domain: http://wiremock:8080
     networks:
       - testing-network
 
