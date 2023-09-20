@@ -81,3 +81,9 @@ jobs:
               -e /opt/newman/Integration_Tests.postman_environment.json
               --env-var "JWT_SECRETKEY=${JWT_SECRET_KEY}"
               --env-var "JWT_TOKEN=${JWT_TOKEN}"
+
+      - name: Dump docker logs on failure
+        if: failure()
+        uses: jwalton/gh-docker-logs@v2
+        with:
+          images: gap-find-open-data-api
