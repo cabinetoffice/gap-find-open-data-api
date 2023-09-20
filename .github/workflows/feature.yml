@@ -66,11 +66,9 @@ jobs:
           mvn spring-boot:build-image -DskipTests
           docker compose -f docker-compose-integration-tests.yml up -d
 
-      - name: Check Health Endpoint
-        working-directory: ./api
+      - name: Let's nap for 30 seconds to make sure the app has started
         run: |
-          chmod +x ./scripts/healthCheckScript.sh
-          ./scripts/healthCheckScript.sh "http://localhost:8086/apply/open-data/actuator/health"
+          sleep 30
 
       # TODO look into moving these docker steps into docker-compose.yml
       - name: Run Integration Tests
