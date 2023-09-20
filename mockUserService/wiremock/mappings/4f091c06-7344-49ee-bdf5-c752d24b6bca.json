@@ -13,7 +13,7 @@
     "status": 200,
     "bodyFileName": "userDTO.json",
     "headers": {
-      "Content-Type": "text/plain"
+      "Content-Type": "application/json"
     }
   },
   "uuid": "4f091c06-7344-49ee-bdf5-c752d24b6bca"
