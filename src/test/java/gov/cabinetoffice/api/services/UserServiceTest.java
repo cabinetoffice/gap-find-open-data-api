@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static gov.cabinetoffice.api.mappers.SubmissionMapperTestData.GRANT_APPLICANT_EMAIL_ADDRESS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
@@ -24,7 +25,7 @@ public class UserServiceTest {
     @Test
     public void getUserEmailForSub_Successful() {
         final String sub = "d522c5ac-dea1-4d79-ba07-62d5c7203da1";
-        final UserDto expectedUserDto = UserDto.builder().build();
+        final UserDto expectedUserDto = UserDto.builder().emailAddress(GRANT_APPLICANT_EMAIL_ADDRESS).build();
         when(userServiceClient.getUserForSub(sub)).thenReturn(expectedUserDto);
 
         final String result = userService.getUserEmailForSub(sub);

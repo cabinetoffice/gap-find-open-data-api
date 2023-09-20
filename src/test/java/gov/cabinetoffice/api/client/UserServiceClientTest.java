@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
+import static gov.cabinetoffice.api.mappers.SubmissionMapperTestData.GRANT_APPLICANT_EMAIL_ADDRESS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,7 +42,7 @@ class UserServiceClientTest {
         final String sub = "d522c5ac-dea1-4d79-ba07-62d5c7203da1";
         final String domain = "domain";
         final String url = domain + "/user?userSub={userSub}";
-        final UserDto expectedUserDto = UserDto.builder().emailAddress("").build();
+        final UserDto expectedUserDto = UserDto.builder().emailAddress(GRANT_APPLICANT_EMAIL_ADDRESS).build();
 
         when(userServiceConfig.getDomain()).thenReturn(domain);
         when(userServiceConfig.getLambdaSecret()).thenReturn("secret");
