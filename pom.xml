@@ -128,7 +128,10 @@
 			<plugin>
 				<groupId>org.owasp</groupId>
 				<artifactId>dependency-check-maven</artifactId>
-				<version>7.1.1</version>
+				<version>8.4.0</version>
+				<configuration>
+					<failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
+				</configuration>
 				<executions>
 					<execution>
 						<goals>
