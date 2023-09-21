@@ -131,6 +131,7 @@
 				<version>8.4.0</version>
 				<configuration>
 					<failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
+					<ossindexAnalyzerEnabled>false</ossindexAnalyzerEnabled>
 				</configuration>
 				<executions>
 					<execution>

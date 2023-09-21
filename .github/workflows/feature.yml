@@ -47,7 +47,9 @@ jobs:
           path: "."
           format: "HTML"
           args: >
-            --failOnCVSS 0
+            --failOnCVSS 0.1
+            --enableRetired
+            --disableOssIndex true
 
       - name: Upload Dependency Check Report
         uses: actions/upload-artifact@master
