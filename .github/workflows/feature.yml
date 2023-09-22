@@ -52,6 +52,7 @@ jobs:
             --disableOssIndex true
 
       - name: Upload Dependency Check Report
+        if: success() || failure()
         uses: actions/upload-artifact@master
         with:
           name: Dependency Check Report
