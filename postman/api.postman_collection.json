@@ -124,7 +124,6 @@
 						"{{URL}}"
 					],
 					"path": [
-						"apply",
 						"open-data",
 						"submissions",
 						"SCH-000003589"
@@ -210,7 +209,6 @@
 						"{{URL}}"
 					],
 					"path": [
-						"apply",
 						"open-data",
 						"submissions"
 					]
