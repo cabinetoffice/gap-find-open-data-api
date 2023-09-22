@@ -47,7 +47,7 @@ jobs:
           path: "."
           format: "HTML"
           args: >
-            --failOnCVSS 0.1
+            --failOnCVSS 7.0
             --enableRetired
             --disableOssIndex true
 

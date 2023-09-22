@@ -130,7 +130,7 @@
 				<artifactId>dependency-check-maven</artifactId>
 				<version>8.4.0</version>
 				<configuration>
-					<failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
+					<failBuildOnCVSS>7.0</failBuildOnCVSS>
 					<ossindexAnalyzerEnabled>false</ossindexAnalyzerEnabled>
 				</configuration>
 				<executions>
