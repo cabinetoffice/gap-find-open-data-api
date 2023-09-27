@@ -119,12 +119,11 @@
 					}
 				],
 				"url": {
-					"raw": "{{URL}}/apply/open-data/submissions/SCH-000003589",
+					"raw": "{{URL}}/open-data/submissions/SCH-000003589",
 					"host": [
 						"{{URL}}"
 					],
 					"path": [
-						"apply",
 						"open-data",
 						"submissions",
 						"SCH-000003589"
@@ -205,12 +204,11 @@
 					}
 				],
 				"url": {
-					"raw": "{{URL}}/apply/open-data/submissions",
+					"raw": "{{URL}}/open-data/submissions",
 					"host": [
 						"{{URL}}"
 					],
 					"path": [
-						"apply",
 						"open-data",
 						"submissions"
 					]

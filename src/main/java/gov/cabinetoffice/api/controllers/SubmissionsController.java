@@ -34,7 +34,7 @@ public class SubmissionsController {
 			@ApiResponse(
 					responseCode = "200", description = "Submissions retrieved successfully.",
 					content = @Content(mediaType = "application/json",
-							schema = @Schema(implementation = Submission.class)
+							schema = @Schema(implementation = ApplicationListDTO.class)
 					)
 			),
 			@ApiResponse(
@@ -60,7 +60,7 @@ public class SubmissionsController {
 			@ApiResponse(
 					responseCode = "200", description = "Submissions retrieved successfully.",
 					content = @Content(mediaType = "application/json",
-							schema = @Schema(implementation = Submission.class)
+							schema = @Schema(implementation = ApplicationListDTO.class)
 					)
 			),
 			@ApiResponse(
