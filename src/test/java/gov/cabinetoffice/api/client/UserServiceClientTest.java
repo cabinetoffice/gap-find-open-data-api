@@ -2,6 +2,7 @@ package gov.cabinetoffice.api.client;
 
 import gov.cabinetoffice.api.config.UserServiceConfig;
 import gov.cabinetoffice.api.dtos.user.UserDto;
+import gov.cabinetoffice.api.exceptions.InvalidBodyException;
 import gov.cabinetoffice.api.exceptions.UserNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,9 +13,11 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.Map;
 
 import static gov.cabinetoffice.api.mappers.SubmissionMapperTestData.GRANT_APPLICANT_EMAIL_ADDRESS;
@@ -67,9 +70,9 @@ class UserServiceClientTest {
                 .thenReturn(new ResponseEntity(HttpStatus.OK));
 
         assertThrows(
-                UserNotFoundException.class,
+                InvalidBodyException.class,
                 () -> userServiceClient.getUserForSub(sub),
-                "User not found for sub " + sub + " in user service"
+                "Null body from " + expectedUrl + "where sub is : " + sub + " in user service"
         );
     }
 
@@ -82,7 +85,7 @@ class UserServiceClientTest {
         when(userServiceConfig.getDomain()).thenReturn(domain);
         when(userServiceConfig.getLambdaSecret()).thenReturn("secret");
         when(restTemplate.exchange(eq(expectedUrl), eq(HttpMethod.GET), any(HttpEntity.class), any(Class.class), any(Map.class)))
-                .thenReturn(new ResponseEntity(HttpStatus.NOT_FOUND));
+                .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
 
         assertThrows(
                 UserNotFoundException.class,
@@ -106,5 +109,20 @@ class UserServiceClientTest {
                 HttpServerErrorException.class,
                 () -> userServiceClient.getUserForSub(sub)
         );
+    }
+
+    @Test
+    public void getUserForSub_UnexpectedError() {
+        final String sub = "d522c5ac-dea1-4d79-ba07-62d5c7203da1";
+        final String domain = "domain";
+        final String url = "domain/user?userSub={userSub}";
+
+        when(userServiceConfig.getDomain()).thenReturn(domain);
+        when(userServiceConfig.getLambdaSecret()).thenReturn("secret");
+        when(restTemplate.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(UserDto.class), anyMap()))
+                .thenThrow(new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR));
+
+
+        assertThrows(HttpClientErrorException.class, () -> userServiceClient.getUserForSub(sub));
     }
 }
