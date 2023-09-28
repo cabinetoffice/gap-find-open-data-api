@@ -1,0 +1,224 @@
+{
+	"info": {
+		"_postman_id": "cb3c67fb-04f0-4d9a-a7cb-1665905e26de",
+		"name": "GAP Find Open Data API Security",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29654212"
+	},
+	"item": [
+		{
+			"name": "Valid API Key",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"  pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"The numberOfResults field should be a non-negative integer\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.numberOfResults).to.be.a('number');",
+							"    pm.expect(responseData.numberOfResults).to.be.at.least(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{API_KEY}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/open-data/submissions",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"open-data",
+						"submissions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "NonExistent API Key Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"User is not authorized to access this resource with an explicit deny\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{NON_EXISTENT_KEY}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/apply/open-data/submissions",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"apply",
+						"open-data",
+						"submissions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Revoked API Key",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"User is not authorized to access this resource with an explicit deny\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{REVOKED_API_KEY}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/apply/open-data/submissions",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"apply",
+						"open-data",
+						"submissions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Disabled API Key",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"User is not authorized to access this resource with an explicit deny\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{DISABLED_API_KEY}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/apply/open-data/submissions/G2-SCH-2024-11-15262",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"apply",
+						"open-data",
+						"submissions",
+						"G2-SCH-2024-11-15262"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Attempted SQL Injection",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"User is not authorized to access this resource with an explicit deny\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{SQL_INJECTION_KEY}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/open-data/submissions/G2-SCH-2024-11-15262",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"open-data",
+						"submissions",
+						"G2-SCH-2024-11-15262"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
