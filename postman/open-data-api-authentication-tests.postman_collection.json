@@ -58,11 +58,11 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
+							"pm.test(\"Status code is 403\", function () {",
 							"    pm.response.to.have.status(403);",
 							"});",
 							"",
-							"pm.test(\"Body matches string\", function () {",
+							"pm.test(\"403 returns expected response body\", function () {",
 							"    pm.expect(pm.response.text()).to.include(\"User is not authorized to access this resource with an explicit deny\");",
 							"});"
 						],
@@ -100,11 +100,11 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
+							"pm.test(\"Status code is 403\", function () {",
 							"    pm.response.to.have.status(403);",
 							"});",
 							"",
-							"pm.test(\"Body matches string\", function () {",
+							"pm.test(\"403 returns expected response body\", function () {",
 							"    pm.expect(pm.response.text()).to.include(\"User is not authorized to access this resource with an explicit deny\");",
 							"});"
 						],
@@ -142,11 +142,11 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
+							"pm.test(\"Status code is 403\", function () {",
 							"    pm.response.to.have.status(403);",
 							"});",
 							"",
-							"pm.test(\"Body matches string\", function () {",
+							"pm.test(\"403 returns expected response body\", function () {",
 							"    pm.expect(pm.response.text()).to.include(\"User is not authorized to access this resource with an explicit deny\");",
 							"});"
 						],
@@ -185,11 +185,11 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
+							"pm.test(\"Status code is 403\", function () {",
 							"    pm.response.to.have.status(403);",
 							"});",
 							"",
-							"pm.test(\"Body matches string\", function () {",
+							"pm.test(\"403 returns expected response body\", function () {",
 							"    pm.expect(pm.response.text()).to.include(\"User is not authorized to access this resource with an explicit deny\");",
 							"});"
 						],
