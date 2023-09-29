@@ -1,0 +1,426 @@
+{
+	"info": {
+		"_postman_id": "26b6d710-07c5-4e9e-8f29-7fa148b88488",
+		"name": "API Authorization Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20133660"
+	},
+	"item": [
+		{
+			"name": "Get Submissions by application form ID for funding organisation 1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Valid API Key for funding organisation 1 returns submission data for a specific GGIS ID where that GGID ID belongs to the department associated with the API Key(funding organisation 1)\", function () {",
+							"   ",
+							"    const responseData = pm.response.json();",
+							"    const applications = responseData.applications;",
+							"    const  submission1 = applications[0].submissions[0];",
+							"    const  submission2 = applications[0].submissions[1];  ",
+							"",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(applications).to.have.length(1);",
+							"    pm.expect(applications[0].submissions).to.have.length(2)",
+							"    pm.expect(submission1.submissionId).to.equal(\"3a6cfe2d-bf58-440d-9e07-3579c7dcf207\");",
+							"    pm.expect(submission2.submissionId).to.equal(\"3a6cfe2d-bf58-440d-9e07-3579c7dcf150\");",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{VALID_API_KEY_FUNDING_1}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/open-data/submissions/{{GGIS_ID_FUNDER_1}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"open-data",
+						"submissions",
+						"{{GGIS_ID_FUNDER_1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Submissions by application form ID with apiKey for funding organisation 2",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Valid API Key for funding organisation 2 does not return any submission data for a specific GGIS ID where that GGIS ID belongs to other departments(funding organisation 1) not associated with the API Key\", function () {",
+							"    const responseData = pm.response.text();",
+							"",
+							"    pm.expect(pm.response.code).to.equal(404);",
+							"    pm.expect(responseData).to.include(\"No applications found for this funding organisation with GGIS identifier\")",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{VALID_API_KEY_FUNDING_2}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/open-data/submissions/{{GGIS_ID_FUNDER_1}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"open-data",
+						"submissions",
+						"{{GGIS_ID_FUNDER_1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Submissions by application form ID with apiKey for funding organisation 1 where ggsId is long and not existant in our db",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Invalid data provided as a GGIS ID (ie a long string) returns an error and does not expose any data\", function () {",
+							"    const responseData = pm.response.text();",
+							"",
+							"    pm.expect(pm.response.code).to.equal(404);",
+							"    pm.expect(responseData).to.include(\"No applications found for this funding organisation with GGIS identifier\")",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{VALID_API_KEY_FUNDING_2}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/open-data/submissions/aVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLongGGISIdWhichDoesNotExistInOurDatabase",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"open-data",
+						"submissions",
+						"aVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLongGGISIdWhichDoesNotExistInOurDatabase"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Submissions by application form ID with apiKey for funding organisation 1 where ggsId is an sql Statement",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Invalid data provided as a GGIS ID (ie a long string) returns an error and does not expose any data\", function () {",
+							"    const responseData = pm.response.text();",
+							"",
+							"    pm.expect(pm.response.code).to.equal(403);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{VALID_API_KEY_FUNDING_2}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/open-data/submissions/Select * from gap_users;",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"open-data",
+						"submissions",
+						"Select * from gap_users;"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All Submissions for funding organisation 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Valid API Key returns all submission data for the department associated with the API Key\", function () {",
+							"   ",
+							"    const responseData = pm.response.json();",
+							"    const applications = responseData.applications;",
+							"    const  submission1 = applications[0].submissions[0];",
+							"    const  submission2 = applications[0].submissions[1];  ",
+							"",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(applications).to.have.length(1);",
+							"    pm.expect(applications[0].submissions).to.have.length(2)",
+							"    pm.expect(submission1.submissionId).to.equal(\"3a6cfe2d-bf58-440d-9e07-3579c7dcf207\");",
+							"    pm.expect(submission2.submissionId).to.equal(\"3a6cfe2d-bf58-440d-9e07-3579c7dcf150\");",
+							"",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{VALID_API_KEY_FUNDING_1}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/open-data/submissions",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"open-data",
+						"submissions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All Submissions with apiKey for funding organisation 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Valid API Key for funding organisation 2 does not return any submission data for other departments not associated with the API Key(funding organisation 1)\", function () {",
+							"    const responseData = pm.response.text();",
+							"",
+							"    pm.expect(pm.response.code).to.equal(404);",
+							"    pm.expect(responseData).to.include(\"No applications found for this funding organisation\")",
+							"",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{VALID_API_KEY_FUNDING_2}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/open-data/submissions",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"open-data",
+						"submissions"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "in",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "value",
+				"value": "{{API_KEY}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "x-api-key",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host-name",
+			"value": "http://host.docker.internal:8080",
+			"disabled": true
+		},
+		{
+			"key": "hostname",
+			"value": "{{hostname}}",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "GGIS_ID_FUNDER_1",
+			"value": "SCH-000003589"
+		},
+		{
+			"key": "GGIS_ID_FUNDER_2",
+			"value": "SCH-000002023"
+		}
+	]
+}
