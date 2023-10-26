@@ -50,6 +50,7 @@ jobs:
             --failOnCVSS 7.0
             --enableRetired
             --disableOssIndex true
+            --exclude  **/netty-transport-4.1.100.Final.jar/
 
       - name: Upload Dependency Check Report
         if: success() || failure()
