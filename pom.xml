@@ -133,10 +133,7 @@
 				<configuration>
 					<failBuildOnCVSS>7.0</failBuildOnCVSS>
 					<ossindexAnalyzerEnabled>false</ossindexAnalyzerEnabled>
-					<excludes>
-						<groupId>io.netty</groupId>
-						<artifactId>netty-transport</artifactId>
-					</excludes>
+					<suppressionFile>dependency-check-suppression.xml</suppressionFile>
 				</configuration>
 				<executions>
 					<execution>
