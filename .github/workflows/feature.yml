@@ -50,7 +50,7 @@ jobs:
             --failOnCVSS 7.0
             --enableRetired
             --disableOssIndex true
-            --suppression "../../dependency-check-suppression.xml"
+            --suppression "/dependency-check-suppression.xml"
 
       - name: Upload Dependency Check Report
         if: success() || failure()
