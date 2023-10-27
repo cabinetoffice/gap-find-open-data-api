@@ -21,13 +21,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: TEST - filespace
-        run: ls ${{github.workspace}}
-
       - name: Checkout API
         uses: actions/checkout@v3
         with:
           path: api
+
+      - name: TEST - filespace
+        run: ls ${{github.workspace}}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
