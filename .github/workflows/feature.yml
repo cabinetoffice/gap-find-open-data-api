@@ -21,6 +21,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: TEST - filespace
+        run: ls .
+
       - name: Checkout API
         uses: actions/checkout@v3
         with:
@@ -48,9 +51,9 @@ jobs:
           format: "HTML"
           args: >
             --failOnCVSS 7.0
+            --suppress ${{github.workspace}}/api/dependency-check-suppression.xml
             --enableRetired
             --disableOssIndex true
-            --suppress ${{github.workspace}}/api/dependency-check-suppression.xml
 
       - name: Upload Dependency Check Report
         if: success() || failure()
