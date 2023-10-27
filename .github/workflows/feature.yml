@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: TEST - filespace
-        run: ls ./api && cd ./api && pwd
+        run: cd api && pwd
 
       - name: Checkout API
         uses: actions/checkout@v3
