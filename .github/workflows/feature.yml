@@ -27,7 +27,7 @@ jobs:
           path: api
 
       - name: TEST - filespace
-        run: ls ./api
+        run: cat ./api/dependency-check-suppression.xml && echo "file present"
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -51,7 +51,7 @@ jobs:
           format: "HTML"
           args: >
             --failOnCVSS 7.0
-            --suppress ${{github.workspace}}/api/dependency-check-suppression.xml
+            --suppress ./api/dependency-check-suppression.xml
             --enableRetired
             --disableOssIndex true
 
