@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: TEST - filespace
-        run: ls .
+        run: ls && pwd
 
       - name: Checkout API
         uses: actions/checkout@v3
