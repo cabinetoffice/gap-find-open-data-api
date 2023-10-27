@@ -37,8 +37,8 @@ jobs:
         working-directory: ./api
         run: mvn -B package --file pom.xml -DskipTests
 
-      - name: TEST - List files in Workspace
-        run: ls ${{github.workspace}}/api && cat ${{github.workspace}}/api/dependency-check-suppression.xml
+      - name: TEST - Run dependency check command
+        run: dependency-check --project "gap-find-open-data-api" --scan . --failOnCVSS 7.0 --suppression "${{github.workspace}}/api/dependency-check-suppression.xml"
 
       - name: Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
@@ -53,7 +53,7 @@ jobs:
             --failOnCVSS 7.0
             --enableRetired
             --disableOssIndex true
-            --suppression "${{github.workspace}}/api/dependency-check-suppression.xml"
+            --suppressionFiles "${{github.workspace}}/api/dependency-check-suppression.xml"
 
       - name: Upload Dependency Check Report
         if: success() || failure()
