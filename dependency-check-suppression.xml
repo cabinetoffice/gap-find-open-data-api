@@ -5,7 +5,6 @@
       Suppressing netty-transport-4.1.100.Final.jar CVE-2023-4586 as we need to wait for Netty5 to release.
       ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.netty/netty\-transport@.*$</packageUrl>
-        <cpe>cpe:/a:netty:netty</cpe>
         <cve>CVE-2023-4586</cve>
     </suppress>
 
@@ -14,7 +13,6 @@
    Suppressing netty-transport-classes-epoll-4.1.100.Final.jar CVE-2023-4586 as we need to wait for Netty5 to release.
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.netty/netty\-transport\-classes\-epoll@.*$</packageUrl>
-        <cpe>cpe:/a:netty:netty</cpe>
         <cve>CVE-2023-4586</cve>
     </suppress>
 
@@ -23,7 +21,6 @@
    Suppressing netty-transport-native-unix-common-4.1.100.Final.jar CVE-2023-4586 as we need to wait for Netty5 to release.
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.netty/netty\-transport\-native\-unix\-common@.*$</packageUrl>
-        <cpe>cpe:/a:netty:netty</cpe>
         <cve>CVE-2023-4586</cve>
     </suppress>
 
@@ -32,7 +29,6 @@
    Suppressing netty-codec-4.1.100.Final.jar CVE-2023-4586 as we need to wait for Netty5 to release.
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.netty/netty\-codec@.*$</packageUrl>
-        <cpe>cpe:/a:netty:netty</cpe>
         <cve>CVE-2023-4586</cve>
     </suppress>
 
@@ -41,7 +37,6 @@
    Suppressing netty-buffer-4.1.100.Final.jar CVE-2023-4586 as we need to wait for Netty5 to release.
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.netty/netty\-buffer@.*$</packageUrl>
-        <cpe>cpe:/a:netty:netty</cpe>
         <cve>CVE-2023-4586</cve>
     </suppress>
 
@@ -50,7 +45,6 @@
    Suppressing netty-common-4.1.100.Final.jar CVE-2023-4586 as we need to wait for Netty5 to release.
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.netty/netty\-common@.*$</packageUrl>
-        <cpe>cpe:/a:netty:netty</cpe>
         <cve>CVE-2023-4586</cve>
     </suppress>
 
@@ -59,7 +53,6 @@
    Suppressing netty-handler-4.1.100.Final.jar CVE-2023-4586 as we need to wait for Netty5 to release.
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.netty/netty\-handler@.*$</packageUrl>
-        <cpe>cpe:/a:netty:netty</cpe>
         <cve>CVE-2023-4586</cve>
     </suppress>
 
@@ -68,7 +61,6 @@
    Suppressing netty-resolver-4.1.100.Final.jar CVE-2023-4586 as we need to wait for Netty5 to release.
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.netty/netty\-resolver@.*$</packageUrl>
-        <cpe>cpe:/a:netty:netty</cpe>
         <cve>CVE-2023-4586</cve>
     </suppress>
 
@@ -77,7 +69,6 @@
    Suppressing netty-codec-http-4.1.100.Final.jar CVE-2023-4586 as we need to wait for Netty5 to release.
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.netty/netty\-codec\-http@.*$</packageUrl>
-        <cpe>cpe:/a:netty:netty</cpe>
         <cve>CVE-2023-4586</cve>
     </suppress>
 
@@ -86,7 +77,6 @@
    Suppressing netty-codec-http2-4.1.100.Final.jar CVE-2023-4586 as we need to wait for Netty5 to release.
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/io\.netty/netty\-codec\-http2@.*$</packageUrl>
-        <cpe>cpe:/a:netty:netty</cpe>
         <cve>CVE-2023-4586</cve>
     </suppress>
 </suppressions>
