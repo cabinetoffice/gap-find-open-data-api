@@ -27,7 +27,7 @@ jobs:
           path: api
 
       - name: TEST - filespace
-        run: ls ${{github.workspace}}
+        run: ls
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
