@@ -8,14 +8,18 @@ import gov.cabinetoffice.api.exceptions.SubmissionNotFoundException;
 import gov.cabinetoffice.api.mappers.SubmissionMapper;
 import gov.cabinetoffice.api.repositories.SubmissionJDBCRepository;
 import gov.cabinetoffice.api.repositories.SubmissionRepository;
+
 import static gov.cabinetoffice.api.test_data_generator.RandomSubmissionGenerator.randomSubmission;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
 import static org.mockito.Mockito.*;
+
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -25,14 +29,14 @@ class SubmissionsServiceTest {
 
 	@Mock
 	private SubmissionRepository submissionRepository;
-
 	@Mock
 	private SubmissionJDBCRepository submissionJDBCRepository;
-
 	@Mock
 	private SubmissionMapper submissionMapper;
+
 	@InjectMocks
 	private SubmissionsService submissionsService;
+
 	private final int FUNDING_ORG_ID = 1;
 	private final int APPLICATION_ID = 1234;
 	private final String GGIS_REFERENCE_NUMBER = "SCH-000003589";

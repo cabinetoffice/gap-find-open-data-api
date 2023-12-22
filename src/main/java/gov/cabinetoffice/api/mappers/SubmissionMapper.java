@@ -17,7 +17,8 @@ import static java.lang.Integer.parseInt;
 public interface SubmissionMapper {
 
 	@Mapping(source = "id", target = "submissionId")
-	@Mapping(source = "scheme.email", target = "grantApplicantEmailAddress") //TODO fetch the applicant email from the database after one login work completes - this is not the correct value
+    //TODO fetch the applicant email from the database after one login work completes - this is not the correct value
+	@Mapping(source = "scheme.email", target = "grantApplicantEmailAddress")
 	@Mapping(source = "submittedDate", target = "submittedTimeStamp")
 	@Mapping(source = "definition.sections", target = "sections", qualifiedByName = "mapSections")
 	SubmissionDTO submissionToSubmissionDto(Submission submission);
@@ -43,16 +44,16 @@ public interface SubmissionMapper {
 		return submissionQuestions.stream().map(this::submissionQuestionToSubmissionQuestionDto).toList();
 	}
 
-	default SubmissionQuestionDTO submissionQuestionToSubmissionQuestionDto(SubmissionQuestion submissionQuestion) {
-		Object questionResponse;
-		final String response = submissionQuestion.getResponse();
-		final String[] multiResponse = submissionQuestion.getMultiResponse();
-		final SubmissionQuestionDTO submissionQuestionDTO = SubmissionQuestionDTO.builder()
-			.questionId(submissionQuestion.getQuestionId())
-			.questionTitle(submissionQuestion.getFieldTitle())
-			.build();
-		if (response == null && multiResponse == null)
-			return submissionQuestionDTO;
+    default SubmissionQuestionDTO submissionQuestionToSubmissionQuestionDto(SubmissionQuestion submissionQuestion) {
+        Object questionResponse;
+        final String response = submissionQuestion.getResponse();
+        final String[] multiResponse = submissionQuestion.getMultiResponse();
+        final SubmissionQuestionDTO submissionQuestionDTO = SubmissionQuestionDTO.builder()
+                .questionId(submissionQuestion.getQuestionId())
+                .questionTitle(submissionQuestion.getFieldTitle())
+                .build();
+        if (response == null && multiResponse == null)
+            return submissionQuestionDTO;
 
 		questionResponse = getQuestionResponseByResponseType(submissionQuestion);
 		submissionQuestionDTO.setQuestionResponse(questionResponse);
@@ -86,13 +87,13 @@ public interface SubmissionMapper {
 		}
 	}
 
-	default AddressDTO buildAddress(String[] multiResponse) {
-		return AddressDTO.builder()
-			.addressLine1(multiResponse[0])
-			.addressLine2(multiResponse[1])
-			.town(multiResponse[2])
-			.county(multiResponse[3])
-			.postcode(multiResponse[4])
-			.build();
-	}
+    default AddressDTO buildAddress(String[] multiResponse) {
+        return AddressDTO.builder()
+                .addressLine1(multiResponse[0])
+                .addressLine2(multiResponse[1])
+                .town(multiResponse[2])
+                .county(multiResponse[3])
+                .postcode(multiResponse[4])
+                .build();
+    }
 }

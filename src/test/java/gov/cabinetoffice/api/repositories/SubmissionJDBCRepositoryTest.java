@@ -4,16 +4,22 @@ import gov.cabinetoffice.api.dtos.submission.ApplicationDTO;
 import gov.cabinetoffice.api.dtos.submission.ApplicationListDTO;
 import gov.cabinetoffice.api.exceptions.SubmissionNotFoundException;
 import gov.cabinetoffice.api.rowmappers.ApplicationDTORowMapper;
+
 import static org.assertj.core.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EmptySource;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
 import static org.mockito.Mockito.when;
+
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;

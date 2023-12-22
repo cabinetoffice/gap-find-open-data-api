@@ -26,10 +26,10 @@ public class RandomSubmissionGenerator {
 	public static SubmissionDefinition.SubmissionDefinitionBuilder randomSubmissionDefinition(
 			SubmissionDefinition submissionDefinition) {
 
-		final List<SubmissionSection> submissionSectionList = submissionDefinition.getSections()
-			.stream()
-			.map(section -> randomSubmissionSection(section).build())
-			.toList();
+        final List<SubmissionSection> submissionSectionList = submissionDefinition.getSections()
+                .stream()
+                .map(section -> randomSubmissionSection(section).build())
+                .toList();
 
 		return SubmissionDefinition.builder().sections(submissionSectionList);
 
@@ -44,16 +44,16 @@ public class RandomSubmissionGenerator {
 	public static SubmissionSection.SubmissionSectionBuilder randomSubmissionSection(
 			SubmissionSection submissionSection) {
 
-		final List<SubmissionQuestion> submissionQuestionList = submissionSection.getQuestions()
-			.stream()
-			.map(question -> randomSubmissionQuestion(question).build())
-			.toList();
+        final List<SubmissionQuestion> submissionQuestionList = submissionSection.getQuestions()
+                .stream()
+                .map(question -> randomSubmissionQuestion(question).build())
+                .toList();
 
-		return SubmissionSection.builder()
-			.sectionId(submissionSection.getSectionId())
-			.sectionStatus(submissionSection.getSectionStatus())
-			.sectionTitle(submissionSection.getSectionTitle())
-			.questions(submissionQuestionList);
+        return SubmissionSection.builder()
+                .sectionId(submissionSection.getSectionId())
+                .sectionStatus(submissionSection.getSectionStatus())
+                .sectionTitle(submissionSection.getSectionTitle())
+                .questions(submissionQuestionList);
 
 	}
 
@@ -65,20 +65,20 @@ public class RandomSubmissionGenerator {
 
 	public static SubmissionQuestion.SubmissionQuestionBuilder randomSubmissionQuestion(SubmissionQuestion question) {
 
-		return SubmissionQuestion.builder()
-			.questionId(question.getQuestionId())
-			.profileField(question.getProfileField())
-			.fieldTitle(question.getFieldTitle())
-			.hintText(question.getHintText())
-			.questionSuffix(question.getQuestionSuffix())
-			.adminSummary(question.getAdminSummary())
-			.validation(question.getValidation())
-			.displayText(question.getDisplayText())
-			.fieldPrefix(question.getFieldPrefix())
-			.responseType(question.getResponseType())
-			.options(question.getOptions())
-			.response(question.getResponse())
-			.multiResponse(question.getMultiResponse());
-	}
+        return SubmissionQuestion.builder()
+                .questionId(question.getQuestionId())
+                .profileField(question.getProfileField())
+                .fieldTitle(question.getFieldTitle())
+                .hintText(question.getHintText())
+                .questionSuffix(question.getQuestionSuffix())
+                .adminSummary(question.getAdminSummary())
+                .validation(question.getValidation())
+                .displayText(question.getDisplayText())
+                .fieldPrefix(question.getFieldPrefix())
+                .responseType(question.getResponseType())
+                .options(question.getOptions())
+                .response(question.getResponse())
+                .multiResponse(question.getMultiResponse());
+    }
 
 }

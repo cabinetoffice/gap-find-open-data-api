@@ -56,161 +56,161 @@ class SubmissionMapperTest {
 
 	final String SECTION_TITLE_2 = "Project Status";
 
-	final SchemeEntity scheme = SchemeEntity.builder()
-		.id(1)
-		.version(1)
-		.funderId(1)
-		.lastUpdated(instant)
-		.email("test@and.digital")
-		.name("Test Scheme")
-		.ggisIdentifier("Test GGIS Identifier")
-		.build();
+    final SchemeEntity scheme = SchemeEntity.builder()
+            .id(1)
+            .version(1)
+            .funderId(1)
+            .lastUpdated(instant)
+            .email("test@and.digital")
+            .name("Test Scheme")
+            .ggisIdentifier("Test GGIS Identifier")
+            .build();
 
-	final ApplicationFormEntity application = ApplicationFormEntity.builder()
-		.grantApplicationId(APPLICATION_ID)
-		.applicationName("Test Application")
-		.created(instant)
-		.lastUpdated(instant)
-		.definition(new ApplicationDefinition())
-		.grantSchemeId(scheme.getId())
-		.version(1)
-		.lastUpdateBy(1)
-		.build();
+    final ApplicationFormEntity application = ApplicationFormEntity.builder()
+            .grantApplicationId(APPLICATION_ID)
+            .applicationName("Test Application")
+            .created(instant)
+            .lastUpdated(instant)
+            .definition(new ApplicationDefinition())
+            .grantSchemeId(scheme.getId())
+            .version(1)
+            .lastUpdateBy(1)
+            .build();
 
-	final SubmissionQuestion question1 = SubmissionQuestion.builder()
-		.questionId(QUESTION_ID_1)
-		.profileField("ORG_NAME")
-		.fieldTitle("Enter the name of your organisation")
-		.hintText(
-				"This is the official name of your organisation. It could be the name that is registered with Companies House or the Charities Commission")
-		.responseType(ResponseTypeEnum.ShortAnswer)
-		.response("organisationName")
-		.validation(SubmissionQuestionValidation.builder().mandatory(true).minLength(2).maxLength(250).build())
-		.build();
+    final SubmissionQuestion question1 = SubmissionQuestion.builder()
+            .questionId(QUESTION_ID_1)
+            .profileField("ORG_NAME")
+            .fieldTitle("Enter the name of your organisation")
+            .hintText(
+                    "This is the official name of your organisation. It could be the name that is registered with Companies House or the Charities Commission")
+            .responseType(ResponseTypeEnum.ShortAnswer)
+            .response("organisationName")
+            .validation(SubmissionQuestionValidation.builder().mandatory(true).minLength(2).maxLength(250).build())
+            .build();
 
-	final SubmissionQuestionDTO questionDTO1 = SubmissionQuestionDTO.builder()
-		.questionId(question1.getQuestionId())
-		.questionTitle(question1.getFieldTitle())
-		.questionResponse(question1.getResponse())
-		.build();
+    final SubmissionQuestionDTO questionDTO1 = SubmissionQuestionDTO.builder()
+            .questionId(question1.getQuestionId())
+            .questionTitle(question1.getFieldTitle())
+            .questionResponse(question1.getResponse())
+            .build();
 
 	final String[] address = { "addressLine1", "addressLine2", "town", "county", "postcode" };
 
-	final SubmissionQuestion question2 = SubmissionQuestion.builder()
-		.questionId(QUESTION_ID_2)
-		.profileField("ORG_ADDRESS")
-		.fieldTitle("Enter your organisation's address")
-		.responseType(ResponseTypeEnum.AddressInput)
-		.multiResponse(address)
-		.validation(SubmissionQuestionValidation.builder().mandatory(true).build())
-		.build();
+    final SubmissionQuestion question2 = SubmissionQuestion.builder()
+            .questionId(QUESTION_ID_2)
+            .profileField("ORG_ADDRESS")
+            .fieldTitle("Enter your organisation's address")
+            .responseType(ResponseTypeEnum.AddressInput)
+            .multiResponse(address)
+            .validation(SubmissionQuestionValidation.builder().mandatory(true).build())
+            .build();
 
-	final SubmissionQuestion question3 = SubmissionQuestion.builder()
-		.questionId(QUESTION_ID_3)
-		.profileField("ORG_COMPANIES_HOUSE")
-		.fieldTitle("Does your organisation have a Companies House number?")
-		.hintText(
-				"Funding organisation might use this to identify your organisation when you apply for a grant. It might also be used to check your organisation is legitimate.")
-		.responseType(ResponseTypeEnum.YesNo)
-		.response("yes")
-		.validation(SubmissionQuestionValidation.builder().minLength(5).maxLength(100).build())
-		.build();
+    final SubmissionQuestion question3 = SubmissionQuestion.builder()
+            .questionId(QUESTION_ID_3)
+            .profileField("ORG_COMPANIES_HOUSE")
+            .fieldTitle("Does your organisation have a Companies House number?")
+            .hintText(
+                    "Funding organisation might use this to identify your organisation when you apply for a grant. It might also be used to check your organisation is legitimate.")
+            .responseType(ResponseTypeEnum.YesNo)
+            .response("yes")
+            .validation(SubmissionQuestionValidation.builder().minLength(5).maxLength(100).build())
+            .build();
 
-	final SubmissionSection section1 = SubmissionSection.builder()
-		.sectionId(SECTION_ID_1)
-		.sectionTitle(SECTION_TITLE_1)
-		.sectionStatus(String.valueOf(SubmissionSectionStatus.IN_PROGRESS))
-		.questions(List.of(question1, question2, question3))
-		.build();
+    final SubmissionSection section1 = SubmissionSection.builder()
+            .sectionId(SECTION_ID_1)
+            .sectionTitle(SECTION_TITLE_1)
+            .sectionStatus(String.valueOf(SubmissionSectionStatus.IN_PROGRESS))
+            .questions(List.of(question1, question2, question3))
+            .build();
 
-	final SubmissionQuestionDTO questionDTO3 = SubmissionQuestionDTO.builder()
-		.questionId(question3.getQuestionId())
-		.questionTitle(question3.getFieldTitle())
-		.questionResponse(question3.getResponse())
-		.build();
+    final SubmissionQuestionDTO questionDTO3 = SubmissionQuestionDTO.builder()
+            .questionId(question3.getQuestionId())
+            .questionTitle(question3.getFieldTitle())
+            .questionResponse(question3.getResponse())
+            .build();
 
-	final SubmissionQuestion question4 = SubmissionQuestion.builder()
-		.questionId(QUESTION_ID_4)
-		.fieldTitle(
-				"Description of the project, please include information regarding public accessibility (see GOV.UK guidance for a definition of public access) to the newly planted trees")
-		.hintText("Optional additional helptext")
-		.responseType(ResponseTypeEnum.LongAnswer)
-		.validation(SubmissionQuestionValidation.builder()
-			.mandatory(true)
-			.minLength(100)
-			.maxLength(2000)
-			.minWords(50)
-			.maxWords(400)
-			.build())
-		.response("description of the project")
-		.build();
+    final SubmissionQuestion question4 = SubmissionQuestion.builder()
+            .questionId(QUESTION_ID_4)
+            .fieldTitle(
+                    "Description of the project, please include information regarding public accessibility (see GOV.UK guidance for a definition of public access) to the newly planted trees")
+            .hintText("Optional additional helptext")
+            .responseType(ResponseTypeEnum.LongAnswer)
+            .validation(SubmissionQuestionValidation.builder()
+                    .mandatory(true)
+                    .minLength(100)
+                    .maxLength(2000)
+                    .minWords(50)
+                    .maxWords(400)
+                    .build())
+            .response("description of the project")
+            .build();
 
-	final SubmissionSection section2 = SubmissionSection.builder()
-		.sectionId(SECTION_ID_2)
-		.sectionTitle(SECTION_TITLE_2)
-		.sectionStatus(String.valueOf(SubmissionSectionStatus.IN_PROGRESS))
-		.questions(List.of(question4))
-		.build();
+    final SubmissionSection section2 = SubmissionSection.builder()
+            .sectionId(SECTION_ID_2)
+            .sectionTitle(SECTION_TITLE_2)
+            .sectionStatus(String.valueOf(SubmissionSectionStatus.IN_PROGRESS))
+            .questions(List.of(question4))
+            .build();
 
-	final SubmissionDefinition definition = SubmissionDefinition.builder()
-		.sections(List.of(section1, section2))
-		.build();
+    final SubmissionDefinition definition = SubmissionDefinition.builder()
+            .sections(List.of(section1, section2))
+            .build();
 
-	final SubmissionQuestionDTO questionDTO4 = SubmissionQuestionDTO.builder()
-		.questionId(question4.getQuestionId())
-		.questionTitle(question4.getFieldTitle())
-		.questionResponse(question4.getResponse())
-		.build();
+    final SubmissionQuestionDTO questionDTO4 = SubmissionQuestionDTO.builder()
+            .questionId(question4.getQuestionId())
+            .questionTitle(question4.getFieldTitle())
+            .questionResponse(question4.getResponse())
+            .build();
 
-	final SubmissionSectionDTO submissionSectionDTO2 = SubmissionSectionDTO.builder()
-		.sectionId(SECTION_ID_2)
-		.sectionTitle(SECTION_TITLE_2)
-		.questions(List.of(questionDTO4))
-		.build();
+    final SubmissionSectionDTO submissionSectionDTO2 = SubmissionSectionDTO.builder()
+            .sectionId(SECTION_ID_2)
+            .sectionTitle(SECTION_TITLE_2)
+            .questions(List.of(questionDTO4))
+            .build();
 
-	final AddressDTO addressDTO = AddressDTO.builder()
-		.addressLine1(address[0])
-		.addressLine2(address[1])
-		.town(address[2])
-		.county(address[3])
-		.postcode(address[4])
-		.build();
+    final AddressDTO addressDTO = AddressDTO.builder()
+            .addressLine1(address[0])
+            .addressLine2(address[1])
+            .town(address[2])
+            .county(address[3])
+            .postcode(address[4])
+            .build();
 
-	final SubmissionQuestionDTO questionDTO2 = SubmissionQuestionDTO.builder()
-		.questionId(question2.getQuestionId())
-		.questionTitle(question2.getFieldTitle())
-		.questionResponse(addressDTO)
-		.build();
+    final SubmissionQuestionDTO questionDTO2 = SubmissionQuestionDTO.builder()
+            .questionId(question2.getQuestionId())
+            .questionTitle(question2.getFieldTitle())
+            .questionResponse(addressDTO)
+            .build();
 
-	final SubmissionSectionDTO submissionSectionDTO1 = SubmissionSectionDTO.builder()
-		.sectionId(SECTION_ID_1)
-		.sectionTitle(SECTION_TITLE_1)
-		.questions(List.of(questionDTO1, questionDTO2, questionDTO3))
-		.build();
+    final SubmissionSectionDTO submissionSectionDTO1 = SubmissionSectionDTO.builder()
+            .sectionId(SECTION_ID_1)
+            .sectionTitle(SECTION_TITLE_1)
+            .questions(List.of(questionDTO1, questionDTO2, questionDTO3))
+            .build();
 
 	final String[] date = { "01", "12", "1987" };
 
 	private final UUID SUBMISSION_ID = UUID.fromString("1c2eabf0-b33c-433a-b00f-e73d8efca929");
 
-	final Submission submission = Submission.builder()
-		.id(SUBMISSION_ID)
-		.scheme(scheme)
-		.application(application)
-		.version(1)
-		.created(timestamp)
-		.lastUpdated(timestamp)
-		.applicationName("Test Submission")
-		.status(SubmissionStatus.IN_PROGRESS)
-		.definition(definition)
-		.submittedDate(zonedDateTime)
-		.build();
+    final Submission submission = Submission.builder()
+            .id(SUBMISSION_ID)
+            .scheme(scheme)
+            .application(application)
+            .version(1)
+            .created(timestamp)
+            .lastUpdated(timestamp)
+            .applicationName("Test Submission")
+            .status(SubmissionStatus.IN_PROGRESS)
+            .definition(definition)
+            .submittedDate(zonedDateTime)
+            .build();
 
-	final SubmissionDTO submissionDTO = SubmissionDTO.builder()
-		.submissionId(SUBMISSION_ID)
-		.submittedTimeStamp(zonedDateTime)
-		.grantApplicantEmailAddress(scheme.getEmail())
-		.sections(List.of(submissionSectionDTO1, submissionSectionDTO2))
-		.build();
+    final SubmissionDTO submissionDTO = SubmissionDTO.builder()
+            .submissionId(SUBMISSION_ID)
+            .submittedTimeStamp(zonedDateTime)
+            .grantApplicantEmailAddress(scheme.getEmail())
+            .sections(List.of(submissionSectionDTO1, submissionSectionDTO2))
+            .build();
 
 	private final SubmissionMapper submissionMapper = Mappers.getMapper(SubmissionMapper.class);
 
@@ -226,22 +226,22 @@ class SubmissionMapperTest {
 		assertThat(result).isNull();
 	}
 
-	@Test
-	void submissionToSubmissionDto_GrantAdminEmailAddress_isNull_IfSubmissionSchemeIsNull() {
-		final Submission submission = Submission.builder()
-				.definition(SubmissionDefinition.builder().build())
-				.build();
-		SubmissionDTO result = submissionMapper.submissionToSubmissionDto(submission);
-		assertThat(result.getGrantApplicantEmailAddress()).isNull();
-	}
+    @Test
+    void submissionToSubmissionDto_GrantAdminEmailAddress_isNull_IfSubmissionSchemeIsNull() {
+        final Submission submission = Submission.builder()
+                .definition(SubmissionDefinition.builder().build())
+                .build();
+        SubmissionDTO result = submissionMapper.submissionToSubmissionDto(submission);
+        assertThat(result.getGrantApplicantEmailAddress()).isNull();
+    }
 
-	@Test
-	void submissionToSubmissionDto_GrantAdminEmailAddress_isNull_IfSubmissionSchemeEmailAddressIsNull() {
-		final SchemeEntity scheme = SchemeEntity.builder().build();
-		final Submission submission = Submission.builder()
-				.definition(SubmissionDefinition.builder().build())
-				.scheme(scheme)
-				.build();
+    @Test
+    void submissionToSubmissionDto_GrantAdminEmailAddress_isNull_IfSubmissionSchemeEmailAddressIsNull() {
+        final SchemeEntity scheme = SchemeEntity.builder().build();
+        final Submission submission = Submission.builder()
+                .definition(SubmissionDefinition.builder().build())
+                .scheme(scheme)
+                .build();
 
 		final SubmissionDTO result = submissionMapper.submissionToSubmissionDto(submission);
 
@@ -266,19 +266,19 @@ class SubmissionMapperTest {
 		assertThat(result).isNull();
 	}
 
-	@Test
-	void submissionSectionListToSubmissionSectionDtoList() {
-		List<SubmissionSectionDTO> result = submissionMapper
-			.submissionSectionListToSubmissionSectionDtoList(submission.getDefinition().getSections());
-		assertThat(result).isEqualTo(List.of(submissionSectionDTO1, submissionSectionDTO2));
-	}
+    @Test
+    void submissionSectionListToSubmissionSectionDtoList() {
+        List<SubmissionSectionDTO> result = submissionMapper
+                .submissionSectionListToSubmissionSectionDtoList(submission.getDefinition().getSections());
+        assertThat(result).isEqualTo(List.of(submissionSectionDTO1, submissionSectionDTO2));
+    }
 
-	@Test
-	void submissionQuestionListToSubmissionQuestionDtoList() {
-		List<SubmissionQuestionDTO> result = submissionMapper
-			.submissionQuestionListToSubmissionQuestionDtoList(section1.getQuestions());
-		assertThat(result).isEqualTo(List.of(questionDTO1, questionDTO2, questionDTO3));
-	}
+    @Test
+    void submissionQuestionListToSubmissionQuestionDtoList() {
+        List<SubmissionQuestionDTO> result = submissionMapper
+                .submissionQuestionListToSubmissionQuestionDtoList(section1.getQuestions());
+        assertThat(result).isEqualTo(List.of(questionDTO1, questionDTO2, questionDTO3));
+    }
 
 	@Test
 	void submissionQuestionToSubmissionQuestionDto() {
@@ -286,25 +286,25 @@ class SubmissionMapperTest {
 		assertThat(result).isEqualTo(questionDTO1);
 	}
 
-	@Test
-	void submissionQuestionToSubmissionQuestionDto_HandlesNullValues() {
-		final String questionTitle = "Enter the name of your organisation";
-		final SubmissionQuestion question1 = SubmissionQuestion.builder()
-				.questionId(QUESTION_ID_1)
-				.profileField("ORG_NAME")
-				.fieldTitle(questionTitle)
-				.hintText(
-						"This is the official name of your organisation. It could be the name that is registered with Companies House or the Charities Commission")
-				.responseType(ResponseTypeEnum.ShortAnswer)
-				.response(null)
-				.multiResponse(null)
-				.validation(SubmissionQuestionValidation.builder().mandatory(true).minLength(2).maxLength(250).build())
-				.build();
+    @Test
+    void submissionQuestionToSubmissionQuestionDto_HandlesNullValues() {
+        final String questionTitle = "Enter the name of your organisation";
+        final SubmissionQuestion question1 = SubmissionQuestion.builder()
+                .questionId(QUESTION_ID_1)
+                .profileField("ORG_NAME")
+                .fieldTitle(questionTitle)
+                .hintText(
+                        "This is the official name of your organisation. It could be the name that is registered with Companies House or the Charities Commission")
+                .responseType(ResponseTypeEnum.ShortAnswer)
+                .response(null)
+                .multiResponse(null)
+                .validation(SubmissionQuestionValidation.builder().mandatory(true).minLength(2).maxLength(250).build())
+                .build();
 
-		final SubmissionQuestionDTO dto = SubmissionQuestionDTO.builder()
-				.questionId(QUESTION_ID_1)
-				.questionTitle(questionTitle)
-				.build();
+        final SubmissionQuestionDTO dto = SubmissionQuestionDTO.builder()
+                .questionId(QUESTION_ID_1)
+                .questionTitle(questionTitle)
+                .build();
 
 		SubmissionQuestionDTO result = submissionMapper.submissionQuestionToSubmissionQuestionDto(question1);
 		assertThat(result).isEqualTo(dto);
@@ -340,80 +340,80 @@ class SubmissionMapperTest {
 		assertThat(result).isEqualTo(question4.getResponse());
 	}
 
-	@Test
-	void getQuestionResponseByResponseType__DropdownType() {
-		SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
-			.questionId("testId")
-			.responseType(ResponseTypeEnum.Dropdown)
-			.fieldTitle("Test Dropdown")
-			.response("Test Dropdown Response")
-			.build();
-		Object result = submissionMapper.getQuestionResponseByResponseType(submissionQuestion);
-		assertThat(result).isEqualTo(submissionQuestion.getResponse());
-	}
+    @Test
+    void getQuestionResponseByResponseType__DropdownType() {
+        SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
+                .questionId("testId")
+                .responseType(ResponseTypeEnum.Dropdown)
+                .fieldTitle("Test Dropdown")
+                .response("Test Dropdown Response")
+                .build();
+        Object result = submissionMapper.getQuestionResponseByResponseType(submissionQuestion);
+        assertThat(result).isEqualTo(submissionQuestion.getResponse());
+    }
 
-	@Test
-	void getQuestionResponseByResponseType__NumericType() {
-		SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
-			.questionId("testId")
-			.responseType(ResponseTypeEnum.Numeric)
-			.fieldTitle("Test Numeric")
-			.response("1")
-			.build();
-		Object result = submissionMapper.getQuestionResponseByResponseType(submissionQuestion);
-		assertThat(result).isEqualTo(submissionQuestion.getResponse());
-	}
+    @Test
+    void getQuestionResponseByResponseType__NumericType() {
+        SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
+                .questionId("testId")
+                .responseType(ResponseTypeEnum.Numeric)
+                .fieldTitle("Test Numeric")
+                .response("1")
+                .build();
+        Object result = submissionMapper.getQuestionResponseByResponseType(submissionQuestion);
+        assertThat(result).isEqualTo(submissionQuestion.getResponse());
+    }
 
-	@Test
-	void getQuestionResponseByResponseType__MultipleSelectionType() {
-		String[] multiResponse = { "a", "b", "c" };
-		SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
-			.questionId("testId")
-			.responseType(ResponseTypeEnum.MultipleSelection)
-			.fieldTitle("Test Multiple selection")
-			.multiResponse(multiResponse)
-			.build();
-		Object result = submissionMapper.getQuestionResponseByResponseType(submissionQuestion);
-		assertThat(result).isEqualTo(submissionQuestion.getMultiResponse());
-	}
+    @Test
+    void getQuestionResponseByResponseType__MultipleSelectionType() {
+        String[] multiResponse = {"a", "b", "c"};
+        SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
+                .questionId("testId")
+                .responseType(ResponseTypeEnum.MultipleSelection)
+                .fieldTitle("Test Multiple selection")
+                .multiResponse(multiResponse)
+                .build();
+        Object result = submissionMapper.getQuestionResponseByResponseType(submissionQuestion);
+        assertThat(result).isEqualTo(submissionQuestion.getMultiResponse());
+    }
 
-	@Test
-	void getQuestionResponseByResponseType__AddressType() {
-		AddressDTO addressDTO = AddressDTO.builder()
-			.addressLine1(address[0])
-			.addressLine2(address[1])
-			.town(address[2])
-			.county(address[3])
-			.postcode(address[4])
-			.build();
-		Object result = submissionMapper.getQuestionResponseByResponseType(question2);
-		assertThat(result).isEqualTo(addressDTO);
-	}
+    @Test
+    void getQuestionResponseByResponseType__AddressType() {
+        AddressDTO addressDTO = AddressDTO.builder()
+                .addressLine1(address[0])
+                .addressLine2(address[1])
+                .town(address[2])
+                .county(address[3])
+                .postcode(address[4])
+                .build();
+        Object result = submissionMapper.getQuestionResponseByResponseType(question2);
+        assertThat(result).isEqualTo(addressDTO);
+    }
 
-	@Test
-	void getQuestionResponseByResponseType__DateType() {
-		String[] date = { "01", "12", "1987" };
-		SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
-			.questionId("testId")
-			.responseType(ResponseTypeEnum.Date)
-			.fieldTitle("Test Date")
-			.multiResponse(date)
-			.build();
-		LocalDate expectedResult = LocalDate.of(1987, 12, 1);
-		Object result = submissionMapper.getQuestionResponseByResponseType(submissionQuestion);
-		assertThat(result).isEqualTo(expectedResult);
-	}
+    @Test
+    void getQuestionResponseByResponseType__DateType() {
+        String[] date = {"01", "12", "1987"};
+        SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
+                .questionId("testId")
+                .responseType(ResponseTypeEnum.Date)
+                .fieldTitle("Test Date")
+                .multiResponse(date)
+                .build();
+        LocalDate expectedResult = LocalDate.of(1987, 12, 1);
+        Object result = submissionMapper.getQuestionResponseByResponseType(submissionQuestion);
+        assertThat(result).isEqualTo(expectedResult);
+    }
 
-	@Test
-	void getQuestionResponseByResponseType__Default() {
-		SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
-			.questionId("testId")
-			.responseType(ResponseTypeEnum.SingleSelection)
-			.fieldTitle("Test singleSelection")
-			.multiResponse(date)
-			.build();
-		Object result = submissionMapper.getQuestionResponseByResponseType(submissionQuestion);
-		assertThat(result).isEqualTo("");
-	}
+    @Test
+    void getQuestionResponseByResponseType__Default() {
+        SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
+                .questionId("testId")
+                .responseType(ResponseTypeEnum.SingleSelection)
+                .fieldTitle("Test singleSelection")
+                .multiResponse(date)
+                .build();
+        Object result = submissionMapper.getQuestionResponseByResponseType(submissionQuestion);
+        assertThat(result).isEqualTo("");
+    }
 
 }
