@@ -13,8 +13,6 @@ import gov.cabinetoffice.api.models.submission.SubmissionQuestion;
 import gov.cabinetoffice.api.models.submission.SubmissionQuestionValidation;
 import gov.cabinetoffice.api.models.submission.SubmissionSection;
 import gov.cabinetoffice.api.entities.ApplicationFormEntity;
-import gov.cabinetoffice.api.entities.GrantApplicant;
-import gov.cabinetoffice.api.entities.GrantApplicantOrganisationProfile;
 import gov.cabinetoffice.api.entities.SchemeEntity;
 import gov.cabinetoffice.api.entities.Submission;
 import org.junit.jupiter.api.Test;
@@ -191,30 +189,6 @@ class SubmissionMapperTest {
 		.build();
 
 	final String[] date = { "01", "12", "1987" };
-
-	private final long APPLICANT_ID = 1;
-
-	private final long PROFILE_ID = 1;
-
-	final GrantApplicantOrganisationProfile grantApplicantOrganisationProfile = GrantApplicantOrganisationProfile
-		.builder()
-		.id(PROFILE_ID)
-		.legalName("AND Digital")
-		.charityCommissionNumber("45")
-		.companiesHouseNumber("000010")
-		.addressLine1("AND Digital")
-		.addressLine2("9 George Square")
-		.town("Glasgow")
-		.postcode("G2 1QQ")
-		.county("Renfrewshire")
-		.build();
-
-	private final String APPLICANT_USER_ID = "75ab5fbd-0682-4d3d-a467-01c7a447f07c";
-
-	final GrantApplicant grantApplicant = GrantApplicant.builder()
-		.id(APPLICANT_ID)
-		.userId(APPLICANT_USER_ID)
-		.build();
 
 	private final UUID SUBMISSION_ID = UUID.fromString("1c2eabf0-b33c-433a-b00f-e73d8efca929");
 

@@ -18,11 +18,6 @@ public class GrantApplicantOrganisationProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-//    commented this out because it's an unused property that negatively impacts performance
-//    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "applicant_id", referencedColumnName = "id")
-//    private GrantApplicant applicant;
-
     @Column(name = "legal_name")
     private String legalName;
 

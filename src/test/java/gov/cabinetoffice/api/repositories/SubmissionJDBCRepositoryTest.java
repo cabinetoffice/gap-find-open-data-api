@@ -9,20 +9,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EmptySource;
-import org.junit.jupiter.params.provider.NullSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,7 +30,7 @@ class SubmissionJDBCRepositoryTest {
     private SubmissionJDBCRepository repositoryUnderTest;
 
     public static final int FUNDING_ORG_ID = 965;
-    public static final String GGIS_IDENFIFIER = "SCH-2023-08-07";
+    public static final String GGIS_IDENTIFIER = "SCH-2023-08-07";
 
     @Test
     void getApplicationSubmissionsByFundingOrganisationId_ReturnsExpectedSubmissions() {
@@ -48,9 +43,8 @@ class SubmissionJDBCRepositoryTest {
 
         final List<ApplicationDTO> applicationDTOList = List.of(applicationDTO);
 
-        final String query = new StringBuilder(SubmissionJDBCRepository.APPLICATIONS_WITH_SUBMISSIONS_QUERY)
-                .append(SubmissionJDBCRepository.AND_FUNDING_ORG_CLAUSE)
-                .toString();
+        final String query = SubmissionJDBCRepository.APPLICATIONS_WITH_SUBMISSIONS_QUERY +
+                SubmissionJDBCRepository.AND_FUNDING_ORG_CLAUSE;
 
         when(jdbcTemplate.query(eq(query), any(SqlParameterSource.class), any(ApplicationDTORowMapper.class)))
                 .thenReturn(applicationDTOList);
@@ -65,9 +59,8 @@ class SubmissionJDBCRepositoryTest {
     @EmptySource
     void getApplicationSubmissionsByFundingOrganisationId_ThrowsSubmissionNotFoundException(List<ApplicationDTO> submissions) {
 
-        final String query = new StringBuilder(SubmissionJDBCRepository.APPLICATIONS_WITH_SUBMISSIONS_QUERY)
-                .append(SubmissionJDBCRepository.AND_FUNDING_ORG_CLAUSE)
-                .toString();
+        final String query = SubmissionJDBCRepository.APPLICATIONS_WITH_SUBMISSIONS_QUERY +
+                SubmissionJDBCRepository.AND_FUNDING_ORG_CLAUSE;
 
         when(jdbcTemplate.query(eq(query), any(SqlParameterSource.class), any(ApplicationDTORowMapper.class)))
                 .thenReturn(submissions);
@@ -87,15 +80,14 @@ class SubmissionJDBCRepositoryTest {
 
         final List<ApplicationDTO> applicationDTOList = List.of(applicationDTO);
 
-        final String query = new StringBuilder(SubmissionJDBCRepository.APPLICATIONS_WITH_SUBMISSIONS_QUERY)
-                .append(SubmissionJDBCRepository.AND_FUNDING_ORG_CLAUSE)
-                .append(SubmissionJDBCRepository.AND_GGIS_ID_CLAUSE)
-                .toString();
+        final String query = SubmissionJDBCRepository.APPLICATIONS_WITH_SUBMISSIONS_QUERY +
+                SubmissionJDBCRepository.AND_FUNDING_ORG_CLAUSE +
+                SubmissionJDBCRepository.AND_GGIS_ID_CLAUSE;
 
         when(jdbcTemplate.query(eq(query), any(SqlParameterSource.class), any(ApplicationDTORowMapper.class)))
                 .thenReturn(applicationDTOList);
 
-        final ApplicationListDTO methodResponse = repositoryUnderTest.getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(FUNDING_ORG_ID, GGIS_IDENFIFIER);
+        final ApplicationListDTO methodResponse = repositoryUnderTest.getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(FUNDING_ORG_ID, GGIS_IDENTIFIER);
 
         assertThat(methodResponse.getNumberOfResults()).isEqualTo(1);
         assertThat(methodResponse.getApplications()).containsOnly(applicationDTO);
@@ -105,15 +97,14 @@ class SubmissionJDBCRepositoryTest {
     @EmptySource
     void getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier_ThrowsSubmissionNotFoundException(List<ApplicationDTO> submissions) {
 
-        final String query = new StringBuilder(SubmissionJDBCRepository.APPLICATIONS_WITH_SUBMISSIONS_QUERY)
-                .append(SubmissionJDBCRepository.AND_FUNDING_ORG_CLAUSE)
-                .append(SubmissionJDBCRepository.AND_GGIS_ID_CLAUSE)
-                .toString();
+        final String query = SubmissionJDBCRepository.APPLICATIONS_WITH_SUBMISSIONS_QUERY +
+                SubmissionJDBCRepository.AND_FUNDING_ORG_CLAUSE +
+                SubmissionJDBCRepository.AND_GGIS_ID_CLAUSE;
 
         when(jdbcTemplate.query(eq(query), any(SqlParameterSource.class), any(ApplicationDTORowMapper.class)))
                 .thenReturn(submissions);
 
         assertThatExceptionOfType(SubmissionNotFoundException.class)
-                .isThrownBy(() -> repositoryUnderTest.getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(FUNDING_ORG_ID, GGIS_IDENFIFIER));
+                .isThrownBy(() -> repositoryUnderTest.getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(FUNDING_ORG_ID, GGIS_IDENTIFIER));
     }
 }

@@ -42,9 +42,7 @@ public class SubmissionJDBCRepository {
         final SqlParameterSource applicationParameters = new MapSqlParameterSource()
                 .addValue("fundingOrgId", fundingOrgId);
 
-        final String query = new StringBuilder(APPLICATIONS_WITH_SUBMISSIONS_QUERY)
-                .append(AND_FUNDING_ORG_CLAUSE)
-                .toString();
+        final String query = APPLICATIONS_WITH_SUBMISSIONS_QUERY + AND_FUNDING_ORG_CLAUSE;
 
         final List<ApplicationDTO> applications = jdbcTemplate.query(query, applicationParameters, new ApplicationDTORowMapper());
 
@@ -65,10 +63,7 @@ public class SubmissionJDBCRepository {
                 .addValue("fundingOrgId", fundingOrgId)
                 .addValue("ggisIdentifier", ggisIdentifier);
 
-        final String query = new StringBuilder(APPLICATIONS_WITH_SUBMISSIONS_QUERY)
-                .append(AND_FUNDING_ORG_CLAUSE)
-                .append(AND_GGIS_ID_CLAUSE)
-                .toString();
+        final String query = APPLICATIONS_WITH_SUBMISSIONS_QUERY + AND_FUNDING_ORG_CLAUSE + AND_GGIS_ID_CLAUSE;
 
         final List<ApplicationDTO> applications = jdbcTemplate.query(query, applicationParameters, new ApplicationDTORowMapper());
 

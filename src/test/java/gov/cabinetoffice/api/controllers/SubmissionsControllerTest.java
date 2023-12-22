@@ -1,11 +1,9 @@
 package gov.cabinetoffice.api.controllers;
 
 import gov.cabinetoffice.api.dtos.submission.*;
-import gov.cabinetoffice.api.entities.ApplicationFormEntity;
 import gov.cabinetoffice.api.entities.SchemeEntity;
 import gov.cabinetoffice.api.enums.ResponseTypeEnum;
 import gov.cabinetoffice.api.exceptions.SubmissionNotFoundException;
-import gov.cabinetoffice.api.models.application.ApplicationDefinition;
 import gov.cabinetoffice.api.models.submission.SubmissionQuestion;
 import gov.cabinetoffice.api.models.submission.SubmissionQuestionValidation;
 import gov.cabinetoffice.api.services.SubmissionsService;
@@ -30,7 +28,6 @@ import java.util.UUID;
 @ExtendWith(MockitoExtension.class)
 class SubmissionsControllerTest {
 
-	private static final int APPLICATION_ID = 1;
 	private static final int FUNDING_ORGANISATION_ID = 1;
 
 	final ZonedDateTime zonedDateTime = ZonedDateTime.now();
@@ -61,17 +58,6 @@ class SubmissionsControllerTest {
 		.email("test@and.digital")
 		.name("Test Scheme")
 		.ggisIdentifier("Test GGIS Identifier")
-		.build();
-
-	final ApplicationFormEntity application = ApplicationFormEntity.builder()
-		.grantApplicationId(APPLICATION_ID)
-		.applicationName("Test Application")
-		.created(instant)
-		.lastUpdated(instant)
-		.definition(new ApplicationDefinition())
-		.grantSchemeId(scheme.getId())
-		.version(1)
-		.lastUpdateBy(1)
 		.build();
 
 	final SubmissionQuestion question1 = SubmissionQuestion.builder()
@@ -168,18 +154,6 @@ class SubmissionsControllerTest {
 		.build();
 
 	private final UUID SUBMISSION_ID = UUID.fromString("1c2eabf0-b33c-433a-b00f-e73d8efca929");
-
-	final SubmissionDTO submissionDTO = SubmissionDTO.builder()
-		.submissionId(SUBMISSION_ID)
-		.submittedTimeStamp(zonedDateTime)
-		.grantApplicantEmailAddress(scheme.getEmail())
-		.sections(List.of(submissionSectionDTO1, submissionSectionDTO2))
-		.build();
-
-	final SubmissionListDTO submissionsDTO = SubmissionListDTO.builder()
-			.submissions(List.of(submissionDTO))
-			.numberOfResults(List.of(submissionDTO).size())
-			.build();
 
 	final String GGIS_REFERENCE_NUMBER = "SCH-000003589";
 
