@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @AllArgsConstructor
 @NoArgsConstructor
 @Configuration("s3ConfigurationProperties")
-@ConfigurationProperties(prefix = "s3")
+@ConfigurationProperties(prefix = "aws")
 public class S3ConfigProperties {
 
 	@NotNull
