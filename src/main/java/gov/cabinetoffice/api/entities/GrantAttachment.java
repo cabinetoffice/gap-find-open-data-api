@@ -22,15 +22,6 @@ public class GrantAttachment {
 	@Column(name = "grant_attachment_id")
 	private UUID id;
 
-//	commented this out because it's an unused property that negatively impacts performance
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "submission_id", referencedColumnName = "id")
-//	private Submission submission;
-
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "created_by", referencedColumnName = "id")
-//	private GrantApplicant createdBy;
-
 	@Column(name = "question_id", nullable = false)
 	private String questionId;
 

@@ -1,12 +1,16 @@
 package gov.cabinetoffice.api.rowmappers;
 
 import gov.cabinetoffice.api.dtos.submission.ApplicationDTO;
+
 import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+
 import static org.mockito.Mockito.when;
+
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.ResultSet;
@@ -18,7 +22,6 @@ class ApplicationDTORowMapperTest {
     @Mock
     private ResultSet resultSet;
     private final int rowNum = 1;
-
     private ApplicationDTORowMapper rowMapperUnderTest;
 
     @BeforeEach

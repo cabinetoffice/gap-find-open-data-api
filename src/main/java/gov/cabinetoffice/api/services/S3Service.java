@@ -15,11 +15,11 @@ public class S3Service {
 
 	private final S3Presigner presigner;
 
-	public String createPresignedURL(String bucketName, String objectKey) {
-		final GetObjectPresignRequest getObjectPresignRequest = GetObjectPresignRequest.builder()
-			.signatureDuration(Duration.ofMinutes(URL_DURATION))
-			.getObjectRequest(getObjectRequest -> getObjectRequest.bucket(bucketName).key(objectKey))
-			.build();
+    public String createPresignedURL(String bucketName, String objectKey) {
+        final GetObjectPresignRequest getObjectPresignRequest = GetObjectPresignRequest.builder()
+                .signatureDuration(Duration.ofMinutes(URL_DURATION))
+                .getObjectRequest(getObjectRequest -> getObjectRequest.bucket(bucketName).key(objectKey))
+                .build();
 
 		return presigner.presignGetObject(getObjectPresignRequest).url().toString();
 	}
