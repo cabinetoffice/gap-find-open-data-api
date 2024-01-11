@@ -137,7 +137,7 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
 		try {
 			return userService.getUserEmailForSub(sub);
 		} catch (UserNotFoundException e) {
-			log.error(String.format("User not found for sub %s", sub));
+			log.error("User not found for sub {}", sub);
 			return "User not found";
 		}
 	}
