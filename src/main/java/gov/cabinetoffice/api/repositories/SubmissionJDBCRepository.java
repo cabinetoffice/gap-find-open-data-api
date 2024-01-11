@@ -23,7 +23,8 @@ public class SubmissionJDBCRepository {
                DISTINCT ga.grant_application_id AS applicationId,
                gs.ggis_identifier AS ggisReferenceNumber,
                ga.application_name AS applicationFormName,
-               gs.scheme_contact AS contactEmail
+               gs.scheme_contact AS contactEmail,
+               gs.version AS applicationFormVersion
             FROM grant_submission s
             INNER JOIN grant_scheme gs
                ON gs.grant_scheme_id = s.scheme_id
@@ -38,6 +39,7 @@ public class SubmissionJDBCRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
+    @SuppressWarnings("StringBufferReplaceableByString")
     public ApplicationListDTO getApplicationSubmissionsByFundingOrganisationId(final int fundingOrgId) {
         final SqlParameterSource applicationParameters = new MapSqlParameterSource()
                 .addValue("fundingOrgId", fundingOrgId);
@@ -60,6 +62,7 @@ public class SubmissionJDBCRepository {
                 .build();
     }
 
+    @SuppressWarnings("StringBufferReplaceableByString")
     public ApplicationListDTO getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(final int fundingOrgId, final String ggisIdentifier) {
         final SqlParameterSource applicationParameters = new MapSqlParameterSource()
                 .addValue("fundingOrgId", fundingOrgId)

@@ -16,6 +16,7 @@ public class ApplicationDTORowMapper implements RowMapper<ApplicationDTO> {
                .ggisReferenceNumber(rs.getString("ggisReferenceNumber"))
                .grantAdminEmailAddress(rs.getString("contactEmail"))
                .applicationId(rs.getInt("applicationId"))
+               .applicationFormVersion(rs.getInt("applicationFormVersion"))
                .build();
     }
 }

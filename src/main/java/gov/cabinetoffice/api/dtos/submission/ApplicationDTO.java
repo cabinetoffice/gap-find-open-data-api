@@ -23,6 +23,8 @@ public class ApplicationDTO {
 
     private String ggisReferenceNumber;
 
+    private int applicationFormVersion;
+
     @JsonIgnore
     private int applicationId;
 
