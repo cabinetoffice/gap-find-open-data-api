@@ -91,14 +91,14 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
 			return null;
 		}
 
-		final List<SubmissionSection> sections = submissionDefinitionSections(submission);
-		return SubmissionDTO.builder()
-			.submissionId(submission.getId())
-			.grantApplicantEmailAddress(getUserEmail(submission.getApplicant().getUserId()))
-			.submittedTimeStamp(submission.getSubmittedDate())
-			.sections(mapSections(sections))
-			.build();
-	}
+        final List<SubmissionSection> sections = submissionDefinitionSections(submission);
+        return SubmissionDTO.builder()
+                .submissionId(submission.getId())
+                .grantApplicantEmailAddress(getUserEmail(submission.getApplicant().getUserId()))
+                .submittedTimeStamp(submission.getSubmittedDate())
+                .sections(mapSections(sections))
+                .build();
+    }
 
 	@Override
 	public SubmissionSectionDTO submissionSectionToSubmissionSectionDto(SubmissionSection submissionSection) {
@@ -106,11 +106,11 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
 			return null;
 		}
 
-		return SubmissionSectionDTO.builder()
-			.sectionId(submissionSection.getSectionId())
-			.sectionTitle(submissionSection.getSectionTitle())
-			.questions(submissionQuestionListToSubmissionQuestionDtoList(submissionSection.getQuestions()))
-			.build();
+        return SubmissionSectionDTO.builder()
+                .sectionId(submissionSection.getSectionId())
+                .sectionTitle(submissionSection.getSectionTitle())
+                .questions(submissionQuestionListToSubmissionQuestionDtoList(submissionSection.getQuestions()))
+                .build();
 
 	}
 

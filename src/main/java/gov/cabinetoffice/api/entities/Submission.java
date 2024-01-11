@@ -38,19 +38,6 @@ public class Submission {
 
 	private GrantApplicant applicant;
 
-//	commented this out because it's an unused property that negatively impacts performance
-//	@ManyToOne(cascade = CascadeType.ALL)
-//	@JoinColumn(name = "created_by", referencedColumnName = "id")
-//	@JsonIgnoreProperties("submissions")
-//	@ToString.Exclude
-//	private GrantApplicant createdBy;
-
-//	@ManyToOne(cascade = CascadeType.ALL)
-//	@JoinColumn(name = "last_updated_by", referencedColumnName = "id")
-//	@JsonIgnoreProperties("submissions")
-//	@ToString.Exclude
-//	private GrantApplicant lastUpdatedBy;
-
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "scheme_id")
 	@ToString.Exclude

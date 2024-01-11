@@ -17,7 +17,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
 import java.util.Map;
 
 import static gov.cabinetoffice.api.mappers.SubmissionMapperTestData.GRANT_APPLICANT_EMAIL_ADDRESS;
@@ -50,7 +49,7 @@ class UserServiceClientTest {
         when(userServiceConfig.getDomain()).thenReturn(domain);
         when(userServiceConfig.getLambdaSecret()).thenReturn("secret");
         when(restTemplate.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(UserDto.class), anyMap()))
-                .thenReturn(new ResponseEntity(expectedUserDto, HttpStatus.OK));
+                .thenReturn(new ResponseEntity<>(expectedUserDto, HttpStatus.OK));
 
         final UserDto result = userServiceClient.getUserForSub(sub);
 
@@ -67,7 +66,7 @@ class UserServiceClientTest {
         when(userServiceConfig.getDomain()).thenReturn(domain);
         when(userServiceConfig.getLambdaSecret()).thenReturn("secret");
         when(restTemplate.exchange(eq(expectedUrl), eq(HttpMethod.GET), any(HttpEntity.class), any(Class.class), any(Map.class)))
-                .thenReturn(new ResponseEntity(HttpStatus.OK));
+                .thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
         assertThrows(
                 InvalidBodyException.class,

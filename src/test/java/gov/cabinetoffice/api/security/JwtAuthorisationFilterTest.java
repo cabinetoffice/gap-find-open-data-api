@@ -78,6 +78,7 @@ class JwtAuthorisationFilterTest {
                 .isThrownBy(() -> jwtAuthorisationFilter.doFilterInternal(request, response, filterChain))
                 .withMessage("The Token has expired on 2022-07-25T16:33:49Z.");
     }
+
     @Test
     void doFilterInternal_invalidSignature() {
         final String invalidSignatureToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmdW5kZXJfaWQiOiIxIn0.j_uP1WWerR1pSMetHh1sNXtbbK5R7uncKgX09maodRY";

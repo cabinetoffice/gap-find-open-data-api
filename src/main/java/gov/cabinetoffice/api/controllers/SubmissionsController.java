@@ -28,30 +28,30 @@ public class SubmissionsController {
 
 	private final SubmissionsService submissionsService;
 
-	@GetMapping
-		@ApiResponses(value = {
-			@ApiResponse(
-					responseCode = "200", description = "Submissions retrieved successfully.",
-					content = @Content(mediaType = "application/json",
-							schema = @Schema(implementation = ApplicationListDTO.class)
-					)
-			),
-			@ApiResponse(
-					responseCode = "403", description = "Invalid API key provided",
-					content = @Content(mediaType = "application/json",
-							schema = @Schema(implementation = ErrorMessage.class)
-					)
-			),
-			@ApiResponse(
-					responseCode = "404", description = "No submissions found for funding organisation",
-					content = @Content(mediaType = "application/json",
-							schema = @Schema(implementation = ErrorMessage.class)
-					)
-			)
-		})
-	public ResponseEntity<ApplicationListDTO> getSubmissions(final Principal principal) {
-		final int fundingOrganisationId = Integer.parseInt(principal.getName());
-		log.info("funding organisation: " + fundingOrganisationId);
+    @GetMapping
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200", description = "Submissions retrieved successfully.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApplicationListDTO.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403", description = "Invalid API key provided",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorMessage.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404", description = "No submissions found for funding organisation",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorMessage.class)
+                    )
+            )
+    })
+    public ResponseEntity<ApplicationListDTO> getSubmissions(final Principal principal) {
+        final int fundingOrganisationId = Integer.parseInt(principal.getName());
+        log.info("funding organisation: " + fundingOrganisationId);
 
 		final ApplicationListDTO response = this.submissionsService.getSubmissionsByFundingOrgId(fundingOrganisationId);
 		log.debug("results of submissionsService.getSubmissionsByFundingOrgId");

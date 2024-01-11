@@ -19,8 +19,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws IOException, ServletException {
         try {
             filterChain.doFilter(request, response);
-        }
-        catch (TokenExpiredException | SignatureVerificationException | MissingClaimException e) {
+        } catch (TokenExpiredException | SignatureVerificationException | MissingClaimException e) {
             log.error("an error occurred", e);
 
             String message = switch (e.getClass().getSimpleName()) {
