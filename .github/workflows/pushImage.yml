@@ -51,6 +51,10 @@ jobs:
   imageBuild:
     needs: build
 
+    permissions:
+      id-token: write
+      contents: read
+
     environment: AWS
     runs-on: ubuntu-latest
 
@@ -68,10 +72,10 @@ jobs:
           cache: maven
 
       - name: Setup AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1-node16
+        uses: aws-actions/configure-aws-credentials@v3
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          role-session-name: gap-find-open-data-api-service
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to AWS ECR
