@@ -23,7 +23,7 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI openApi() {
         Server server = new Server();
-        server.setUrl(swaggerConfig.getApiGatewayQaEnvironmentUrl());
+        server.setUrl(swaggerConfig.getApiGatewayUrl());
 
 
         Info info = new Info()
