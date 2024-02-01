@@ -17,6 +17,6 @@ import org.springframework.context.annotation.Configuration;
 public class SwaggerConfig {
 
     @NotNull
-    private String apiGatewayQaEnvironmentUrl;
+    private String apiGatewayUrl;
 
 }
