@@ -1,0 +1,273 @@
+{
+	"info": {
+		"_postman_id": "0825c5e4-33f4-47b3-8446-bc8a58a5d70e",
+		"name": "GAP Find Open Data API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28777470"
+	},
+	"item": [
+		{
+			"name": "Get Submissions by application form ID",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Returns expected number of submissions\", function () {",
+							"    let response = pm.response.json();",
+							"    pm.expect(response.applications[0].submissions).to.have.length(2);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Returns correct submissions\", function () {",
+							"    let responseData = pm.response.json();",
+							"    let submission1 = responseData.applications[0].submissions[0];",
+							"    let submission2 = responseData.applications[0].submissions[1];",
+							"",
+							"    pm.expect(submission1.submissionId).to.equal(\"3a6cfe2d-bf58-440d-9e07-3579c7dcf207\");",
+							"    pm.expect(submission2.submissionId).to.equal(\"3a6cfe2d-bf58-440d-9e07-3579c7dcf150\");",
+							"});",
+							"",
+							"",
+							"",
+							"var template = `",
+							"<style type=\"text/css\">",
+							"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}",
+							"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}",
+							"    .tftable tr {background-color:#ffffff;}",
+							"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}",
+							"    .tftable tr:hover {background-color:#e0ffff;}",
+							"</style>",
+							"",
+							"<table class=\"tftable\" border=\"1\">",
+							"    <tr>",
+							"        <th>Application Form Name</th>",
+							"        <th>Grant Admin Email Address</th>",
+							"        <th>GGIS Reference Number</th>",
+							"        <th>Submission ID</th>",
+							"        <th>Grant Applicant Email Address</th>",
+							"        <th>Submitted Time Stamp</th>",
+							"        <th>Section ID</th>",
+							"        <th>Section Title</th>",
+							"        <th>Question ID</th>",
+							"        <th>Question Title</th>",
+							"        <th>Question Response</th>",
+							"    </tr>",
+							"    ",
+							"    {{#each response.applications}}",
+							"        {{#each this.submissions}}",
+							"            {{#each this.sections}}",
+							"                {{#each this.questions}}",
+							"                    <tr>",
+							"                        <td>{{../../../applicationFormName}}</td>",
+							"                        <td>{{../../../grantAdminEmailAddress}}</td>",
+							"                        <td>{{../../../ggisReferenceNumber}}</td>",
+							"                        <td>{{../submissionId}}</td>",
+							"                        <td>{{../grantApplicantEmailAddress}}</td>",
+							"                        <td>{{../submittedTimeStamp}}</td>",
+							"                        <td>{{../sectionId}}</td>",
+							"                        <td>{{../sectionTitle}}</td>",
+							"                        <td>{{questionId}}</td>",
+							"                        <td>{{questionTitle}}</td>",
+							"                        <td>{{questionResponse}}</td>",
+							"                    </tr>",
+							"                {{/each}}",
+							"            {{/each}}",
+							"        {{/each}}",
+							"    {{/each}}",
+							"</table>",
+							"`;",
+							"",
+							"function constructVisualizerPayload() {",
+							"    return { response: pm.response.json() }",
+							"}",
+							"",
+							"pm.visualizer.set(template, constructVisualizerPayload());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{API_KEY}}",
+						"description": "API Key for requests",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "jwt",
+						"value": "{{JWT_TOKEN}}",
+						"description": "JWT Token required to call any end point.",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/open-data/submissions/SCH-000003589",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"open-data",
+						"submissions",
+						"SCH-000003589"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All Submissions",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"  pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"The numberOfResults field should be a non-negative integer\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.numberOfResults).to.be.a('number');",
+							"    pm.expect(responseData.numberOfResults).to.be.at.least(0);",
+							"});",
+							"",
+							"",
+							"pm.test(\"The 'applications' array is present and contains at least one element\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData.applications).to.exist.and.to.be.an('array').and.to.have.lengthOf.at.least(1);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Verify that the 'submissions' array is present and contains at least one element\", function () {",
+							"   ",
+							"    const responseData = pm.response.json();",
+							"       ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.applications).to.exist.and.to.be.an('array').and.to.have.lengthOf.at.least(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{API_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{API_KEY}}",
+						"description": "API Key for requests",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "jwt",
+						"value": "{{JWT_TOKEN}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/open-data/submissions",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"open-data",
+						"submissions"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "in",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "value",
+				"value": "{{API_KEY}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "x-api-key",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host-name",
+			"value": "http://host.docker.internal:8080",
+			"disabled": true
+		},
+		{
+			"key": "hostname",
+			"value": "{{hostname}}",
+			"type": "string",
+			"disabled": true
+		}
+	]
+}

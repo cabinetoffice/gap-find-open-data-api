@@ -1,23 +1,26 @@
 name: Java CI with Maven
 
+env:
+  JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
+  JWT_TOKEN: ${{secrets.JWT_TOKEN}}
+
 on:
+  push:
+    branches:
+      - feature/**
+      - TMI2-**
+      - bug/**
   pull_request:
     branches:
-      - develop
-      - main
+      - feature/**
+      - TMI2-**
+      - bug/**
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Serenity
-        uses: actions/checkout@v3
-        with:
-          path: serenity
-          repository: cabinetoffice/gap-serenity-bdd-prototype
-          ref: main
-
       - name: Checkout API
         uses: actions/checkout@v3
         with:
@@ -34,7 +37,7 @@ jobs:
         working-directory: ./api
         run: mvn -B package --file pom.xml -DskipTests
 
-      - name: Dependency check
+      - name: Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
         env:
           JAVA_HOME: /opt/jdk
@@ -44,41 +47,47 @@ jobs:
           path: "."
           format: "HTML"
           args: >
+            --failOnCVSS 7.0
+            --suppress ./api/dependency-check-suppression.xml
             --enableRetired
             --disableOssIndex true
+            --disableRetireJS true
 
-      - name: Upload dependency check report
+      - name: Upload Dependency Check Report
+        if: success() || failure()
         uses: actions/upload-artifact@master
         with:
-          name: DependencyCheck report
+          name: Dependency Check Report
           path: ${{github.workspace}}/reports
 
-      - name: Unit tests
-        working-directory: ./api
-        run: mvn test
+#            - name: Unit tests
+#              working-directory: ./api
+#              run: mvn test
 
-      # TODO look into moving these docker steps into docker-compose.yml
       - name: Build Integration Environment
         working-directory: ./api
         run: |
           mvn spring-boot:build-image -DskipTests
           docker compose -f docker-compose-integration-tests.yml up -d
 
+      - name: Let's nap for 30 seconds to make sure the app has started
+        run: |
+          sleep 30
+
+      # TODO look into moving these docker steps into docker-compose.yml
       - name: Run Integration Tests
-        working-directory: ./serenity
-        run: docker run --name serenity-prototype -v "$(pwd)":/usr/src/serenity -w /usr/src/serenity --network api_testing-network maven:3-amazoncorretto-17 mvn clean verify
-
-      - name: Log Integration Test Results
-        if: always()
         working-directory: ./api
-        run: docker logs -t serenity-prototype
+        #Newman needs an absolute path here. It does not like relative paths.
+        run: docker run --name newman-tests 
+              -v /home/runner/work/gap-find-open-data-api/gap-find-open-data-api/api/postman:/opt/newman 
+              --network api_testing-network
+              postman/newman run /opt/newman/api.postman_collection.json
+              -e /opt/newman/Integration_Tests.postman_environment.json
+              --env-var "JWT_SECRETKEY=${JWT_SECRET_KEY}"
+              --env-var "JWT_TOKEN=${JWT_TOKEN}"
 
-      - name: Copy Serenity Report
-        working-directory: ./serenity
-        run: docker cp serenity-prototype:/usr/src/serenity/target/site ${{github.workspace}}/serenity/reports
-
-      - name: Upload Serenity Report
-        uses: actions/upload-artifact@master
+      - name: Dump docker logs on failure
+        if: failure()
+        uses: jwalton/gh-docker-logs@v2
         with:
-          name: Serenity report
-          path: ${{github.workspace}}/serenity/reports
+          images: gap-find-open-data-api

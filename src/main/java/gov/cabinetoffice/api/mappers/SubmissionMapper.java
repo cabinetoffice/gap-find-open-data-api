@@ -1,10 +1,7 @@
 package gov.cabinetoffice.api.mappers;
 
+import gov.cabinetoffice.api.dtos.submission.*;
 import gov.cabinetoffice.api.entities.Submission;
-import gov.cabinetoffice.api.dtos.submission.AddressDTO;
-import gov.cabinetoffice.api.dtos.submission.SubmissionDTO;
-import gov.cabinetoffice.api.dtos.submission.SubmissionQuestionDTO;
-import gov.cabinetoffice.api.dtos.submission.SubmissionSectionDTO;
 import gov.cabinetoffice.api.models.submission.SubmissionQuestion;
 import gov.cabinetoffice.api.models.submission.SubmissionSection;
 import org.mapstruct.Mapper;
@@ -20,11 +17,8 @@ import static java.lang.Integer.parseInt;
 public interface SubmissionMapper {
 
 	@Mapping(source = "id", target = "submissionId")
-	@Mapping(source = "application.applicationName", target = "applicationFormName")
-	// TODO is adminEmail the same as scheme.email? Don't store grantApplicant email
-	@Mapping(source = "scheme.email", target = "grantAdminEmailAddress")
+    //TODO fetch the applicant email from the database after one login work completes - this is not the correct value
 	@Mapping(source = "scheme.email", target = "grantApplicantEmailAddress")
-	@Mapping(source = "scheme.ggisIdentifier", target = "ggisReferenceNumber")
 	@Mapping(source = "submittedDate", target = "submittedTimeStamp")
 	@Mapping(source = "definition.sections", target = "sections", qualifiedByName = "mapSections")
 	SubmissionDTO submissionToSubmissionDto(Submission submission);
@@ -50,19 +44,18 @@ public interface SubmissionMapper {
 		return submissionQuestions.stream().map(this::submissionQuestionToSubmissionQuestionDto).toList();
 	}
 
-	default SubmissionQuestionDTO submissionQuestionToSubmissionQuestionDto(SubmissionQuestion submissionQuestion) {
-		Object questionResponse;
-		final String response = submissionQuestion.getResponse();
-		final String[] multiResponse = submissionQuestion.getMultiResponse();
-		final SubmissionQuestionDTO submissionQuestionDTO = SubmissionQuestionDTO.builder()
-			.questionId(submissionQuestion.getQuestionId())
-			.questionTitle(submissionQuestion.getFieldTitle())
-			.build();
-		if (response == null && multiResponse == null)
-			return submissionQuestionDTO;
+    default SubmissionQuestionDTO submissionQuestionToSubmissionQuestionDto(SubmissionQuestion submissionQuestion) {
+        Object questionResponse;
+        final String response = submissionQuestion.getResponse();
+        final String[] multiResponse = submissionQuestion.getMultiResponse();
+        final SubmissionQuestionDTO submissionQuestionDTO = SubmissionQuestionDTO.builder()
+                .questionId(submissionQuestion.getQuestionId())
+                .questionTitle(submissionQuestion.getFieldTitle())
+                .build();
+        if (response == null && multiResponse == null)
+            return submissionQuestionDTO;
 
 		questionResponse = getQuestionResponseByResponseType(submissionQuestion);
-
 		submissionQuestionDTO.setQuestionResponse(questionResponse);
 		return submissionQuestionDTO;
 	}
@@ -76,7 +69,7 @@ public interface SubmissionMapper {
 			case AddressInput -> buildAddress(multiResponse);
 			case Date -> buildDate(multiResponse);
 			case SingleFileUpload -> buildUploadResponse(submissionQuestion);
-			default -> ""; // TODO do we want this to be null or an empty string?
+			default -> "";
 		};
 	}
 
@@ -87,17 +80,20 @@ public interface SubmissionMapper {
 	}
 
 	default LocalDate buildDate(String[] multiResponse) {
-		return LocalDate.of(parseInt(multiResponse[2]), parseInt(multiResponse[1]), parseInt(multiResponse[0]));
+		try {
+			return LocalDate.of(parseInt(multiResponse[2]), parseInt(multiResponse[1]), parseInt(multiResponse[0]));
+		} catch (NumberFormatException e) {
+			return null;
+		}
 	}
 
-	default AddressDTO buildAddress(String[] multiResponse) {
-		return AddressDTO.builder()
-			.addressLine1(multiResponse[0])
-			.addressLine2(multiResponse[1])
-			.town(multiResponse[2])
-			.county(multiResponse[3])
-			.postcode(multiResponse[4])
-			.build();
-	}
-
+    default AddressDTO buildAddress(String[] multiResponse) {
+        return AddressDTO.builder()
+                .addressLine1(multiResponse[0])
+                .addressLine2(multiResponse[1])
+                .town(multiResponse[2])
+                .county(multiResponse[3])
+                .postcode(multiResponse[4])
+                .build();
+    }
 }

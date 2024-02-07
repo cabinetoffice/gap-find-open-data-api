@@ -1,16 +1,16 @@
 # Name: GAP Find Open Data API
 # Desc: Creates a custom JRE image hosted on alpine for the backend JRE
 # Author: Chris Forbes
-# Version: 1.0 
+# Version: 1.0
 # Change Log:
 # | Author       | Description of change | Version |
-# | Chris Forbes | Initial Version       | 1.0     | 
+# | Chris Forbes | Initial Version       | 1.0     |
 
 # ====================================================
 # Base image splits the jar into layers
 # ====================================================
 
-FROM --platform=linux/amd64 public.ecr.aws/amazoncorretto/amazoncorretto:17 as builder
+FROM --platform=linux/amd64 public.ecr.aws/amazoncorretto/amazoncorretto:17 AS builder
 WORKDIR application
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} application.jar
@@ -47,5 +47,5 @@ COPY --from=builder application/snapshot-dependencies/ ./
 # Necessary to prevent a layer not found exception, similar to issue described here - https://github.com/moby/moby/issues/33974
 RUN true
 COPY --from=builder application/application/ ./
-EXPOSE 8080
+EXPOSE 8086
 ENTRYPOINT ["/jre/bin/java", "org.springframework.boot.loader.JarLauncher"]

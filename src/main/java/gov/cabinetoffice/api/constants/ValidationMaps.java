@@ -18,8 +18,8 @@ public class ValidationMaps {
 			new AbstractMap.SimpleEntry<String, Object>("minLength", 2),
 			new AbstractMap.SimpleEntry<String, Object>("maxLength", 6000));
 
-	public static final Map<String, Object> NUMERIC_ANSWER_VALIDATION = java.util.Map
-		.ofEntries(new AbstractMap.SimpleEntry<String, Object>("greaterThanZero", true));
+    public static final Map<String, Object> NUMERIC_ANSWER_VALIDATION = java.util.Map
+            .ofEntries(new AbstractMap.SimpleEntry<String, Object>("greaterThanZero", true));
 
 	public static final Map<String, Object> SINGLE_FILE_UPLOAD_VALIDATION = java.util.Map.ofEntries(
 			new AbstractMap.SimpleEntry<String, Object>("maxFileSizeMB", 300),
