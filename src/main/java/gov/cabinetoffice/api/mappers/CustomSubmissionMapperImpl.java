@@ -7,6 +7,7 @@ import gov.cabinetoffice.api.dtos.submission.SubmissionQuestionDTO;
 import gov.cabinetoffice.api.dtos.submission.SubmissionSectionDTO;
 import gov.cabinetoffice.api.entities.GrantAttachment;
 import gov.cabinetoffice.api.entities.Submission;
+import gov.cabinetoffice.api.enums.GrantAttachmentStatus;
 import gov.cabinetoffice.api.exceptions.UserNotFoundException;
 import gov.cabinetoffice.api.models.submission.SubmissionQuestion;
 import gov.cabinetoffice.api.models.submission.SubmissionSection;
@@ -69,17 +70,16 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
         final GrantAttachment grantAttachment = grantAttachmentService.getGrantAttachmentById(grantAttachmentId);
         final String bucketName = s3ConfigProperties.getSourceBucket();
 
-        if (grantAttachment.getStatus().equals(QUARANTINED)) {
-            return "This file is not available please contact the Grant Applicant";
-        }
-
-        if (grantAttachment.getStatus().equals(AWAITING_SCAN)) {
-            return "The url for this file is not available at the moment. It is undergoing our antivirus process. Please try later";
-        }
-
-        final String objectKey = grantAttachment.getLocation().split(s3ConfigProperties.getSourceBucket() + "/")[1];
-
-        return s3Service.createPresignedURL(bucketName, objectKey);
+        final GrantAttachmentStatus status = grantAttachment.getStatus();
+        return switch (status) {
+            case QUARANTINED -> "This file is not available. Please contact the Grant Applicant.";
+            case AWAITING_SCAN ->
+                    "The URL for this file is not available at the moment. It is undergoing our antivirus process. Please try later.";
+            default -> {
+                final String objectKey = grantAttachment.getLocation().split(bucketName + "/")[1];
+                 yield s3Service.createPresignedURL(s3ConfigProperties.getSourceBucket(), objectKey);
+            }
+        };
     }
 
     @Override
