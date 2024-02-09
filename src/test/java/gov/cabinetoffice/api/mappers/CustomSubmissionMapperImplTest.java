@@ -48,7 +48,7 @@ class CustomSubmissionMapperImplTest {
     @Test
     void buildUploadResponse_AttachmentHasAwaitingScanStatus() {
         final UUID grantAttachmentId = UUID.randomUUID();
-        final String expectedResult = "The url for this file is not available at the moment. It is undergoing our antivirus process. Please try later";
+        final String expectedResult = "The URL for this file is not available at the moment. It is undergoing our antivirus process. Please try later.";
 
         final SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
                 .attachmentId(grantAttachmentId)
@@ -68,7 +68,7 @@ class CustomSubmissionMapperImplTest {
     @Test
     void buildUploadResponse_AttachmentHasQuarantinedStatus() {
         final UUID grantAttachmentId = UUID.randomUUID();
-        final String expectedResult = "This file is not available please contact the Grant Applicant";
+        final String expectedResult = "This file is not available. Please contact the Grant Applicant.";
 
         final SubmissionQuestion submissionQuestion = SubmissionQuestion.builder()
                 .attachmentId(grantAttachmentId)

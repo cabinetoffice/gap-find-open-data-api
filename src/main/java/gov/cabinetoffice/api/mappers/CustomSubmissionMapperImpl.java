@@ -23,9 +23,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-import static gov.cabinetoffice.api.enums.GrantAttachmentStatus.AWAITING_SCAN;
-import static gov.cabinetoffice.api.enums.GrantAttachmentStatus.QUARANTINED;
-
 @RequiredArgsConstructor
 @Component
 @Primary
@@ -66,19 +63,26 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
 
     @Override
     public String buildUploadResponse(SubmissionQuestion submissionQuestion) {
+        log.info("Building upload response for submission question {}", submissionQuestion.getQuestionId());
+
         final UUID grantAttachmentId = submissionQuestion.getAttachmentId();
         final GrantAttachment grantAttachment = grantAttachmentService.getGrantAttachmentById(grantAttachmentId);
+        log.info("Grant attachment found with Id {}", grantAttachmentId);
+        final GrantAttachmentStatus status = grantAttachment.getStatus();
+        log.info("Grant attachment status: {}", grantAttachment.getStatus());
+
         final String bucketName = s3ConfigProperties.getSourceBucket();
 
-        final GrantAttachmentStatus status = grantAttachment.getStatus();
         return switch (status) {
             case QUARANTINED -> "This file is not available. Please contact the Grant Applicant.";
             case AWAITING_SCAN ->
                     "The URL for this file is not available at the moment. It is undergoing our antivirus process. Please try later.";
-            default -> {
+            case AVAILABLE -> {
                 final String objectKey = grantAttachment.getLocation().split(bucketName + "/")[1];
-                 yield s3Service.createPresignedURL(s3ConfigProperties.getSourceBucket(), objectKey);
+                yield s3Service.createPresignedURL(s3ConfigProperties.getSourceBucket(), objectKey);
             }
+            //just in case we add some additional status in the future
+            default -> "This file is not available";
         };
     }
 
