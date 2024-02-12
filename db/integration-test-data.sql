@@ -307,7 +307,7 @@ ALTER TABLE grant_attachment ADD CONSTRAINT FK_GRANT_ATTACHMENT_ON_CREATED_BY FO
 ALTER TABLE grant_attachment ADD CONSTRAINT FK_GRANT_ATTACHMENT_ON_SUBMISSION FOREIGN KEY (submission_id) REFERENCES grant_submission (id);
 
 INSERT INTO grant_attachment (grant_attachment_id, created, filename, last_updated, "location", question_id, status, "version", created_by, submission_id) VALUES
-('fd7fe160-6661-40f2-b8c8-784bdec0c84b', '2022-09-29 08:44:38.338', 'hello-world.txt', '2022-09-29 08:44:41.226', 'https://gap-sandbox-attachments.s3.eu-west-2.amazonaws.com/1/3a6cfe2d-bf58-440d-9e07-3579c7dcf207/testQuestionId/hello-world.txt', '28a96a4c-f2c1-4c20-8097-576ffa949630', 'AVAILABLE', 1, 1, NULL);
+('fd7fe160-6661-40f2-b8c8-784bdec0c84b', '2022-09-29 08:44:38.338', 'hello-world.txt', '2022-09-29 08:44:41.226', 'https://gap-sandbox-attachments.s3.eu-west-2.amazonaws.com/1/3a6cfe2d-bf58-440d-9e07-3579c7dcf207/testQuestionId/hello-world.txt', '28a96a4c-f2c1-4c20-8097-576ffa949630', 'AWAITING_SCAN', 1, 1, NULL);
 
 INSERT INTO public.grant_submission(id,application_name,created,definition,last_updated,status,submitted_date, version,applicant_id,application_id, created_by,last_updated_by,scheme_id,gap_id,last_required_checks_export) VALUES ('3a6cfe2d-bf58-440d-9e07-3579c7dcf150', 'Application with File Upload', '2022-08-02 20:10:20', '{
   "sections": [
