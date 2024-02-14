@@ -16,7 +16,10 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "aws")
 public class S3ConfigProperties {
 
-	@NotNull
-	private String sourceBucket;
+    @NotNull
+    private String region;
+
+    @NotNull
+    private String sourceBucket;
 
 }
