@@ -25,6 +25,7 @@ Requests to the API must include a 'jwt' header with a JWT token containing the 
 ## Local Development
 
 - You would need to set up the admin database as per [gap-find-admin-backend](https://github.com/cabinetoffice/gap-find-admin-backend/)
+- From root go to the mockUserService folder and run ```docker compose up -d``` to run the user-service mock (Needed to grab the user email)
 - You would need to comment out in src/main/java/gov/cabinetoffice/api/security/JwtAuthorisationFilter.java from line 32 to 49.
 - In src/main/java/gov/cabinetoffice/api/security/JwtAuthorisationFilter.java line 51 replace funderId.asString() with a string containing a funding_id present in the database that you want to test.
 - Run ```mvn spring-boot:run ```
