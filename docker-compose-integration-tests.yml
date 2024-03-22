@@ -31,6 +31,8 @@ services:
       spring_datasource_password: mysecretpassword
       jwt_secretKey: ${JWT_SECRET_KEY}
       userservice_domain: http://wiremock:8080
+      userservice_secret: secret
+      userservice_publicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA9tFWBEI5fBdN5pmnUcZJ6xziLC0JcsXPyRIs9SnR7iQ4UEn8zQf+uZuJkTkUFQ9Yk2dHJv/jiFo/sxDWmNIDT6SqQXhCbvkwzo3F8Q8fto6BRr8fPMTyETfO9GQwzTJoGmlZ6/BOBNw34/AdD5UVyu8/o62aVwWsVhI98Ivp/WH2BNFApfb6OB2/5kG1cJkdbNq3mJnyUkPfUemomcSMem3jXmW42olGk1O8ytsVOVRt53LU1vY8yTkf2QUAMrI2cnpEHu4EVVmuTtLCQIzDwJUZc2A4xXGyPMIZwEc2/5/2rR1l5NfFEMCfABbGQ+e2UOMXLG/4/mUz7Qcln/EpFwIDAQAB
     networks:
       - testing-network
 
