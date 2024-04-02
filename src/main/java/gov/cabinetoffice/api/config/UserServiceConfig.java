@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 public class UserServiceConfig {
 
     private String domain;
-    private String lambdaSecret;
+    private String secret;
+    private String publicKey;
 
 }
