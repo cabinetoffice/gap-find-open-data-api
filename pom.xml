@@ -17,6 +17,7 @@
 		<java.version>17</java.version>
 		<aws.java.sdk.version>2.21.5</aws.java.sdk.version>
 		<spring-security.version>6.1.4</spring-security.version>
+		<tomcat.version>10.1.43</tomcat.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
