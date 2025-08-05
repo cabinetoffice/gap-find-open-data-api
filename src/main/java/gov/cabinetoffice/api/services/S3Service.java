@@ -13,7 +13,7 @@ import java.time.Duration;
 @Slf4j
 public class S3Service {
 
-	public static final int URL_DURATION = 15;
+	public static final int URL_DURATION = 60;
 
 	private final S3Presigner presigner;
 
