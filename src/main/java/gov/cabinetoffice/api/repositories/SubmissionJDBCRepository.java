@@ -41,11 +41,25 @@ public class SubmissionJDBCRepository {
 
     @SuppressWarnings("StringBufferReplaceableByString")
     public ApplicationListDTO getApplicationSubmissionsByFundingOrganisationId(final int fundingOrgId) {
+        // default to first page with page size 100 when no page provided
+        return getApplicationSubmissionsByFundingOrganisationId(fundingOrgId, 1);
+    }
+
+    @SuppressWarnings("StringBufferReplaceableByString")
+    public ApplicationListDTO getApplicationSubmissionsByFundingOrganisationId(final int fundingOrgId, final int page) {
+        final int pageSize = 100;
+        final int safePage = page < 1 ? 1 : page;
+        final int offset = (safePage - 1) * pageSize;
+
         final SqlParameterSource applicationParameters = new MapSqlParameterSource()
-                .addValue("fundingOrgId", fundingOrgId);
+                .addValue("fundingOrgId", fundingOrgId)
+                .addValue("limit", pageSize)
+                .addValue("offset", offset);
 
         final String query = new StringBuilder(APPLICATIONS_WITH_SUBMISSIONS_QUERY)
                 .append(AND_FUNDING_ORG_CLAUSE)
+                .append("LIMIT :limit \n")
+                .append("OFFSET :offset \n")
                 .toString();
 
         final List<ApplicationDTO> applications = jdbcTemplate.query(query, applicationParameters, new ApplicationDTORowMapper());
@@ -64,13 +78,27 @@ public class SubmissionJDBCRepository {
 
     @SuppressWarnings("StringBufferReplaceableByString")
     public ApplicationListDTO getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(final int fundingOrgId, final String ggisIdentifier) {
+        // default to first page with page size 100 when no page provided
+        return getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(fundingOrgId, ggisIdentifier, 1);
+    }
+
+    @SuppressWarnings("StringBufferReplaceableByString")
+    public ApplicationListDTO getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(final int fundingOrgId, final String ggisIdentifier, final int page) {
+        final int pageSize = 100;
+        final int safePage = page < 1 ? 1 : page;
+        final int offset = (safePage - 1) * pageSize;
+
         final SqlParameterSource applicationParameters = new MapSqlParameterSource()
                 .addValue("fundingOrgId", fundingOrgId)
-                .addValue("ggisIdentifier", ggisIdentifier);
+                .addValue("ggisIdentifier", ggisIdentifier)
+                .addValue("limit", pageSize)
+                .addValue("offset", offset);
 
         final String query = new StringBuilder(APPLICATIONS_WITH_SUBMISSIONS_QUERY)
                 .append(AND_FUNDING_ORG_CLAUSE)
                 .append(AND_GGIS_ID_CLAUSE)
+                .append("LIMIT :limit \n")
+                .append("OFFSET :offset \n")
                 .toString();
 
         final List<ApplicationDTO> applications = jdbcTemplate.query(query, applicationParameters, new ApplicationDTORowMapper());
