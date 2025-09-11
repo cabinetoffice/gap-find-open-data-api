@@ -26,8 +26,23 @@ public class SubmissionsService {
 			final List<Submission> submissions = submissionRepository.findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId());
 			a.setSubmissions(
 					submissions.stream()
-							.map(submissionMapper::submissionToSubmissionDto)
-							.toList()
+						.map(submissionMapper::submissionToSubmissionDto)
+						.toList()
+			);
+		});
+
+		return applicationDTO;
+	}
+
+	public ApplicationListDTO getSubmissionsByFundingOrgId(int fundingOrgId, int page) {
+		final ApplicationListDTO applicationDTO = submissionJdbcRepository.getApplicationSubmissionsByFundingOrganisationId(fundingOrgId, page);
+
+		applicationDTO.getApplications().forEach(a -> {
+			final List<Submission> submissions = submissionRepository.findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId());
+			a.setSubmissions(
+					submissions.stream()
+						.map(submissionMapper::submissionToSubmissionDto)
+						.toList()
 			);
 		});
 
@@ -35,14 +50,19 @@ public class SubmissionsService {
 	}
 
 	public ApplicationListDTO getSubmissionsByFundingOrgIdAndGgisReferenceNum(int fundingOrgId, String ggisReferenceNumber) {
-		final ApplicationListDTO applicationDTO = submissionJdbcRepository.getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(fundingOrgId, ggisReferenceNumber);
+		// default to first page when no page provided
+		return getSubmissionsByFundingOrgIdAndGgisReferenceNum(fundingOrgId, ggisReferenceNumber, 1);
+	}
+
+	public ApplicationListDTO getSubmissionsByFundingOrgIdAndGgisReferenceNum(int fundingOrgId, String ggisReferenceNumber, int page) {
+		final ApplicationListDTO applicationDTO = submissionJdbcRepository.getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(fundingOrgId, ggisReferenceNumber, page);
 
 		applicationDTO.getApplications().forEach(a -> {
 			final List<Submission> submissions = submissionRepository.findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId());
 			a.setSubmissions(
 					submissions.stream()
-							.map(submissionMapper::submissionToSubmissionDto)
-							.toList()
+						.map(submissionMapper::submissionToSubmissionDto)
+						.toList()
 			);
 		});
 
