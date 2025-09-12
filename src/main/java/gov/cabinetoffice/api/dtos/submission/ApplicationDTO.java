@@ -1,6 +1,5 @@
 package gov.cabinetoffice.api.dtos.submission;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +25,10 @@ public class ApplicationDTO {
     private int applicationFormVersion;
 
     private int applicationId;
+
+    // total number of submissions for this application (across all pages)
+    @Builder.Default
+    private int totalSubmissions = 0;
 
     @Builder.Default
     private List<SubmissionDTO> submissions = new ArrayList<>();
