@@ -50,21 +50,23 @@ public class SubmissionsController {
                     )
             )
     })
-    public ResponseEntity<ApplicationListDTO> getSubmissions(final Principal principal) {
-        return getSubmissions(principal, null);
-    }
-
     public ResponseEntity<ApplicationListDTO> getSubmissions(final Principal principal, @RequestParam(name = "page", required = false) Integer page) {
         final int fundingOrganisationId = Integer.parseInt(principal.getName());
         log.info("funding organisation: " + fundingOrganisationId);
 
         final int requestedPage = (page == null || page < 1) ? 1 : page;
-		final ApplicationListDTO response = this.submissionsService.getSubmissionsByFundingOrgId(fundingOrganisationId, requestedPage);
-		log.debug("results of submissionsService.getSubmissionsByFundingOrgId");
-		log.debug(response.toString());
+        log.info("requested page: " + page);
 
-		return ResponseEntity.ok().body(response);
-	}
+        final ApplicationListDTO response = this.submissionsService.getSubmissionsByFundingOrgId(fundingOrganisationId, requestedPage);
+        log.debug("results of submissionsService.getSubmissionsByFundingOrgId");
+        log.debug(response.toString());
+
+        return ResponseEntity.ok().body(response);
+    }
+
+    public ResponseEntity<ApplicationListDTO> getSubmissions(final Principal principal) {
+        return getSubmissions(principal, null);
+    }
 
 	@GetMapping("/{ggisReferenceNumber}")
 	@ApiResponses(value = {
@@ -87,17 +89,13 @@ public class SubmissionsController {
 					)
 			)
 	})
-	public ResponseEntity<ApplicationListDTO> getSubmissionsByGgisRefNum(@PathVariable @NotNull final String ggisReferenceNumber, final Principal principal) {
-		return getSubmissionsByGgisRefNum(ggisReferenceNumber, principal, null);
-	}
-
 	public ResponseEntity<ApplicationListDTO> getSubmissionsByGgisRefNum(@PathVariable @NotNull final String ggisReferenceNumber, final Principal principal, @RequestParam(name = "page", required = false) Integer page) {
 		final int fundingOrganisationId = Integer.parseInt(principal.getName());
 		log.info("funding organisation: " + fundingOrganisationId + ", GGIS ID: " + ggisReferenceNumber);
+		log.info("requested page: " + page);
 
         final ApplicationListDTO response;
         if (page == null || page < 1) {
-            // Preserve backward compatibility with existing service method
             response = this.submissionsService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(fundingOrganisationId, ggisReferenceNumber);
         } else {
             response = this.submissionsService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(fundingOrganisationId, ggisReferenceNumber, page);
@@ -106,5 +104,9 @@ public class SubmissionsController {
 		log.debug(response.toString());
 
 		return ResponseEntity.ok().body(response);
+	}
+
+	public ResponseEntity<ApplicationListDTO> getSubmissionsByGgisRefNum(@PathVariable @NotNull final String ggisReferenceNumber, final Principal principal) {
+		return getSubmissionsByGgisRefNum(ggisReferenceNumber, principal, null);
 	}
 }
