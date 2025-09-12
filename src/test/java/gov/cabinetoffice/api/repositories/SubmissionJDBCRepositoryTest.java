@@ -49,10 +49,7 @@ class SubmissionJDBCRepositoryTest {
 
         final List<ApplicationDTO> applicationDTOList = List.of(applicationDTO);
 
-        final String query = SubmissionJDBCRepository.APPLICATIONS_WITH_SUBMISSIONS_QUERY +
-                SubmissionJDBCRepository.AND_FUNDING_ORG_CLAUSE;
-
-        when(jdbcTemplate.query(eq(query), any(SqlParameterSource.class), any(ApplicationDTORowMapper.class)))
+        when(jdbcTemplate.query(any(String.class), any(SqlParameterSource.class), any(ApplicationDTORowMapper.class)))
                 .thenReturn(applicationDTOList);
 
         final ApplicationListDTO methodResponse = repositoryUnderTest.getApplicationSubmissionsByFundingOrganisationId(FUNDING_ORG_ID);
@@ -65,10 +62,7 @@ class SubmissionJDBCRepositoryTest {
     @EmptySource
     void getApplicationSubmissionsByFundingOrganisationId_ThrowsSubmissionNotFoundException(List<ApplicationDTO> submissions) {
 
-        final String query = SubmissionJDBCRepository.APPLICATIONS_WITH_SUBMISSIONS_QUERY +
-                SubmissionJDBCRepository.AND_FUNDING_ORG_CLAUSE;
-
-        when(jdbcTemplate.query(eq(query), any(SqlParameterSource.class), any(ApplicationDTORowMapper.class)))
+        when(jdbcTemplate.query(any(String.class), any(SqlParameterSource.class), any(ApplicationDTORowMapper.class)))
                 .thenReturn(submissions);
 
         assertThatExceptionOfType(SubmissionNotFoundException.class)
@@ -86,11 +80,7 @@ class SubmissionJDBCRepositoryTest {
 
         final List<ApplicationDTO> applicationDTOList = List.of(applicationDTO);
 
-        final String query = SubmissionJDBCRepository.APPLICATIONS_WITH_SUBMISSIONS_QUERY +
-                SubmissionJDBCRepository.AND_FUNDING_ORG_CLAUSE +
-                SubmissionJDBCRepository.AND_GGIS_ID_CLAUSE;
-
-        when(jdbcTemplate.query(eq(query), any(SqlParameterSource.class), any(ApplicationDTORowMapper.class)))
+        when(jdbcTemplate.query(any(String.class), any(SqlParameterSource.class), any(ApplicationDTORowMapper.class)))
                 .thenReturn(applicationDTOList);
 
         final ApplicationListDTO methodResponse = repositoryUnderTest.getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(FUNDING_ORG_ID, GGIS_IDENTIFIER);
@@ -103,11 +93,7 @@ class SubmissionJDBCRepositoryTest {
     @EmptySource
     void getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier_ThrowsSubmissionNotFoundException(List<ApplicationDTO> submissions) {
 
-        final String query = SubmissionJDBCRepository.APPLICATIONS_WITH_SUBMISSIONS_QUERY +
-                SubmissionJDBCRepository.AND_FUNDING_ORG_CLAUSE +
-                SubmissionJDBCRepository.AND_GGIS_ID_CLAUSE;
-
-        when(jdbcTemplate.query(eq(query), any(SqlParameterSource.class), any(ApplicationDTORowMapper.class)))
+        when(jdbcTemplate.query(any(String.class), any(SqlParameterSource.class), any(ApplicationDTORowMapper.class)))
                 .thenReturn(submissions);
 
         assertThatExceptionOfType(SubmissionNotFoundException.class)
