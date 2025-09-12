@@ -118,4 +118,32 @@ public class SubmissionJDBCRepository {
                 .numberOfResults(applications.size())
                 .build();
     }
+
+    public int countApplicationsByFundingOrganisationId(final int fundingOrgId) {
+        final String countQuery = """
+            SELECT COUNT(DISTINCT ga.grant_application_id) AS total
+            FROM grant_submission s
+            INNER JOIN grant_scheme gs ON gs.grant_scheme_id = s.scheme_id
+            INNER JOIN grant_application ga ON ga.grant_application_id = s.application_id
+            WHERE s.status = 'SUBMITTED' AND gs.funder_id = :fundingOrgId
+        """;
+        final SqlParameterSource params = new MapSqlParameterSource().addValue("fundingOrgId", fundingOrgId);
+        Integer result = jdbcTemplate.queryForObject(countQuery, params, Integer.class);
+        return result == null ? 0 : result;
+    }
+
+    public int countApplicationsByFundingOrganisationIdAndGgisIdentifier(final int fundingOrgId, final String ggisIdentifier) {
+        final String countQuery = """
+            SELECT COUNT(DISTINCT ga.grant_application_id) AS total
+            FROM grant_submission s
+            INNER JOIN grant_scheme gs ON gs.grant_scheme_id = s.scheme_id
+            INNER JOIN grant_application ga ON ga.grant_application_id = s.application_id
+            WHERE s.status = 'SUBMITTED' AND gs.funder_id = :fundingOrgId AND gs.ggis_identifier = :ggisIdentifier
+        """;
+        final SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("fundingOrgId", fundingOrgId)
+                .addValue("ggisIdentifier", ggisIdentifier);
+        Integer result = jdbcTemplate.queryForObject(countQuery, params, Integer.class);
+        return result == null ? 0 : result;
+    }
 }

@@ -1,6 +1,7 @@
 package gov.cabinetoffice.api.controllers;
 
 import gov.cabinetoffice.api.dtos.submission.ApplicationListDTO;
+import gov.cabinetoffice.api.dtos.submission.CountResponseDTO;
 import gov.cabinetoffice.api.models.ErrorMessage;
 import gov.cabinetoffice.api.services.SubmissionsService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -68,6 +69,28 @@ public class SubmissionsController {
         return getSubmissions(principal, null);
     }
 
+    @GetMapping("/count")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200", description = "Count retrieved successfully.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CountResponseDTO.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403", description = "Invalid API key provided",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorMessage.class)
+                    )
+            )
+    })
+    public ResponseEntity<CountResponseDTO> getSubmissionsCount(final Principal principal) {
+        final int fundingOrganisationId = Integer.parseInt(principal.getName());
+        log.info("funding organisation: " + fundingOrganisationId);
+        final CountResponseDTO response = this.submissionsService.getSubmissionsCountByFundingOrgId(fundingOrganisationId);
+        return ResponseEntity.ok().body(response);
+    }
+
 	@GetMapping("/{ggisReferenceNumber}")
 	@ApiResponses(value = {
 			@ApiResponse(
@@ -108,5 +131,27 @@ public class SubmissionsController {
 
 	public ResponseEntity<ApplicationListDTO> getSubmissionsByGgisRefNum(@PathVariable @NotNull final String ggisReferenceNumber, final Principal principal) {
 		return getSubmissionsByGgisRefNum(ggisReferenceNumber, principal, null);
+	}
+
+	@GetMapping("/{ggisReferenceNumber}/count")
+	@ApiResponses(value = {
+			@ApiResponse(
+					responseCode = "200", description = "Count retrieved successfully.",
+					content = @Content(mediaType = "application/json",
+							schema = @Schema(implementation = CountResponseDTO.class)
+					)
+			),
+			@ApiResponse(
+					responseCode = "403", description = "Invalid API key provided",
+					content = @Content(mediaType = "application/json",
+							schema = @Schema(implementation = ErrorMessage.class)
+					)
+			)
+	})
+	public ResponseEntity<CountResponseDTO> getSubmissionsCountByGgis(@PathVariable @NotNull final String ggisReferenceNumber, final Principal principal) {
+		final int fundingOrganisationId = Integer.parseInt(principal.getName());
+		log.info("funding organisation: " + fundingOrganisationId + ", GGIS ID: " + ggisReferenceNumber);
+		final CountResponseDTO response = this.submissionsService.getSubmissionsCountByFundingOrgIdAndGgisReferenceNum(fundingOrganisationId, ggisReferenceNumber);
+		return ResponseEntity.ok().body(response);
 	}
 }
