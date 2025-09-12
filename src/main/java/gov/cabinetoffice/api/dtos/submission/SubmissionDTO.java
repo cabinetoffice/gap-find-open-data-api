@@ -23,6 +23,8 @@ public class SubmissionDTO {
 
 	private ZonedDateTime submittedTimeStamp;
 
+	private String gapId;
+
 	private List<SubmissionSectionDTO> sections;
 
 }
