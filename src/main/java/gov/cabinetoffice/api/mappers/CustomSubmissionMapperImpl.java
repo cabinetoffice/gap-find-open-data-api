@@ -107,6 +107,7 @@ public class CustomSubmissionMapperImpl implements SubmissionMapper {
                 .submissionId(submission.getId())
                 .grantApplicantEmailAddress(getUserEmail(submission.getApplicant().getUserId()))
                 .submittedTimeStamp(submission.getSubmittedDate())
+                .gapId(submission.getGapId())
                 .sections(mapSections(sections))
                 .build();
     }
