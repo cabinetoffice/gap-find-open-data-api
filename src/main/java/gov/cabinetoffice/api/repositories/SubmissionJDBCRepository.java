@@ -18,19 +18,17 @@ import java.util.List;
 @Repository
 public class SubmissionJDBCRepository {
 
-    public static final String APPLICATIONS_WITH_SUBMISSIONS_QUERY = """
-            SELECT
-               DISTINCT ga.grant_application_id AS applicationId,
+    // Base select for applications derived from a page of submissions
+    public static final String APPLICATIONS_FROM_PAGED_SUBMISSIONS = """
+            SELECT DISTINCT
+               ga.grant_application_id AS applicationId,
                gs.ggis_identifier AS ggisReferenceNumber,
                ga.application_name AS applicationFormName,
                gs.scheme_contact AS contactEmail,
                gs.version AS applicationFormVersion
-            FROM grant_submission s
-            INNER JOIN grant_scheme gs
-               ON gs.grant_scheme_id = s.scheme_id
-            INNER JOIN grant_application ga
-               ON ga.grant_application_id = s.application_id
-            WHERE s.status = 'SUBMITTED'
+            FROM paged_submissions ps
+            INNER JOIN grant_scheme gs ON gs.grant_scheme_id = ps.scheme_id
+            INNER JOIN grant_application ga ON ga.grant_application_id = ps.application_id
             """;
 
     public static final String AND_FUNDING_ORG_CLAUSE = "AND gs.funder_id = :fundingOrgId \n";
@@ -51,20 +49,30 @@ public class SubmissionJDBCRepository {
         final int safePage = page < 1 ? 1 : page;
         final int offset = (safePage - 1) * pageSize;
 
-        final SqlParameterSource applicationParameters = new MapSqlParameterSource()
+        final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("fundingOrgId", fundingOrgId)
                 .addValue("limit", pageSize)
                 .addValue("offset", offset);
 
-        final String query = new StringBuilder(APPLICATIONS_WITH_SUBMISSIONS_QUERY)
+        // Page submissions first, then derive applications from that page
+        final String pagedSubmissionsCte = new StringBuilder()
+                .append("WITH paged_submissions AS (\n")
+                .append("  SELECT s.submission_id, s.application_id, s.scheme_id\n")
+                .append("  FROM grant_submission s\n")
+                .append("  INNER JOIN grant_scheme gs ON gs.grant_scheme_id = s.scheme_id\n")
+                .append("  WHERE s.status = 'SUBMITTED'\n")
                 .append(AND_FUNDING_ORG_CLAUSE)
-                .append("LIMIT :limit \n")
-                .append("OFFSET :offset \n")
+                .append("  ORDER BY s.submission_id\n")
+                .append("  LIMIT :limit \n")
+                .append("  OFFSET :offset \n")
+                .append(") \n")
                 .toString();
 
-        log.info(query);
+        final String applicationsQuery = pagedSubmissionsCte + APPLICATIONS_FROM_PAGED_SUBMISSIONS;
 
-        final List<ApplicationDTO> applications = jdbcTemplate.query(query, applicationParameters, new ApplicationDTORowMapper());
+        log.info(applicationsQuery);
+
+        final List<ApplicationDTO> applications = jdbcTemplate.query(applicationsQuery, params, new ApplicationDTORowMapper());
 
         if (applications.isEmpty()) {
             final String msg = "No applications found for this funding organisation";
@@ -72,9 +80,14 @@ public class SubmissionJDBCRepository {
             throw new SubmissionNotFoundException(msg);
         }
 
+        // Count submissions in this page window
+        final String submissionCountQuery = pagedSubmissionsCte + "SELECT COUNT(*) FROM paged_submissions";
+        final Integer submissionCount = jdbcTemplate.queryForObject(submissionCountQuery, params, Integer.class);
+
         return ApplicationListDTO.builder()
                 .applications(applications)
                 .numberOfResults(applications.size())
+                .submissionCount(submissionCount == null ? 0 : submissionCount)
                 .build();
     }
 
@@ -90,22 +103,31 @@ public class SubmissionJDBCRepository {
         final int safePage = page < 1 ? 1 : page;
         final int offset = (safePage - 1) * pageSize;
 
-        final SqlParameterSource applicationParameters = new MapSqlParameterSource()
+        final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("fundingOrgId", fundingOrgId)
                 .addValue("ggisIdentifier", ggisIdentifier)
                 .addValue("limit", pageSize)
                 .addValue("offset", offset);
 
-        final String query = new StringBuilder(APPLICATIONS_WITH_SUBMISSIONS_QUERY)
+        final String pagedSubmissionsCte = new StringBuilder()
+                .append("WITH paged_submissions AS (\n")
+                .append("  SELECT s.submission_id, s.application_id, s.scheme_id\n")
+                .append("  FROM grant_submission s\n")
+                .append("  INNER JOIN grant_scheme gs ON gs.grant_scheme_id = s.scheme_id\n")
+                .append("  WHERE s.status = 'SUBMITTED'\n")
                 .append(AND_FUNDING_ORG_CLAUSE)
                 .append(AND_GGIS_ID_CLAUSE)
-                .append("LIMIT :limit \n")
-                .append("OFFSET :offset \n")
+                .append("  ORDER BY s.submission_id\n")
+                .append("  LIMIT :limit \n")
+                .append("  OFFSET :offset \n")
+                .append(") \n")
                 .toString();
 
-        log.info(query);
+        final String applicationsQuery = pagedSubmissionsCte + APPLICATIONS_FROM_PAGED_SUBMISSIONS;
 
-        final List<ApplicationDTO> applications = jdbcTemplate.query(query, applicationParameters, new ApplicationDTORowMapper());
+        log.info(applicationsQuery);
+
+        final List<ApplicationDTO> applications = jdbcTemplate.query(applicationsQuery, params, new ApplicationDTORowMapper());
 
         if (applications.isEmpty()) {
             final String msg = "No applications found for this funding organisation with GGIS identifier " + ggisIdentifier;
@@ -113,9 +135,14 @@ public class SubmissionJDBCRepository {
             throw new SubmissionNotFoundException(msg);
         }
 
+        // Count submissions in this page window
+        final String submissionCountQuery = pagedSubmissionsCte + "SELECT COUNT(*) FROM paged_submissions";
+        final Integer submissionCount = jdbcTemplate.queryForObject(submissionCountQuery, params, Integer.class);
+
         return ApplicationListDTO.builder()
                 .applications(applications)
                 .numberOfResults(applications.size())
+                .submissionCount(submissionCount == null ? 0 : submissionCount)
                 .build();
     }
 
@@ -138,6 +165,32 @@ public class SubmissionJDBCRepository {
             FROM grant_submission s
             INNER JOIN grant_scheme gs ON gs.grant_scheme_id = s.scheme_id
             INNER JOIN grant_application ga ON ga.grant_application_id = s.application_id
+            WHERE s.status = 'SUBMITTED' AND gs.funder_id = :fundingOrgId AND gs.ggis_identifier = :ggisIdentifier
+        """;
+        final SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("fundingOrgId", fundingOrgId)
+                .addValue("ggisIdentifier", ggisIdentifier);
+        Integer result = jdbcTemplate.queryForObject(countQuery, params, Integer.class);
+        return result == null ? 0 : result;
+    }
+
+    public int countSubmissionsByFundingOrganisationId(final int fundingOrgId) {
+        final String countQuery = """
+            SELECT COUNT(*) AS total
+            FROM grant_submission s
+            INNER JOIN grant_scheme gs ON gs.grant_scheme_id = s.scheme_id
+            WHERE s.status = 'SUBMITTED' AND gs.funder_id = :fundingOrgId
+        """;
+        final SqlParameterSource params = new MapSqlParameterSource().addValue("fundingOrgId", fundingOrgId);
+        Integer result = jdbcTemplate.queryForObject(countQuery, params, Integer.class);
+        return result == null ? 0 : result;
+    }
+
+    public int countSubmissionsByFundingOrganisationIdAndGgisIdentifier(final int fundingOrgId, final String ggisIdentifier) {
+        final String countQuery = """
+            SELECT COUNT(*) AS total
+            FROM grant_submission s
+            INNER JOIN grant_scheme gs ON gs.grant_scheme_id = s.scheme_id
             WHERE s.status = 'SUBMITTED' AND gs.funder_id = :fundingOrgId AND gs.ggis_identifier = :ggisIdentifier
         """;
         final SqlParameterSource params = new MapSqlParameterSource()

@@ -73,13 +73,13 @@ public class SubmissionsService {
 	}
 
 	public CountResponseDTO getSubmissionsCountByFundingOrgId(int fundingOrgId) {
-		int total = submissionJdbcRepository.countApplicationsByFundingOrganisationId(fundingOrgId);
+		int total = submissionJdbcRepository.countSubmissionsByFundingOrganisationId(fundingOrgId);
 		int totalPages = (int) Math.ceil((double) total / PAGE_SIZE);
 		return CountResponseDTO.builder().totalCount(total).totalPages(totalPages).build();
 	}
 
 	public CountResponseDTO getSubmissionsCountByFundingOrgIdAndGgisReferenceNum(int fundingOrgId, String ggisReferenceNumber) {
-		int total = submissionJdbcRepository.countApplicationsByFundingOrganisationIdAndGgisIdentifier(fundingOrgId, ggisReferenceNumber);
+		int total = submissionJdbcRepository.countSubmissionsByFundingOrganisationIdAndGgisIdentifier(fundingOrgId, ggisReferenceNumber);
 		int totalPages = (int) Math.ceil((double) total / PAGE_SIZE);
 		return CountResponseDTO.builder().totalCount(total).totalPages(totalPages).build();
 	}

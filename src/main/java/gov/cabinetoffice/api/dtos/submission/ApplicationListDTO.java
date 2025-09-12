@@ -15,7 +15,11 @@ import java.util.List;
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ApplicationListDTO {
+    // number of applications in this page window (distinct applications)
     private int numberOfResults;
+
+    // number of submissions in this page window
+    private int submissionCount;
 
     @Builder.Default
     private List<ApplicationDTO> applications = new ArrayList<>();
