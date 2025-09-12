@@ -6,25 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.UUID;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SubmissionDTO {
-
-	private UUID submissionId;
-
-	private String grantApplicantEmailAddress;
-
-	private ZonedDateTime submittedTimeStamp;
-
-	private String gapId;
-
-	private List<SubmissionSectionDTO> sections;
-
+public class CountResponseDTO {
+    private int totalCount;
+    private int totalPages;
 }

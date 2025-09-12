@@ -20,6 +20,7 @@ public interface SubmissionMapper {
     //TODO fetch the applicant email from the database after one login work completes - this is not the correct value
 	@Mapping(source = "scheme.email", target = "grantApplicantEmailAddress")
 	@Mapping(source = "submittedDate", target = "submittedTimeStamp")
+	@Mapping(source = "gapId", target = "gapId")
 	@Mapping(source = "definition.sections", target = "sections", qualifiedByName = "mapSections")
 	SubmissionDTO submissionToSubmissionDto(Submission submission);
 
