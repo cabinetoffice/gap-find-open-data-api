@@ -8,6 +8,8 @@ import gov.cabinetoffice.api.mappers.SubmissionMapper;
 import gov.cabinetoffice.api.repositories.SubmissionJDBCRepository;
 import gov.cabinetoffice.api.repositories.SubmissionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,25 +25,21 @@ public class SubmissionsService {
 	private final SubmissionMapper submissionMapper;
 
 	public ApplicationListDTO getSubmissionsByFundingOrgId(int fundingOrgId) {
-		final ApplicationListDTO applicationDTO = submissionJdbcRepository.getApplicationSubmissionsByFundingOrganisationId(fundingOrgId);
-
-		applicationDTO.getApplications().forEach(a -> {
-			final List<Submission> submissions = submissionRepository.findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId());
-			a.setSubmissions(
-					submissions.stream()
-						.map(submissionMapper::submissionToSubmissionDto)
-						.toList()
-			);
-		});
-
-		return applicationDTO;
+		// default to first page of submissions when no page provided
+		return getSubmissionsByFundingOrgId(fundingOrgId, 1);
 	}
 
 	public ApplicationListDTO getSubmissionsByFundingOrgId(int fundingOrgId, int page) {
-		final ApplicationListDTO applicationDTO = submissionJdbcRepository.getApplicationSubmissionsByFundingOrganisationId(fundingOrgId, page);
+		// fetch all applications (no application-level pagination)
+		final ApplicationListDTO applicationDTO = submissionJdbcRepository.getApplicationSubmissionsByFundingOrganisationId(fundingOrgId);
+
+		final int safePage = page < 1 ? 1 : page;
+		final Pageable pageable = PageRequest.of(safePage - 1, PAGE_SIZE);
 
 		applicationDTO.getApplications().forEach(a -> {
-			final List<Submission> submissions = submissionRepository.findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId());
+			final int total = submissionRepository.countByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId());
+			a.setTotalSubmissions(total);
+			final List<Submission> submissions = submissionRepository.findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId(), pageable);
 			a.setSubmissions(
 					submissions.stream()
 						.map(submissionMapper::submissionToSubmissionDto)
@@ -58,10 +56,16 @@ public class SubmissionsService {
 	}
 
 	public ApplicationListDTO getSubmissionsByFundingOrgIdAndGgisReferenceNum(int fundingOrgId, String ggisReferenceNumber, int page) {
-		final ApplicationListDTO applicationDTO = submissionJdbcRepository.getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(fundingOrgId, ggisReferenceNumber, page);
+		// fetch all applications matching GGIS (no application-level pagination)
+		final ApplicationListDTO applicationDTO = submissionJdbcRepository.getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(fundingOrgId, ggisReferenceNumber);
+
+		final int safePage = page < 1 ? 1 : page;
+		final Pageable pageable = PageRequest.of(safePage - 1, PAGE_SIZE);
 
 		applicationDTO.getApplications().forEach(a -> {
-			final List<Submission> submissions = submissionRepository.findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId());
+			final int total = submissionRepository.countByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId());
+			a.setTotalSubmissions(total);
+			final List<Submission> submissions = submissionRepository.findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId(), pageable);
 			a.setSubmissions(
 					submissions.stream()
 						.map(submissionMapper::submissionToSubmissionDto)

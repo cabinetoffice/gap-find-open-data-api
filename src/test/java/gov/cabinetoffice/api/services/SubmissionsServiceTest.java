@@ -21,6 +21,7 @@ import org.mockito.Mock;
 import static org.mockito.Mockito.*;
 
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -64,7 +65,9 @@ class SubmissionsServiceTest {
 		when(submissionJDBCRepository.getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(FUNDING_ORG_ID, GGIS_REFERENCE_NUMBER))
 				.thenReturn(applicationListDTO);
 
-		when(submissionRepository.findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, APPLICATION_ID))
+		when(submissionRepository.countByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, APPLICATION_ID))
+				.thenReturn(submissions.size());
+		when(submissionRepository.findByStatusAndApplicationGrantApplicationId(eq(SubmissionStatus.SUBMITTED), eq(APPLICATION_ID), any(Pageable.class)))
 				.thenReturn(submissions);
 
 		assertThat(application.getSubmissions()).isEmpty();
@@ -72,7 +75,8 @@ class SubmissionsServiceTest {
 		final ApplicationListDTO methodResponse = submissionsService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(FUNDING_ORG_ID, GGIS_REFERENCE_NUMBER);
 
 		verify(submissionJDBCRepository).getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(FUNDING_ORG_ID, GGIS_REFERENCE_NUMBER);
-		verify(submissionRepository, times(1)).findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, APPLICATION_ID);
+		verify(submissionRepository, times(1)).countByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, APPLICATION_ID);
+		verify(submissionRepository, times(1)).findByStatusAndApplicationGrantApplicationId(eq(SubmissionStatus.SUBMITTED), eq(APPLICATION_ID), any(Pageable.class));
 		assertThat(methodResponse.getApplications()).isEqualTo(applications);
 	}
 
@@ -110,7 +114,9 @@ class SubmissionsServiceTest {
 		when(submissionJDBCRepository.getApplicationSubmissionsByFundingOrganisationId(FUNDING_ORG_ID))
 				.thenReturn(applicationListDTO);
 
-		when(submissionRepository.findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, APPLICATION_ID))
+		when(submissionRepository.countByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, APPLICATION_ID))
+				.thenReturn(submissions.size());
+		when(submissionRepository.findByStatusAndApplicationGrantApplicationId(eq(SubmissionStatus.SUBMITTED), eq(APPLICATION_ID), any(Pageable.class)))
 				.thenReturn(submissions);
 
 		assertThat(application.getSubmissions()).isEmpty();
@@ -118,7 +124,8 @@ class SubmissionsServiceTest {
 		final ApplicationListDTO methodResponse = submissionsService.getSubmissionsByFundingOrgId(FUNDING_ORG_ID);
 
 		verify(submissionJDBCRepository).getApplicationSubmissionsByFundingOrganisationId(FUNDING_ORG_ID);
-		verify(submissionRepository, times(1)).findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, APPLICATION_ID);
+		verify(submissionRepository, times(1)).countByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, APPLICATION_ID);
+		verify(submissionRepository, times(1)).findByStatusAndApplicationGrantApplicationId(eq(SubmissionStatus.SUBMITTED), eq(APPLICATION_ID), any(Pageable.class));
 		assertThat(methodResponse.getApplications()).isEqualTo(applications);
 	}
 
