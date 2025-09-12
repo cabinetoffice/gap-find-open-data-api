@@ -4,7 +4,9 @@ import gov.cabinetoffice.api.dtos.submission.*;
 import gov.cabinetoffice.api.entities.Submission;
 import gov.cabinetoffice.api.models.submission.SubmissionQuestion;
 import gov.cabinetoffice.api.models.submission.SubmissionSection;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,13 +23,6 @@ public interface SubmissionMapper {
 	@Mapping(source = "gapId", target = "gapId")
 	@Mapping(source = "definition.sections", target = "sections", qualifiedByName = "mapSections")
 	SubmissionDTO submissionToSubmissionDto(Submission submission);
-
-	@AfterMapping
-	default void ensureGapId(final Submission submission, @MappingTarget final SubmissionDTO dto) {
-		if (dto != null && dto.getGapId() == null && submission != null) {
-			dto.setGapId(submission.getGapId());
-		}
-	}
 
 	@Named("mapSections")
 	default List<SubmissionSectionDTO> mapSections(List<SubmissionSection> sections) {
