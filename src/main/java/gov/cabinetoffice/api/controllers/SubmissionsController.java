@@ -55,6 +55,8 @@ public class SubmissionsController {
         log.info("funding organisation: " + fundingOrganisationId);
 
         final int requestedPage = (page == null || page < 1) ? 1 : page;
+        log.info("requested page: " + page);
+
         final ApplicationListDTO response = this.submissionsService.getSubmissionsByFundingOrgId(fundingOrganisationId, requestedPage);
         log.debug("results of submissionsService.getSubmissionsByFundingOrgId");
         log.debug(response.toString());
@@ -90,10 +92,10 @@ public class SubmissionsController {
 	public ResponseEntity<ApplicationListDTO> getSubmissionsByGgisRefNum(@PathVariable @NotNull final String ggisReferenceNumber, final Principal principal, @RequestParam(name = "page", required = false) Integer page) {
 		final int fundingOrganisationId = Integer.parseInt(principal.getName());
 		log.info("funding organisation: " + fundingOrganisationId + ", GGIS ID: " + ggisReferenceNumber);
+		log.info("requested page: " + page);
 
         final ApplicationListDTO response;
         if (page == null || page < 1) {
-            // Preserve backward compatibility with existing service method
             response = this.submissionsService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(fundingOrganisationId, ggisReferenceNumber);
         } else {
             response = this.submissionsService.getSubmissionsByFundingOrgIdAndGgisReferenceNum(fundingOrganisationId, ggisReferenceNumber, page);
