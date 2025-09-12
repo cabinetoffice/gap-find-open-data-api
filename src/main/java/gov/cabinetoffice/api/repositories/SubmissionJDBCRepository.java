@@ -62,6 +62,8 @@ public class SubmissionJDBCRepository {
                 .append("OFFSET :offset \n")
                 .toString();
 
+        log.info(query);
+
         final List<ApplicationDTO> applications = jdbcTemplate.query(query, applicationParameters, new ApplicationDTORowMapper());
 
         if (applications.isEmpty()) {
@@ -100,6 +102,8 @@ public class SubmissionJDBCRepository {
                 .append("LIMIT :limit \n")
                 .append("OFFSET :offset \n")
                 .toString();
+
+        log.info(query);
 
         final List<ApplicationDTO> applications = jdbcTemplate.query(query, applicationParameters, new ApplicationDTORowMapper());
 
