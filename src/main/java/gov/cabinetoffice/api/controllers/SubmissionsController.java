@@ -54,11 +54,14 @@ public class SubmissionsController {
     public ResponseEntity<ApplicationListDTO> getSubmissions(final Principal principal, @RequestParam(name = "page", required = false) Integer page) {
         final int fundingOrganisationId = Integer.parseInt(principal.getName());
         log.info("funding organisation: " + fundingOrganisationId);
-
-        final int requestedPage = (page == null || page < 1) ? 1 : page;
         log.info("requested page: " + page);
 
-        final ApplicationListDTO response = this.submissionsService.getSubmissionsByFundingOrgId(fundingOrganisationId, requestedPage);
+        final ApplicationListDTO response;
+        if (page == null || page < 1) {
+            response = this.submissionsService.getSubmissionsByFundingOrgId(fundingOrganisationId);
+        } else {
+            response = this.submissionsService.getSubmissionsByFundingOrgId(fundingOrganisationId, page);
+        }
         log.debug("results of submissionsService.getSubmissionsByFundingOrgId");
         log.debug(response.toString());
 
