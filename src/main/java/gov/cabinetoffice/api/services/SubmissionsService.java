@@ -1,6 +1,7 @@
 package gov.cabinetoffice.api.services;
 
 import gov.cabinetoffice.api.dtos.submission.ApplicationListDTO;
+import gov.cabinetoffice.api.dtos.submission.CountResponseDTO;
 import gov.cabinetoffice.api.entities.Submission;
 import gov.cabinetoffice.api.enums.SubmissionStatus;
 import gov.cabinetoffice.api.mappers.SubmissionMapper;
@@ -14,6 +15,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class SubmissionsService {
+
+	private static final int PAGE_SIZE = 100;
 
 	private final SubmissionRepository submissionRepository;
 	private final SubmissionJDBCRepository submissionJdbcRepository;
@@ -67,5 +70,17 @@ public class SubmissionsService {
 		});
 
 		return applicationDTO;
+	}
+
+	public CountResponseDTO getSubmissionsCountByFundingOrgId(int fundingOrgId) {
+		int total = submissionJdbcRepository.countApplicationsByFundingOrganisationId(fundingOrgId);
+		int totalPages = (int) Math.ceil((double) total / PAGE_SIZE);
+		return CountResponseDTO.builder().totalCount(total).totalPages(totalPages).build();
+	}
+
+	public CountResponseDTO getSubmissionsCountByFundingOrgIdAndGgisReferenceNum(int fundingOrgId, String ggisReferenceNumber) {
+		int total = submissionJdbcRepository.countApplicationsByFundingOrganisationIdAndGgisIdentifier(fundingOrgId, ggisReferenceNumber);
+		int totalPages = (int) Math.ceil((double) total / PAGE_SIZE);
+		return CountResponseDTO.builder().totalCount(total).totalPages(totalPages).build();
 	}
 }

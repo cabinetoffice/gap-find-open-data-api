@@ -25,7 +25,6 @@ public class ApplicationDTO {
 
     private int applicationFormVersion;
 
-    @JsonIgnore
     private int applicationId;
 
     @Builder.Default
