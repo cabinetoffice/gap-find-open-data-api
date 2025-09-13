@@ -15,7 +15,8 @@ import java.util.List;
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ApplicationSummaryListDTO {
-    private int numberOfResults;
+    // total number of applications across all pages
+    private int totalApplications;
 
     // total number of pages of applications in the result set (page size 100)
     private int totalApplicationPages;
