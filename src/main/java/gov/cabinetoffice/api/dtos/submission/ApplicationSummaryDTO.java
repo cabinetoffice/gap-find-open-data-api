@@ -6,16 +6,22 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ApplicationListDTO {
+public class ApplicationSummaryDTO {
 
-    @Builder.Default
-    private List<ApplicationDTO> applications = new ArrayList<>();
+    private String applicationFormName;
+
+    private String grantAdminEmailAddress;
+
+    private String ggisReferenceNumber;
+
+    private int applicationFormVersion;
+
+    private int totalSubmissions;
+
+    private int totalSubmissionPages;
 }

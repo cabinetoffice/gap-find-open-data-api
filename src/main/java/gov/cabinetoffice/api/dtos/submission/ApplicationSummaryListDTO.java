@@ -14,8 +14,13 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ApplicationListDTO {
+public class ApplicationSummaryListDTO {
+    // total number of applications across all pages
+    private int totalApplications;
+
+    // total number of pages of applications in the result set (page size 100)
+    private int totalApplicationPages;
 
     @Builder.Default
-    private List<ApplicationDTO> applications = new ArrayList<>();
+    private List<ApplicationSummaryDTO> applications = new ArrayList<>();
 }
