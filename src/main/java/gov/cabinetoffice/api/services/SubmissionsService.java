@@ -44,6 +44,7 @@ public class SubmissionsService {
 			a.setTotalSubmissions(total);
 			final int pages = (int) Math.ceil((double) total / PAGE_SIZE);
 			a.setTotalSubmissionPages(pages);
+      
 			final List<Submission> submissions = submissionRepository.findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId(), pageable);
 			a.setSubmissions(
 					submissions.stream()
