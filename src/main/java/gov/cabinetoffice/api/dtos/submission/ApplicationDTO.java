@@ -30,6 +30,10 @@ public class ApplicationDTO {
     @Builder.Default
     private int totalSubmissions = 0;
 
+    // total number of pages of submissions for this application
+    @Builder.Default
+    private int totalSubmissionPages = 0;
+
     @Builder.Default
     private List<SubmissionDTO> submissions = new ArrayList<>();
 }

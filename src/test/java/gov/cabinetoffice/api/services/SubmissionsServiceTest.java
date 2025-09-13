@@ -58,10 +58,9 @@ class SubmissionsServiceTest {
 		final List<ApplicationDTO> applications = List.of(application);
 
 		final ApplicationListDTO applicationListDTO = ApplicationListDTO.builder()
-				.numberOfResults(applications.size())
 				.applications(applications)
 				.build();
-
+		
 		when(submissionJDBCRepository.getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(FUNDING_ORG_ID, GGIS_REFERENCE_NUMBER))
 				.thenReturn(applicationListDTO);
 
@@ -107,10 +106,9 @@ class SubmissionsServiceTest {
 		final List<ApplicationDTO> applications = List.of(application);
 
 		final ApplicationListDTO applicationListDTO = ApplicationListDTO.builder()
-				.numberOfResults(applications.size())
 				.applications(applications)
 				.build();
-
+		
 		when(submissionJDBCRepository.getApplicationSubmissionsByFundingOrganisationId(FUNDING_ORG_ID))
 				.thenReturn(applicationListDTO);
 

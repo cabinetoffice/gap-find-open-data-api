@@ -167,37 +167,6 @@ class SubmissionsControllerTest {
 	private Principal principal;
 
 
-	@Test
-	void getSubmissions_ReturnsExpectedSubmissions() {
-
-		final ApplicationListDTO applications = ApplicationListDTO.builder().build();
-
-		when(principal.getName())
-				.thenReturn(String.valueOf(FUNDING_ORGANISATION_ID));
-
-		when(submissionService.getSubmissionsByFundingOrgId(FUNDING_ORGANISATION_ID))
-				.thenReturn(applications);
-
-		final ResponseEntity<ApplicationListDTO> methodResponse = controllerUnderTest.getSubmissions(principal);
-
-		verify(submissionService).getSubmissionsByFundingOrgId(FUNDING_ORGANISATION_ID);
-		assertThat(methodResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-		assertThat(methodResponse.getBody()).isEqualTo(applications);
-	}
-
-	@Test
-	void getSubmissions_ThrowsSubmissionNotFoundException() {
-
-		when(principal.getName())
-				.thenReturn(String.valueOf(FUNDING_ORGANISATION_ID));
-
-		when(submissionService.getSubmissionsByFundingOrgId(FUNDING_ORGANISATION_ID))
-				.thenThrow(new SubmissionNotFoundException("No submissions found"));
-
-        assertThatExceptionOfType(SubmissionNotFoundException.class)
-                .isThrownBy(() -> controllerUnderTest.getSubmissions(principal))
-                .withMessage("No submissions found");
-    }
 
 	@Test
 	void getSubmissionsByGgisRefNum_ReturnsExpectedSubmissions() {

@@ -1,6 +1,8 @@
 package gov.cabinetoffice.api.services;
 
 import gov.cabinetoffice.api.dtos.submission.ApplicationListDTO;
+import gov.cabinetoffice.api.dtos.submission.ApplicationSummaryDTO;
+import gov.cabinetoffice.api.dtos.submission.ApplicationSummaryListDTO;
 import gov.cabinetoffice.api.dtos.submission.CountResponseDTO;
 import gov.cabinetoffice.api.entities.Submission;
 import gov.cabinetoffice.api.enums.SubmissionStatus;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +42,9 @@ public class SubmissionsService {
 		applicationDTO.getApplications().forEach(a -> {
 			final int total = submissionRepository.countByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId());
 			a.setTotalSubmissions(total);
+			final int pages = (int) Math.ceil((double) total / PAGE_SIZE);
+			a.setTotalSubmissionPages(pages);
+      
 			final List<Submission> submissions = submissionRepository.findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId(), pageable);
 			a.setSubmissions(
 					submissions.stream()
@@ -65,6 +71,8 @@ public class SubmissionsService {
 		applicationDTO.getApplications().forEach(a -> {
 			final int total = submissionRepository.countByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId());
 			a.setTotalSubmissions(total);
+			final int pages = (int) Math.ceil((double) total / PAGE_SIZE);
+			a.setTotalSubmissionPages(pages);
 			final List<Submission> submissions = submissionRepository.findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId(), pageable);
 			a.setSubmissions(
 					submissions.stream()
@@ -73,7 +81,67 @@ public class SubmissionsService {
 			);
 		});
 
-		return applicationDTO;
+ 	return applicationDTO;
+ }
+
+ public ApplicationSummaryListDTO getApplicationSummariesByFundingOrgIdAndGgisReferenceNum(int fundingOrgId, String ggisReferenceNumber) {
+ 	return getApplicationSummariesByFundingOrgIdAndGgisReferenceNum(fundingOrgId, ggisReferenceNumber, 1);
+ }
+
+ public ApplicationSummaryListDTO getApplicationSummariesByFundingOrgIdAndGgisReferenceNum(int fundingOrgId, String ggisReferenceNumber, int page) {
+ 	final ApplicationListDTO applications = submissionJdbcRepository.getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(fundingOrgId, ggisReferenceNumber);
+
+ 	final List<ApplicationSummaryDTO> summaries = applications.getApplications().stream().map(a -> {
+ 		final int total = submissionRepository.countByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId());
+ 		final int pages = (int) Math.ceil((double) total / PAGE_SIZE);
+ 		return ApplicationSummaryDTO.builder()
+ 				.applicationFormName(a.getApplicationFormName())
+ 				.grantAdminEmailAddress(a.getGrantAdminEmailAddress())
+ 				.ggisReferenceNumber(a.getGgisReferenceNumber())
+ 				.applicationFormVersion(a.getApplicationFormVersion())
+ 				.totalSubmissions(total)
+ 				.totalSubmissionPages(pages)
+ 				.build();
+ 	}).toList();
+
+ 	int totalApplications = submissionJdbcRepository.countApplicationsByFundingOrganisationIdAndGgisIdentifier(fundingOrgId, ggisReferenceNumber);
+ 	int totalApplicationPages = (int) Math.ceil((double) totalApplications / PAGE_SIZE);
+
+ 	return ApplicationSummaryListDTO.builder()
+ 			.numberOfResults(summaries.size())
+ 			.totalApplicationPages(totalApplicationPages)
+ 			.applications(summaries)
+ 			.build();
+ }
+
+ public ApplicationSummaryListDTO getApplicationSummariesByFundingOrgId(int fundingOrgId) {
+ 	return getApplicationSummariesByFundingOrgId(fundingOrgId, 1);
+ }
+
+	public ApplicationSummaryListDTO getApplicationSummariesByFundingOrgId(int fundingOrgId, int page) {
+		final ApplicationListDTO applications = submissionJdbcRepository.getApplicationSubmissionsByFundingOrganisationId(fundingOrgId);
+
+		final List<ApplicationSummaryDTO> summaries = applications.getApplications().stream().map(a -> {
+			final int total = submissionRepository.countByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId());
+			final int pages = (int) Math.ceil((double) total / PAGE_SIZE);
+			return ApplicationSummaryDTO.builder()
+					.applicationFormName(a.getApplicationFormName())
+					.grantAdminEmailAddress(a.getGrantAdminEmailAddress())
+					.ggisReferenceNumber(a.getGgisReferenceNumber())
+					.applicationFormVersion(a.getApplicationFormVersion())
+					.totalSubmissions(total)
+					.totalSubmissionPages(pages)
+					.build();
+		}).toList();
+
+		int totalApplications = submissionJdbcRepository.countApplicationsByFundingOrganisationId(fundingOrgId);
+		int totalApplicationPages = (int) Math.ceil((double) totalApplications / PAGE_SIZE);
+
+		return ApplicationSummaryListDTO.builder()
+				.numberOfResults(summaries.size())
+				.totalApplicationPages(totalApplicationPages)
+				.applications(summaries)
+				.build();
 	}
 
 	public CountResponseDTO getSubmissionsCountByFundingOrgId(int fundingOrgId) {
