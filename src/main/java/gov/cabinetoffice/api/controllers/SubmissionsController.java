@@ -71,4 +71,5 @@ public class SubmissionsController {
 	public ResponseEntity<ApplicationListDTO> getSubmissionsByGgisRefNum(@PathVariable @NotNull final String ggisReferenceNumber, final Principal principal) {
 		return getSubmissionsByGgisRefNum(ggisReferenceNumber, principal, null);
 	}
+
 }
