@@ -42,6 +42,7 @@ public class SubmissionsService {
 		applicationDTO.getApplications().forEach(a -> {
 			final int total = submissionRepository.countByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId());
 			a.setTotalSubmissions(total);
+
 			final int pages = (int) Math.ceil((double) total / PAGE_SIZE);
 			a.setTotalSubmissionPages(pages);
 
@@ -71,8 +72,10 @@ public class SubmissionsService {
 		applicationDTO.getApplications().forEach(a -> {
 			final int total = submissionRepository.countByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId());
 			a.setTotalSubmissions(total);
+
 			final int pages = (int) Math.ceil((double) total / PAGE_SIZE);
 			a.setTotalSubmissionPages(pages);
+
 			final List<Submission> submissions = submissionRepository.findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId(), pageable);
 			a.setSubmissions(
 					submissions.stream()
@@ -142,6 +145,18 @@ public class SubmissionsService {
 				.totalApplicationPages(totalApplicationPages)
 				.applications(summaries)
 				.build();
+	}
+
+	public CountResponseDTO getSubmissionsCountByFundingOrgId(int fundingOrgId) {
+		int total = submissionJdbcRepository.countApplicationsByFundingOrganisationId(fundingOrgId);
+		int totalPages = (int) Math.ceil((double) total / PAGE_SIZE);
+		return CountResponseDTO.builder().totalCount(total).totalPages(totalPages).build();
+	}
+
+	public CountResponseDTO getSubmissionsCountByFundingOrgIdAndGgisReferenceNum(int fundingOrgId, String ggisReferenceNumber) {
+		int total = submissionJdbcRepository.countApplicationsByFundingOrganisationIdAndGgisIdentifier(fundingOrgId, ggisReferenceNumber);
+		int totalPages = (int) Math.ceil((double) total / PAGE_SIZE);
+		return CountResponseDTO.builder().totalCount(total).totalPages(totalPages).build();
 	}
 
 	public CountResponseDTO getSubmissionsCountByFundingOrgId(int fundingOrgId) {
