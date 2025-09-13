@@ -57,7 +57,6 @@ class SubmissionJDBCRepositoryTest {
 
         final ApplicationListDTO methodResponse = repositoryUnderTest.getApplicationSubmissionsByFundingOrganisationId(FUNDING_ORG_ID);
 
-        assertThat(methodResponse.getNumberOfResults()).isEqualTo(1);
         assertThat(methodResponse.getApplications()).containsOnly(applicationDTO);
     }
 
@@ -95,7 +94,6 @@ class SubmissionJDBCRepositoryTest {
 
         final ApplicationListDTO methodResponse = repositoryUnderTest.getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(FUNDING_ORG_ID, GGIS_IDENTIFIER);
 
-        assertThat(methodResponse.getNumberOfResults()).isEqualTo(1);
         assertThat(methodResponse.getApplications()).containsOnly(applicationDTO);
     }
 

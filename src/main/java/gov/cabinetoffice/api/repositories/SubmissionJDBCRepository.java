@@ -74,7 +74,6 @@ public class SubmissionJDBCRepository {
 
         return ApplicationListDTO.builder()
                 .applications(applications)
-                .numberOfResults(applications.size())
                 .build();
     }
 
@@ -115,7 +114,6 @@ public class SubmissionJDBCRepository {
 
         return ApplicationListDTO.builder()
                 .applications(applications)
-                .numberOfResults(applications.size())
                 .build();
     }
 
