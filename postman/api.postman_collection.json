@@ -136,41 +136,30 @@
 			"name": "All Submissions",
 			"event": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Response status code is 200\", function () {",
-							"  pm.expect(pm.response.code).to.equal(200);",
-							"});",
-							"",
-							"",
-							"pm.test(\"The numberOfResults field should be a non-negative integer\", function () {",
-							"    const responseData = pm.response.json();",
-							"    ",
-							"    pm.expect(responseData.numberOfResults).to.be.a('number');",
-							"    pm.expect(responseData.numberOfResults).to.be.at.least(0);",
-							"});",
-							"",
-							"",
-							"pm.test(\"The 'applications' array is present and contains at least one element\", function () {",
-							"  const responseData = pm.response.json();",
-							"  ",
-							"  pm.expect(responseData).to.be.an('object');",
-							"  pm.expect(responseData.applications).to.exist.and.to.be.an('array').and.to.have.lengthOf.at.least(1);",
-							"});",
-							"",
-							"",
-							"pm.test(\"Verify that the 'submissions' array is present and contains at least one element\", function () {",
-							"   ",
-							"    const responseData = pm.response.json();",
-							"       ",
-							"    pm.expect(responseData).to.be.an('object');",
-							"    pm.expect(responseData.applications).to.exist.and.to.be.an('array').and.to.have.lengthOf.at.least(1);",
-							"});"
-						],
-						"type": "text/javascript"
+						"listen": "test",
+						"script": {
+							"exec": [
+								"pm.test(\"Response status code is 200\", function () {",
+								"  pm.expect(pm.response.code).to.equal(200);",
+								"});",
+								"",
+								"pm.test(\"The 'applications' array is present and contains at least one element\", function () {",
+								"  const responseData = pm.response.json();",
+								"  pm.expect(responseData).to.be.an('object');",
+								"  pm.expect(responseData.applications).to.exist.and.to.be.an('array').and.to.have.lengthOf.at.least(1);",
+								"});",
+								"",
+								"pm.test(\"Each application includes totalSubmissionPages and totalSubmissions\", function () {",
+								"  const responseData = pm.response.json();",
+								"  responseData.applications.forEach(app => {",
+								"    pm.expect(app).to.have.property('totalSubmissionPages');",
+								"    pm.expect(app).to.have.property('totalSubmissions');",
+								"  });",
+								"});"
+							],
+							"type": "text/javascript"
+						}
 					}
-				}
 			],
 			"request": {
 				"auth": {
@@ -204,13 +193,14 @@
 					}
 				],
 				"url": {
-					"raw": "{{URL}}/open-data/submissions",
+					"raw": "{{URL}}/open-data/submissions/SCH-000003589",
 					"host": [
 						"{{URL}}"
 					],
 					"path": [
 						"open-data",
-						"submissions"
+						"submissions",
+						"SCH-000003589"
 					]
 				}
 			},

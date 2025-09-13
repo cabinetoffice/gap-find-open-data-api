@@ -298,13 +298,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}/open-data/submissions",
+					"raw": "{{URL}}/open-data/submissions/{{GGIS_ID_FUNDER_1}}",
 					"host": [
 						"{{URL}}"
 					],
 					"path": [
 						"open-data",
-						"submissions"
+						"submissions",
+						"{{GGIS_ID_FUNDER_1}}"
 					]
 				}
 			},
@@ -322,7 +323,7 @@
 							"    const responseData = pm.response.text();",
 							"",
 							"    pm.expect(pm.response.code).to.equal(404);",
-							"    pm.expect(responseData).to.include(\"No applications found for this funding organisation\")",
+							"    pm.expect(responseData).to.include(\"No applications found for this funding organisation with GGIS identifier\")",
 							"",
 							"});"
 						],
@@ -349,13 +350,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}/open-data/submissions",
+					"raw": "{{URL}}/open-data/submissions/{{GGIS_ID_FUNDER_1}}",
 					"host": [
 						"{{URL}}"
 					],
 					"path": [
 						"open-data",
-						"submissions"
+						"submissions",
+						"{{GGIS_ID_FUNDER_1}}"
 					]
 				}
 			},
