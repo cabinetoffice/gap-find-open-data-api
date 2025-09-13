@@ -44,7 +44,7 @@ public class SubmissionsService {
 			a.setTotalSubmissions(total);
 			final int pages = (int) Math.ceil((double) total / PAGE_SIZE);
 			a.setTotalSubmissionPages(pages);
-      
+
 			final List<Submission> submissions = submissionRepository.findByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId(), pageable);
 			a.setSubmissions(
 					submissions.stream()
@@ -89,7 +89,7 @@ public class SubmissionsService {
  }
 
  public ApplicationSummaryListDTO getApplicationSummariesByFundingOrgIdAndGgisReferenceNum(int fundingOrgId, String ggisReferenceNumber, int page) {
- 	final ApplicationListDTO applications = submissionJdbcRepository.getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(fundingOrgId, ggisReferenceNumber);
+ 	final ApplicationListDTO applications = submissionJdbcRepository.getApplicationSubmissionsByFundingOrganisationIdAndGgisIdentifier(fundingOrgId, ggisReferenceNumber, page);
 
  	final List<ApplicationSummaryDTO> summaries = applications.getApplications().stream().map(a -> {
  		final int total = submissionRepository.countByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId());
@@ -108,7 +108,7 @@ public class SubmissionsService {
  	int totalApplicationPages = (int) Math.ceil((double) totalApplications / PAGE_SIZE);
 
  	return ApplicationSummaryListDTO.builder()
- 			.numberOfResults(summaries.size())
+ 			.totalApplications(totalApplications)
  			.totalApplicationPages(totalApplicationPages)
  			.applications(summaries)
  			.build();
@@ -119,7 +119,7 @@ public class SubmissionsService {
  }
 
 	public ApplicationSummaryListDTO getApplicationSummariesByFundingOrgId(int fundingOrgId, int page) {
-		final ApplicationListDTO applications = submissionJdbcRepository.getApplicationSubmissionsByFundingOrganisationId(fundingOrgId);
+		final ApplicationListDTO applications = submissionJdbcRepository.getApplicationSubmissionsByFundingOrganisationId(fundingOrgId, page);
 
 		final List<ApplicationSummaryDTO> summaries = applications.getApplications().stream().map(a -> {
 			final int total = submissionRepository.countByStatusAndApplicationGrantApplicationId(SubmissionStatus.SUBMITTED, a.getApplicationId());
@@ -138,7 +138,7 @@ public class SubmissionsService {
 		int totalApplicationPages = (int) Math.ceil((double) totalApplications / PAGE_SIZE);
 
 		return ApplicationSummaryListDTO.builder()
-				.numberOfResults(summaries.size())
+				.totalApplications(totalApplications)
 				.totalApplicationPages(totalApplicationPages)
 				.applications(summaries)
 				.build();
