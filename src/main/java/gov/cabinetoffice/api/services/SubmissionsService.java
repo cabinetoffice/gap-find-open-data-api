@@ -4,8 +4,11 @@ import gov.cabinetoffice.api.dtos.submission.ApplicationListDTO;
 import gov.cabinetoffice.api.dtos.submission.ApplicationSummaryDTO;
 import gov.cabinetoffice.api.dtos.submission.ApplicationSummaryListDTO;
 import gov.cabinetoffice.api.dtos.submission.CountResponseDTO;
+import gov.cabinetoffice.api.dtos.submission.SubmissionDTO;
+import gov.cabinetoffice.api.dtos.submission.SubmissionDetailDTO;
 import gov.cabinetoffice.api.entities.Submission;
 import gov.cabinetoffice.api.enums.SubmissionStatus;
+import gov.cabinetoffice.api.exceptions.SubmissionNotFoundException;
 import gov.cabinetoffice.api.mappers.SubmissionMapper;
 import gov.cabinetoffice.api.repositories.SubmissionJDBCRepository;
 import gov.cabinetoffice.api.repositories.SubmissionRepository;
@@ -15,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -141,6 +145,25 @@ public class SubmissionsService {
 				.totalApplications(totalApplications)
 				.totalApplicationPages(totalApplicationPages)
 				.applications(summaries)
+				.build();
+	}
+
+	public SubmissionDetailDTO getSubmissionByIdAndFundingOrgId(UUID submissionId, int fundingOrgId) {
+		// a submission owned by another funder is reported as not found, so ids cannot be probed
+		final Submission submission = submissionRepository
+			.findByIdAndStatusAndSchemeFunderId(submissionId, SubmissionStatus.SUBMITTED, fundingOrgId)
+			.orElseThrow(() -> new SubmissionNotFoundException("No submission found with id " + submissionId));
+
+		final SubmissionDTO submissionDTO = submissionMapper.submissionToSubmissionDto(submission);
+
+		return SubmissionDetailDTO.builder()
+				.submissionId(submissionDTO.getSubmissionId())
+				.gapId(submissionDTO.getGapId())
+				.ggisReferenceNumber(submission.getScheme().getGgisIdentifier())
+				.applicationFormName(submission.getApplication().getApplicationName())
+				.grantApplicantEmailAddress(submissionDTO.getGrantApplicantEmailAddress())
+				.submittedTimeStamp(submissionDTO.getSubmittedTimeStamp())
+				.sections(submissionDTO.getSections())
 				.build();
 	}
 

@@ -2,6 +2,10 @@ package gov.cabinetoffice.api.services;
 
 import gov.cabinetoffice.api.dtos.submission.ApplicationDTO;
 import gov.cabinetoffice.api.dtos.submission.ApplicationListDTO;
+import gov.cabinetoffice.api.dtos.submission.SubmissionDTO;
+import gov.cabinetoffice.api.dtos.submission.SubmissionDetailDTO;
+import gov.cabinetoffice.api.entities.ApplicationFormEntity;
+import gov.cabinetoffice.api.entities.SchemeEntity;
 import gov.cabinetoffice.api.entities.Submission;
 import gov.cabinetoffice.api.enums.SubmissionStatus;
 import gov.cabinetoffice.api.exceptions.SubmissionNotFoundException;
@@ -23,7 +27,10 @@ import static org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Pageable;
 
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @ExtendWith(MockitoExtension.class)
 class SubmissionsServiceTest {
@@ -136,5 +143,49 @@ class SubmissionsServiceTest {
 		assertThatExceptionOfType(SubmissionNotFoundException.class)
 				.isThrownBy(() -> submissionsService.getSubmissionsByFundingOrgId(FUNDING_ORG_ID))
 				.withMessage(msg);
+	}
+
+	@Test
+	void getSubmissionByIdAndFundingOrgId_ReturnsExpectedData() {
+		final UUID submissionId = UUID.randomUUID();
+		final Submission submission = randomSubmission()
+				.id(submissionId)
+				.scheme(SchemeEntity.builder().funderId(FUNDING_ORG_ID).ggisIdentifier(GGIS_REFERENCE_NUMBER).build())
+				.application(ApplicationFormEntity.builder().applicationName("Test Application").build())
+				.build();
+		final SubmissionDTO submissionDTO = SubmissionDTO.builder()
+				.submissionId(submissionId)
+				.gapId("GAP-ID")
+				.grantApplicantEmailAddress("applicant@example.com")
+				.submittedTimeStamp(ZonedDateTime.now())
+				.sections(List.of())
+				.build();
+
+		when(submissionRepository.findByIdAndStatusAndSchemeFunderId(submissionId, SubmissionStatus.SUBMITTED, FUNDING_ORG_ID))
+				.thenReturn(Optional.of(submission));
+		when(submissionMapper.submissionToSubmissionDto(submission)).thenReturn(submissionDTO);
+
+		final SubmissionDetailDTO response = submissionsService.getSubmissionByIdAndFundingOrgId(submissionId, FUNDING_ORG_ID);
+
+		assertThat(response.getSubmissionId()).isEqualTo(submissionId);
+		assertThat(response.getGapId()).isEqualTo("GAP-ID");
+		assertThat(response.getGgisReferenceNumber()).isEqualTo(GGIS_REFERENCE_NUMBER);
+		assertThat(response.getApplicationFormName()).isEqualTo("Test Application");
+		assertThat(response.getGrantApplicantEmailAddress()).isEqualTo("applicant@example.com");
+		assertThat(response.getSubmittedTimeStamp()).isEqualTo(submissionDTO.getSubmittedTimeStamp());
+		assertThat(response.getSections()).isEqualTo(submissionDTO.getSections());
+	}
+
+	@Test
+	void getSubmissionByIdAndFundingOrgId_ThrowsSubmissionNotFoundException_WhenNotOwnedOrNotSubmitted() {
+		final UUID submissionId = UUID.randomUUID();
+
+		when(submissionRepository.findByIdAndStatusAndSchemeFunderId(submissionId, SubmissionStatus.SUBMITTED, FUNDING_ORG_ID))
+				.thenReturn(Optional.empty());
+
+		assertThatExceptionOfType(SubmissionNotFoundException.class)
+				.isThrownBy(() -> submissionsService.getSubmissionByIdAndFundingOrgId(submissionId, FUNDING_ORG_ID))
+				.withMessage("No submission found with id " + submissionId);
+		verifyNoInteractions(submissionMapper);
 	}
 }
