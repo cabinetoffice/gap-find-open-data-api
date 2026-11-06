@@ -26,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import java.security.Principal;
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 @ExtendWith(MockitoExtension.class)
 class SubmissionsControllerTest {
@@ -199,4 +200,41 @@ class SubmissionsControllerTest {
                 .isThrownBy(() -> controllerUnderTest.getSubmissionsByGgisRefNum(GGIS_REFERENCE_NUMBER, principal))
                 .withMessage("No submissions found");
     }
+
+	@Test
+	void getSubmissionById_ReturnsExpectedSubmission() {
+		final UUID submissionId = UUID.randomUUID();
+		final SubmissionDetailDTO submission = SubmissionDetailDTO.builder()
+				.submissionId(submissionId)
+				.ggisReferenceNumber(GGIS_REFERENCE_NUMBER)
+				.sections(List.of(submissionSectionDTO2))
+				.build();
+
+		when(principal.getName())
+				.thenReturn(String.valueOf(FUNDING_ORGANISATION_ID));
+
+		when(submissionService.getSubmissionByIdAndFundingOrgId(submissionId, FUNDING_ORGANISATION_ID))
+				.thenReturn(submission);
+
+		final ResponseEntity<SubmissionDetailDTO> methodResponse = controllerUnderTest.getSubmissionById(submissionId, principal);
+
+		verify(submissionService).getSubmissionByIdAndFundingOrgId(submissionId, FUNDING_ORGANISATION_ID);
+		assertThat(methodResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(methodResponse.getBody()).isEqualTo(submission);
+	}
+
+	@Test
+	void getSubmissionById_ThrowsSubmissionNotFoundException() {
+		final UUID submissionId = UUID.randomUUID();
+
+		when(principal.getName())
+				.thenReturn(String.valueOf(FUNDING_ORGANISATION_ID));
+
+		when(submissionService.getSubmissionByIdAndFundingOrgId(submissionId, FUNDING_ORGANISATION_ID))
+				.thenThrow(new SubmissionNotFoundException("No submission found with id " + submissionId));
+
+		assertThatExceptionOfType(SubmissionNotFoundException.class)
+				.isThrownBy(() -> controllerUnderTest.getSubmissionById(submissionId, principal))
+				.withMessage("No submission found with id " + submissionId);
+	}
 }

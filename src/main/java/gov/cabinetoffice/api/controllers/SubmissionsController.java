@@ -2,6 +2,7 @@ package gov.cabinetoffice.api.controllers;
 
 import gov.cabinetoffice.api.dtos.submission.ApplicationListDTO;
 import gov.cabinetoffice.api.dtos.submission.CountResponseDTO;
+import gov.cabinetoffice.api.dtos.submission.SubmissionDetailDTO;
 import gov.cabinetoffice.api.models.ErrorMessage;
 import gov.cabinetoffice.api.services.SubmissionsService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -64,6 +66,42 @@ public class SubmissionsController {
         }
 		log.debug("results of submissionsService.getSubmissionsByFundingOrgIdAndGgisReferenceNum");
 		log.debug(response.toString());
+
+		return ResponseEntity.ok().body(response);
+	}
+
+	@GetMapping("/by-id/{submissionId}")
+	@ApiResponses(value = {
+			@ApiResponse(
+					responseCode = "200", description = "Submission retrieved successfully.",
+					content = @Content(mediaType = "application/json",
+							schema = @Schema(implementation = SubmissionDetailDTO.class)
+					)
+			),
+			@ApiResponse(
+					responseCode = "400", description = "Submission id is not a valid UUID",
+					content = @Content(mediaType = "application/json",
+							schema = @Schema(implementation = ErrorMessage.class)
+					)
+			),
+			@ApiResponse(
+					responseCode = "403", description = "Invalid API key provided",
+					content = @Content(mediaType = "application/json",
+							schema = @Schema(implementation = ErrorMessage.class)
+					)
+			),
+			@ApiResponse(
+					responseCode = "404", description = "No submitted submission with this id for the funding organisation",
+					content = @Content(mediaType = "application/json",
+							schema = @Schema(implementation = ErrorMessage.class)
+					)
+			)
+	})
+	public ResponseEntity<SubmissionDetailDTO> getSubmissionById(@PathVariable @NotNull final UUID submissionId, final Principal principal) {
+		final int fundingOrganisationId = Integer.parseInt(principal.getName());
+		log.info("funding organisation: " + fundingOrganisationId + ", submission ID: " + submissionId);
+
+		final SubmissionDetailDTO response = this.submissionsService.getSubmissionByIdAndFundingOrgId(submissionId, fundingOrganisationId);
 
 		return ResponseEntity.ok().body(response);
 	}
